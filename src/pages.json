@@ -1,0 +1,74 @@
+{
+  "easycom": { //自动注册组件,直接引用
+    "autoscan": true
+  },
+  "pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+      "style": {
+        "enablePullDownRefresh": false,
+        "disableScroll": true,
+      }
+		},
+    {
+			"path": "pages/home/home",
+      "style": {
+        "enablePullDownRefresh": false,
+        "disableScroll": true,
+      }
+		},
+    {
+			"path": "pages/login/login",
+		},
+    {
+			"path": "pages/mine/mine",
+		},
+    {
+			"path": "pages/class-library/class-library",
+		},
+    {
+			"path": "pages/notices/notices",
+		},
+    {
+			"path": "pages/upload-book/upload-book",
+		},
+    {
+			"path": "pages/rank-list/rank-list",
+		},
+    {
+			"path": "pages/my-library/my-library",
+		},
+    {
+			"path": "pages/my-borrow-out/my-borrow-out",
+		},
+    {
+			"path": "pages/my-borrowing/my-borrowing",
+		},
+    {
+			"path": "pages/my-integral/my-integral",
+		},
+    {
+			"path": "pages/my-credit-integral/my-credit-integral",
+		},
+    {
+			"path": "pages/parent-confirm/parent-confirm",
+		},
+    {
+			"path": "pages/all-books/all-books",
+		},
+    {
+			"path": "pages/category-detail/nature-books",
+		},
+	],
+  "globalStyle": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom",
+    "allowsBounceVertical": "NO",
+    "transparentTitle": "always",
+    "titlePenetrate": "YES",
+    "enablePullDownRefresh": false,
+    "disableScroll": true,
+  },
+}

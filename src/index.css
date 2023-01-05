@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'my-font';
+  src:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/font/HYCuYuanJ.otf") format('trueType');
+  /* src:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/font/me4gjm.ttf") format('truetype'); */
+  /* src:url('@/static/font/HYCuYuanJ.otf'); */
+      /* url('@/static/font/hanyizhongyuanjian.ttf'),
+      url('@/static/font/dinmittelschriftstd.otf'); */
+}

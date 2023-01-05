@@ -1,0 +1,25 @@
+<script setup >
+
+
+</script>
+
+<template>
+  <div class="page">
+    <NavBar title='我的借出' />
+    <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_toolbar.png" class="bg-top" />
+  </div>
+
+</template>
+
+<style lang="less" scoped>
+@import '@static/index.less';
+.page{
+  .full-screen();
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_activity_1.jpg") 0 0/100% 100% no-repeat;
+  position:relative;
+  .bg-top{
+    .box-size(100vw,23.88vw);
+    .pos-absolute(0,0,unset,unset);
+  }
+}
+</style>

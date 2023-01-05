@@ -1,0 +1,79 @@
+.full-screen(){
+  width:100vw;
+  height:100vh;
+  position: fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  right:0;
+}
+
+
+.pos-fixed(@top:0px,@right:0px,@bottom:0px,@left:0px){
+  position: fixed;
+  top:@top;
+  right:@right;
+  bottom:@bottom;
+  left:@left;
+}
+.pos-absolute(@top:0px,@right:0px,@bottom:0px,@left:0px){
+  position: absolute;
+  top:@top;
+  right:@right;
+  bottom:@bottom;
+  left:@left;
+}
+.flex-simple(@content:space-between,@items:center){
+  display: flex;
+  justify-content: @content;
+  align-items: @items;
+}
+
+
+.box-size(@width:100%,@height:100%,@background:transparent){
+  width:@width;
+  flex-basis: @width;
+  height:@height;
+  background: @background;
+  position: relative;
+  box-sizing: border-box;
+  font-family: 'my-font';
+}
+
+
+// 一级加粗字体样式
+.bold-font(@font-size:18px,@color:#332e2b){
+  font-size:@font-size;
+  font-weight: bold;
+  color:@color;
+  font-family: 'my-font';
+}
+
+// 二级未加粗字体一样时
+.normal-font(@font-size:18px,@color:#332e2b){
+  font-size:@font-size;
+  color:@color;
+}
+
+//
+.line-center(@height:18px){
+  height:@height;
+  line-height: @height;
+}
+
+.backgroundImg(@imgSrc){
+  background: url(@imgSrc) 0 0/100% 100% no-repeat;
+}
+
+
+@default-w: 375px;
+.pxToVw(@px, @width: @default-w) {
+  @var:(unit(@px) / ( unit(@width) * 0.01)) * 1vw;
+  @vw: ~'@{var}';
+}
+
+// .pxToVw (@prop, @value) {
+//   @result: (@value / ((375 * 0.01) * 1px)) * 1vw;
+//   @{prop}: @value;
+//   @{prop}: @result;
+// }
