@@ -1,9 +1,9 @@
-import http from './http';
+// import http from './http';
 
 
 export async function login(data) {
-  let res = await http.post("login", data);
-  return res;
+  // let res = await http.post("/login", data);
+  return {};
 }
 
 // 非授权登录

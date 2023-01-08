@@ -1,7 +1,8 @@
-import axios from "axios";
+import buildURL from "axios/lib/helpers/buildURL";
 import settle from "axios/lib/core/settle";
-import buildURL from "axios/lib/helpers/buildURL.js";
-import { uploadLogRecord } from './log'
+import axios from "axios";
+
+
 // const { VITE_BASE_URL = "https://shilai.zhiyi.cn/v1.7", VITE_TIME_OUT = 10 * 1000 } = import.meta.env;
 const { VITE_BASE_URL = "https://test.shilai.zhiyi.cn/v1.6", VITE_TIME_OUT = 10 * 1000 } = {}
 

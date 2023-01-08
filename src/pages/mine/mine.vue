@@ -18,32 +18,42 @@ const userInfo = useUserInfoStore();
     <div class="mine-setting">
       <div class="setting-group">
         <div class='setting-item' @click='navigateTo("/pages/my-library/my-library")'>
-          <img src="" alt="" class='img' />
-          <div class="text">我的图书馆</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-icon-library.png" alt="" class='img' />
+          <!-- <div class="text">我的图书馆</div> -->
         </div>
         <div class='setting-item' @click='navigateTo("/pages/my-borrowing/my-borrowing")'>
-          <img src="" alt="" class='img' />
-          <div class="text">我的借阅</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-borrowing.png" alt="" class='img' />
+          <!-- <div class="text">我的借阅</div> -->
         </div>
       </div>
       <div class="setting-group">
         <div class='setting-item' @click='navigateTo("/pages/my-borrow-out/my-borrow-out")'>
-          <img src="" alt="" class='img' />
-          <div class="text">我的借出</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-out.png" alt="" class='img' />
+          <!-- <div class="text">我的借出</div> -->
         </div>
         <div class='setting-item' @click='navigateTo("/pages/my-credit-integral/my-credit-integral")'>
-          <img src="" alt="" class='img' />
-          <div class="text">信用积分</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-credit-integral.png" alt="" class='img' />
+          <!-- <div class="text">信用积分</div> -->
         </div>
       </div>
       <div class="setting-group">
         <div class='setting-item'  @click='navigateTo("/pages/my-integral/my-integral")'>
-          <img src="" alt="" class='img' />
-          <div class="text">积分</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-integral.png" alt="" class='img' />
+          <!-- <div class="text">积分</div> -->
         </div>
         <div class='setting-item'  @click='navigateTo("/pages/parent-confirm/parent-confirm")'>
-          <img src="" alt="" class='img' />
-          <div class="text">家长确认</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-confirm.png" alt="" class='img' />
+          <!-- <div class="text">家长确认</div> -->
+        </div>
+      </div>
+      <div class="setting-group">
+        <div class='setting-item'  @click='navigateTo("/pages/my-integral/my-integral")'>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-feedback.png" alt="" class='img' />
+          <!-- <div class="text">积分</div> -->
+        </div>
+        <div class='setting-item' >
+          <!-- <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-icon-library.png" alt="" class='img' /> -->
+          <!-- <div class="text">家长确认</div> -->
         </div>
       </div>
 
@@ -93,11 +103,12 @@ const userInfo = useUserInfoStore();
     .setting-group{
       .box-size(100%,unset);
       .flex-simple(space-between,center);
-      margin-top:20px;
+      margin-top:18px;
       .setting-item{
         text-align: center;
+        font-size:0px;
         .img{
-          .box-size(100px,100px,#ccc);
+          .box-size(82px,70px);
         }
         .text{
           .box-size(120px,22px);

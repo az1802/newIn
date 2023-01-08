@@ -7,6 +7,7 @@ export function upperFirst(word) {
 }
 
 
+
 export function cloneDeep(obj) {
   let res = {};
   for (let key in obj) {

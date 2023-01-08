@@ -2,18 +2,18 @@
 import { navigateTo ,wechatSignUp} from '@/utils/wechat';
 import { useUserInfoStore } from '@/stores/user'
 
-import API from "@/api";
+import API from "@api";
 const userInfoStore = useUserInfoStore();
 
 async function loginSystem(){
   // 静态获取usertId,查询是否为本地用户
-  let userId = await wechatSignUp();
-  let userInfo = await API.User.getUserInfo();
-  userInfoStore.setUserInfo({
-    ...userInfo
-  })
-  if(userInfoStore.identity!=='other'){
-    console.log('userInfoStore.identity: ', userInfoStore.identity);
+  // let userId = await wechatSignUp();
+  // let userInfo = await API.User.getUserInfo();
+
+  if(userInfoStore.identity=='student'){
+    navigateTo("/pages/home/home")
+  }else if(userInfoStore.identity=='teacher'){
+    navigateTo("/package-teacher/home/home")
   }else{
     navigateTo("/pages/login/login")
   }
@@ -32,7 +32,7 @@ async function loginSystem(){
 @import '@static/index.less';
 .page{
   .full-screen();
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_welcome.jpg") 0 0/100% 100% no-repeat;
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_welcome.jpg") center/cover no-repeat;
   position:relative;
 
   .login-btn{

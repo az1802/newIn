@@ -14,6 +14,7 @@ export default defineConfig({
       "@utils":resolve("src","utils"),
       "@static":resolve("src","static"),
       "@hooks":resolve("src","hooks"),
+      "@api":resolve("src","api"),
     }
   }
 })

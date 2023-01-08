@@ -20,7 +20,7 @@ async function scanIsbn(){
 
 <template>
   <div class='page'>
-    <NavBar title='上传图书' />
+    <NavBar title='扫描图书' />
     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_toolbar.png" class="bg-top" />
     <div class="upload-wrapper" @click='scanIsbn'>扫描ISBN码</div>
     <div>isbn码结果:{{isbnCode}}</div>

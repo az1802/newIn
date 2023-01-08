@@ -5,7 +5,7 @@ export const useUserInfoStore = defineStore('userInfo', {
     return {
        name: "张恒",
        school:"大鹏中心小学",
-       identity:"student",//student teacher other
+       identity:"other"//student teacher other
     }
   },
   // 也可以定义为
@@ -13,7 +13,7 @@ export const useUserInfoStore = defineStore('userInfo', {
   actions:{
     setUserInfo(info){
       for(let key in info){
-        this[key] = infp[key];
+        this[key] = info[key];
       }
     },
     setName(name) {

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    svg {
+      font-size: 2rem;
+      color:red;
+      font-weight: 800;
+      background-color: #ccc;
+    }
+    .txt{
+      fill:white;
+      text-shadow: 1px 0 1px red,1px -1px 1px red,0 1px 1px red,0px -1px 1px red;
+    }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 30 300 130" height="150">
+    <path id="zxxPath" fill="none" stroke="" d="M10,80 q100,120 120,20 q140,-50 160,0" />
+    <text class='txt'>
+      <textPath href="#zxxPath" class='txtpath'>
+          实际开发，path路径应该设置在&lt;defs&gt;中不显示
+      </textPath>
+    </text>
+  </svg>
+</body>
+</html>

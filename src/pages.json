@@ -30,7 +30,10 @@
 			"path": "pages/notices/notices",
 		},
     {
-			"path": "pages/upload-book/upload-book",
+			"path": "pages/upload-book/upload-book-scan",
+		},
+    {
+			"path": "pages/upload-book/upload-book-manually",
 		},
     {
 			"path": "pages/rank-list/rank-list",
@@ -60,6 +63,18 @@
 			"path": "pages/category-detail/nature-books",
 		},
 	],
+  "subPackages":[
+
+    {
+      "root": "package-teacher",
+      "pages":[{
+        "path": "home/home",
+        "style": {
+          "disableScroll": true
+        }
+      }]
+    }
+  ],
   "globalStyle": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFFFFF",
