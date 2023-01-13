@@ -1,4 +1,5 @@
-// import http from './http';
+import { showToast } from '../utils/wechat';
+import http from './http';
 
 
 export async function login(data) {
@@ -17,8 +18,17 @@ export async function signUp(data){
   }
 }
 
-export async function getUserInfo(){
+export async function bindUser(config){
+  try{
+    let res = await http.get("/bindingUser", config);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
 
+export async function getUserInfo(){
 
   return {
     identity:"student"

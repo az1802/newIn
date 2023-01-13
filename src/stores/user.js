@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useUserInfoStore = defineStore('userInfo', {
   state: () => {
     return {
-       name: "张恒",
+      xingming: "张恒",
        school:"大鹏中心小学",
        identity:"other"//student teacher other
     }

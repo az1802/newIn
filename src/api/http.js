@@ -1,10 +1,10 @@
-import buildURL from "axios/lib/helpers/buildURL";
-import settle from "axios/lib/core/settle";
 import axios from "axios";
+import settle from "axios/lib/core/settle";
+import buildURL from "axios/lib/helpers/buildURL.js";
 
 
 // const { VITE_BASE_URL = "https://shilai.zhiyi.cn/v1.7", VITE_TIME_OUT = 10 * 1000 } = import.meta.env;
-const { VITE_BASE_URL = "https://test.shilai.zhiyi.cn/v1.6", VITE_TIME_OUT = 10 * 1000 } = {}
+const { VITE_BASE_URL = "https://wxapi.gameedu.net/index/sharebooksapi", VITE_TIME_OUT = 10 * 1000 } = {}
 
 
 // 自定义适配器来适配uniapp语法
@@ -13,10 +13,10 @@ axios.defaults.adapter = function (config) {
     uni.request({
       method: config.method.toUpperCase(),
       url:
-        config.baseURL +
-        buildURL(config.url, config.params, config.paramsSerializer),
+      config.baseURL +
+      buildURL(config.url, config.params, config.paramsSerializer),
       header: config.headers,
-      data: config.data,
+      data: config.data || {},
       dataType: config.dataType,
       sslVerify: config.sslVerify,
       complete: function complete(response) {
@@ -38,19 +38,17 @@ const baseConfig = {
   baseURL: VITE_BASE_URL,
   timeout: VITE_TIME_OUT,
   headers: {
-
+    auth:"1CeYdRxaHC2J2AIowodfOHRaD67FL1nm"
   },
 }
 
 const http = axios.create(baseConfig);
 
 http.interceptors.response.use(function (response) {
-  // 此处可以查看url 做响应的数据埋点,日志记录
-  // TODO 根据不同的status对数据做不同的处理 然后返回.
-  if (response.data.errcode == 0) {
+  if (response.status==200&&response.data.code == 0) {
     return response.data.data || response.data;
   } else {
-    return Promise.reject(response.data.errmsg || "服务错误");;
+    return Promise.reject(response.data.message || "服务错误");;
   }
 }, function (error) {
   // 对响应错误做点什么

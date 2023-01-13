@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <NavBar title="班级图书馆" />
-    <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_toolbar.png" class="bg-top" />
+    <div class="bg-top-wrapper">
+        <TopCloud />
+    </div>
+
     <HomeMenuTabs class='home-menu-tabs' active='class-library' />
   </div>
 </template>
@@ -16,13 +19,13 @@
   .full-screen();
   background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/tree_top.png") 0 0/100% 100% no-repeat;
   position:relative;
-  .bg-top{
-    .box-size(100vw,23.88vw);
-    .pos-absolute(0,0,unset,unset);
+  .bg-top-wrapper{
+    .pos-absolute(0,0,unset,0);
+    z-index:0;
   }
 }
 .home-menu-tabs{
-  .pos-fixed(unset,unset,30px,0);
+  .pos-fixed(unset,unset,20px,0);
 }
 
 </style>

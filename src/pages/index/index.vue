@@ -1,22 +1,59 @@
 <script setup>
-import { navigateTo ,wechatSignUp} from '@/utils/wechat';
+import { navigateTo ,wechatSignUp,getUserInfo,showToast,getWechatUserId} from '@/utils/wechat';
 import { useUserInfoStore } from '@/stores/user'
+import {onBeforeMount} from "vue";
+import API from "@/api/index";
 
-import API from "@api";
 const userInfoStore = useUserInfoStore();
+let isLogining = false;
+
+
+// 检测是否是学生,或者是老师
+onBeforeMount(async ()=>{
+  let userInfo = await getWechatUserId();
+  if(userInfo){
+    userInfoStore.setUserInfo(userInfo);
+    let {usertype} = userInfo
+    console.log('usertype: ', usertype);
+    if(usertype==0){
+    }else if(usertype==1){
+      navigateTo("/pages/home/home")
+    }else if(usertype==2){
+      navigateTo("/package-teacher/home/home")
+    }
+  }
+})
+
 
 async function loginSystem(){
-  // 静态获取usertId,查询是否为本地用户
-  // let userId = await wechatSignUp();
-  // let userInfo = await API.User.getUserInfo();
+  if(isLogining){
+    return ;
+  }
+  isLogining = true;
+  let wechatUserInfo = await getUserInfo();
+  let codeMsg = await uni.login();
 
-  if(userInfoStore.identity=='student'){
-    navigateTo("/pages/home/home")
-  }else if(userInfoStore.identity=='teacher'){
-    navigateTo("/package-teacher/home/home")
-  }else{
+  if (!wechatUserInfo || typeof wechatUserInfo === "object" &&wechatUserInfo.errMsg !== "getUserProfile:ok") {
+        await showToast("获取用户信息失败,请重新授权");
+        isLogining = false;
+        return;
+      }
+  const {userInfo } = wechatUserInfo || {};
+  // 绑定用户信息
+  let res = await wechatSignUp({
+    code:codeMsg.code,
+    nickname:userInfo.nickName,
+    avataurl:userInfo.avatarUrl
+  });
+
+  if(res){
+    userInfoStore.setUserInfo(userInfo);
     navigateTo("/pages/login/login")
   }
+
+  isLogining = false;
+
+
 }
 
 </script>

@@ -1,4 +1,4 @@
-// import http from '@/api/http';
+import http from '@/api/http';
 
 
 export function upperFirst(word) {
@@ -266,16 +266,40 @@ export async function scanCode() {
 }
 
 
-// 微信默认登录
-export async function wechatSignUp() {
+// 无须用户授权获取用户id
+export async function getWechatUserId(){
   let codeMsg = await uni.login();
-  let data = { code: codeMsg.code };
-  let res = await API.User.signUp(data)
-  let userId = res.id;
-  if (userId) {
-    uni.setStorageSync("userId", userId);
-    // http.setHeaders({
-    //   userId
-    // })
-  }
+  let userInfo = await http.get("/getWxOpenId",{params:{
+    code:codeMsg.code,
+  }})
+
+  // userInfo.usertype=0;
+  return userInfo
+}
+
+// 微信默认登录
+export async function wechatSignUp(params) {
+  let res = await http.get("/getWxOpenId",{params})
+  return res;
+}
+
+
+export function getUserInfo() {
+  //#ifdef MP-WEIXIN
+  return new Promise((resolve, reject) => {
+    wx.getUserProfile({
+      desc: "个人主页信息展示",
+      complete(res) {
+        console.log('res: ', res);
+        resolve(res)
+      },
+      success: (res) => {
+        console.log('res111: ', res);
+        resolve(res);
+      }, fail: (err) => { //获取个人信息失败
+        resolve(false)
+      }
+    })
+  });
+  //#endif
 }

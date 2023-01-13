@@ -1,8 +1,10 @@
 <script setup >
 import {ref,unref} from "vue";
-import {showToast,navigateTo} from "@utils/wechat"
-import { useUserInfoStore } from '@/stores/user'
-const userInfo = useUserInfoStore();
+import {showToast,navigateTo,getUserInfo} from "@utils/wechat"
+import { useUserInfoStore } from '@/stores/user';
+import {bindUser} from "@/api/user";
+
+const userInfoStore = useUserInfoStore();
 
 
 const identity = ref("student");
@@ -22,8 +24,19 @@ async function bindIndetity(){
   let params = {
     userName:unref(userName),
     userPwd:unref(userPwd),
-    identity:unref(identity)
+    identity:unref(identity),
+    wxuser_id:userInfoStore.wxuser_id
   }
+  let bindRes = await bindUser({
+    params
+  });
+
+  console.log('bindRes: ', bindRes);
+  if(!bindRes){
+    return
+  }
+
+  //根据身份跳转到不同页面
   if(unref(identity)=="student"){
     navigateTo("/pages/home/home")
   }else{

@@ -1,5 +1,6 @@
 <script setup >
 import RankItem from "./RankItem.vue";
+import MyRank from "./MyRank.vue"
 import {ref} from "vue";
 
 const activeTab = ref("grade");
@@ -25,6 +26,26 @@ const gradeRankList=[{
   id:2,
   img:"",
   name:"张凡2",
+  num:200
+},{
+  id:3,
+  img:"",
+  name:"张凡2",
+  num:200
+},{
+  id:4,
+  img:"",
+  name:"张凡2",
+  num:200
+},{
+  id:5,
+  img:"",
+  name:"张凡2",
+  num:200
+},{
+  id:6,
+  img:"",
+  name:"张凡3",
   num:200
 }]
 
@@ -52,15 +73,16 @@ function switchTab(tabName) {
         <div class="tab-item" :class='[activeTab=="grade" ? "active":""]' @click='switchTab("grade")'>年级榜</div>
       </div>
       <div class="tab-content">
-        <div class="tab-content-item" v-show='activeTab=="class"'>
+        <scroll-view class="tab-content-item" v-show='activeTab=="class"' scroll-y :show-scrollbar='false' enhanced>
           <RankItem v-for='item in classRankList' :key='item.id' :info='item'/>
-        </div>
-        <div class="tab-content-item" v-show='activeTab=="grade"'>
+        </scroll-view>
+        <scroll-view class="tab-content-item" v-show='activeTab=="grade"' scroll-y :show-scrollbar='false' enhanced>
           <RankItem v-for='item in gradeRankList' :key='item.id' :info='item'/>
-        </div>
+        </scroll-view>
       </div>
       <div class="my-rank">
-        <RankItem :info='mineRankInfo'/>
+        <div class='divider'></div>
+        <MyRank :info='mineRankInfo'/>
       </div>
     </div>
 
@@ -74,29 +96,42 @@ function switchTab(tabName) {
   background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
   position:relative;
   .rank-wrapper{
-    .box-size(100vw,unset);
-    padding:0 10px;
+    .box-size(calc(100vw - 8.533vw),169.6vw);
+    padding:38.667vw 2.667vw 0;
+    background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-bg.png") 0 0/100% 100% no-repeat;
+    margin:0 auto;
     .tabs{
-      text-align: center;
+      .flex-simple(space-between,center);
+      .box-size(100%,9.6vw);
+      padding:0 64px;
       .tab-item{
         display: inline-block;
-        .box-size(100px,40px);
-        .line-center(40px);
+        .box-size(87px,36px,#D7AD57);
+        .line-center(36px);
+        border-radius: 20px 20px 0 0;
+        text-align:center;
+        .bold-font(16px,#905B38);
+        // background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-tab-active.png") 0 0/100% 100% no-repeat;
         &.active{
-          color:red;
+          background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-tab-active.png") 0 0/100% 100% no-repeat;
         }
       }
     }
     .tab-content{
-      .box-size(100%,unset);
-      padding:0 20px;
+      .box-size(100%,calc(100% - 140px));
+      padding:0 10px;
       .tab-content-item{
-
+        .box-size(100%,100%);
       }
     }
     .my-rank{
       .box-size(100%,unset);
-      padding:0 20px;
+      padding:0 10px;
+      .divider{
+        .box-size(100%,0px);
+        border-top:1px dashed #A74D11;
+        margin-top:10px;
+      }
       .line-center(60px);
     }
   }

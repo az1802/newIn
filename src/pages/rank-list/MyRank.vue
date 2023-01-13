@@ -38,7 +38,7 @@ const props = defineProps({
   .box-size(100%,62px);
   padding:0 30px 0 20px;
   .flex-simple(space-between,center);
-  background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-user-bg.png") 0 0/100% 100% no-repeat;
+  // background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-user-bg.png") 0 0/100% 100% no-repeat;
   margin-bottom:10px;
   .left{
     .flex-simple(flex-start,center);

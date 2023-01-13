@@ -45,7 +45,17 @@
 			"path": "pages/my-borrow-out/my-borrow-out",
 		},
     {
+			"path": "pages/my-borrow-out/borrow-out-detail",
+		},
+
+    {
 			"path": "pages/my-borrowing/my-borrowing",
+		},
+    {
+			"path": "pages/my-borrowing/borrowing-detail",
+		},
+    {
+			"path": "pages/my-borrowing/borrow-evaluate",
 		},
     {
 			"path": "pages/my-integral/my-integral",
@@ -61,6 +71,24 @@
 		},
     {
 			"path": "pages/category-detail/nature-books",
+		},
+    {
+			"path": "pages/book-detail/book-detail",
+		},
+    {
+			"path": "pages/test/test",
+		},
+    {
+			"path": "pages/my-settings/my-settings",
+		},
+    {
+			"path": "pages/my-settings/switch-user",
+		},
+    {
+			"path": "pages/my-settings/user-info",
+		},
+    {
+			"path": "pages/mine/feedback",
 		},
 	],
   "subPackages":[

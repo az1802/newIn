@@ -100,7 +100,7 @@ let showUploadBookSel = ref(false)
   }
 }
 .home-menu-tabs{
-  .pos-absolute(unset,unset,30px,0);
+  .pos-absolute(unset,unset,20px,0);
 }
 
 </style>
