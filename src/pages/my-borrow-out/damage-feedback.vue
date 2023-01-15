@@ -1,13 +1,15 @@
 <script setup >
 import { navigateTo ,showToast} from '@utils/wechat';
 import {ref} from "vue";
-let feedBackText = ref("");
+let appealText = ref("");
 let imgList = ref([1,2]);
 
 
 function delImg(item){
   imgList.value.splice(item-1,1)
 }
+
+
 async function sumbit(){
 
 }
@@ -16,29 +18,27 @@ async function sumbit(){
 
 <template>
   <div class="page">
-    <NavBar title='意见反馈' />
+    <NavBar title='图书破损申诉' />
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
     <div class="group-wrapper">
       <div class="text-area-wrapper">
-          <textarea  class='text-area' v-model='feedBackText'  maxlength='200' placeholder='你的宝贵意见将帮助我们不断改进' placeholder-style='font-size:15px;color:#6F6F6F;font-family:HYCuYuanJ'></textarea>
-          <div class='word-tooltip'>{{feedBackText.length}}/200</div>
-        </div>
-        <div class='img-list-wrapper'>
-          <div class="img-item-wrapper" v-for='item in imgList' :key='item'>
-            <img src="" alt="" class='img'>
-            <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-del.png" alt="" class='img-del' @click='delImg(item)'>
-          </div>
-
-          <img class='add-img' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg-feeback-add-img.png" alt="">
+          <textarea  class='text-area' v-model='appealText'  maxlength='200' placeholder='请输入图书破坏描述' placeholder-style='font-size:15px;color:#6F6F6F;font-family:HYCuYuanJ'></textarea>
+          <div class='word-tooltip'>{{appealText.length}}/100</div>
         </div>
     </div>
+    <div class='img-list-wrapper'>
+      <div class="img-item-wrapper" v-for='item in imgList' :key='item'>
+        <img src="" alt="" class='img'>
+        <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-del-2.png" alt="" class='img-del' @click='delImg(item)'>
+      </div>
 
+      <img class='add-img' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg-appeal-add-img.png" alt="">
+    </div>
     <div class="btn-wrapper">
       <div class="btn" @click='sumbit'>提交</div>
     </div>
-
 
   </div>
 
@@ -48,24 +48,23 @@ async function sumbit(){
 @import '@static/index.less';
 .page{
   .full-screen();
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg-user-info-activity.jpg") 0 0/100% 100% no-repeat;
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg-activity-2.jpg") 0 0/100% 100% no-repeat;
   position:relative;
   .bg-top-wrapper{
     .pos-absolute(0,0,unset,0);
     z-index:0;
   }
   .group-wrapper{
-    .box-size(92vw,392px,#F7B053);
+    .box-size(92vw,65.333vw,#F7B053);
     margin:13.333vw auto 0 auto;
-    padding:20px 12px unset 12px;
+    padding:6px 6px 6px 6px;
     box-shadow: 0px 1.6vw 0px 0px rgba(208,135.595,40.786,1);
     border-radius: 30px;
     .text-area-wrapper{
       position:relative;
       .box-size(100%,unset);
-      padding:5.333vw 3.2vw 0 3.2vw;
       .text-area{
-        .box-size(100%,233px,#FEFBD7);
+        .box-size(100%,62.133vw,#FEFBD7);
         border-radius: 25px;
         padding:20px;
       }
@@ -78,31 +77,29 @@ async function sumbit(){
         padding-right:20px;
       }
     }
-    .img-list-wrapper{
-      .box-size(100%,95px);
-      margin-top:22px;
-      .flex-simple(flex-start,center);
-      padding:0 3.2vw;
-      .img-item-wrapper{
-        position:relative;
-        margin-right:20px;
-        .img{
-          .box-size(95px,95px,#ccc);
-          border-radius: 8px;
-        }
-        .img-del{
-          .box-size(26px,26px);
-          .pos-absolute(-13px,-13px,unset,unset);
-
-        }
+  }
+  .img-list-wrapper{
+    .box-size(100%,36.533vw);
+    margin-top:22px;
+    .flex-simple(flex-start,center);
+    padding:0 3.2vw;
+    .img-item-wrapper{
+      position:relative;
+      margin-right:25px;
+      .img{
+        .box-size(27.2vw,36.533vw,#ccc);
+        border-radius: 1.6vw;
       }
-      .add-img{
-        .box-size(95px,95px);
+      .img-del{
+        .box-size(8vw,8vw);
+        .pos-absolute(-4vw,-4vw,unset,unset);
+
       }
     }
-
+    .add-img{
+      .box-size(27.2vw,36.533vw);
+    }
   }
-
   .btn-wrapper{
     .box-size(100cvw,19.2vw,rgba(0,0,0,0.51));
     .flex-simple(center,center);

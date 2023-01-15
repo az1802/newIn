@@ -36,6 +36,9 @@
 			"path": "pages/upload-book/upload-book-manually",
 		},
     {
+			"path": "pages/upload-book/upload-book-info",
+		},
+    {
 			"path": "pages/rank-list/rank-list",
 		},
     {
@@ -47,7 +50,9 @@
     {
 			"path": "pages/my-borrow-out/borrow-out-detail",
 		},
-
+    {
+			"path": "pages/my-borrow-out/damage-feedback",
+		},
     {
 			"path": "pages/my-borrowing/my-borrowing",
 		},

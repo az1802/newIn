@@ -3,6 +3,8 @@ import {ref,reactive} from "vue";
 import {showToast} from '@utils/wechat';
 
 const bookInfo = reactive({
+  bookName:"",
+  bookAuthor:"",
   url:"",
   isbn:"123",
   pageNum:20,
@@ -30,6 +32,18 @@ async function uploadBook (){
         <div class="label">封面:</div>
         <div class="value">
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/upload-book-carema.png" alt="" class='upload-img'>
+        </div>
+      </div>
+      <div class="form-item">
+        <div class="label">书名:</div>
+        <div class="value">
+          <input class='input' v-model='bookInfo.bookName' type='text' placeholder='请输入书名' placeholder-style='font-size:15px;color:#959797;font-family:HYCuYuanJ'/>
+        </div>
+      </div>
+      <div class="form-item">
+        <div class="label">作者:</div>
+        <div class="value">
+          <input class='input' v-model='bookInfo.bookAuthor' type='text' placeholder='请输入作者名' placeholder-style='font-size:15px;color:#959797;font-family:HYCuYuanJ'/>
         </div>
       </div>
       <div class="form-item">
@@ -77,8 +91,8 @@ async function uploadBook (){
     z-index:0;
   }
   .form-wrapper{
-    margin:16vw auto 0 auto;
-    .box-size(345px,442px);
+    margin:10vw auto 0 auto;
+    .box-size(345px,492px);
     background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/upload-book-form-background.png") 0 0/100% 100% no-repeat;
     padding: 30px 0;
     .form-item{
@@ -101,7 +115,7 @@ async function uploadBook (){
           .box-size(87px,94px);
         }
         .text-area{
-          .box-size(214px,140px);
+          .box-size(214px,110px);
           border:1px solid #D5D5D5;
           border-radius: 4px;
           padding:2px;

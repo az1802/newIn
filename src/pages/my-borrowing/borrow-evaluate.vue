@@ -1,26 +1,42 @@
 <script setup >
 import { navigateTo ,showToast} from '@utils/wechat';
-import {ref,computed} from "vue";
+import {ref,computed,unref} from "vue";
 let evaluateText = ref("");
 let imgList = ref([1,2]);
 let scoreArr = ref([1,2,3,4,5]);
 let score = ref(0)
 const scoreText = computed(()=>{
-  return "非常差"
+  if(unref(score)==5){
+    return "超赞,无可挑剔"
+  }else if(unref(score)<5&&unref(score)>1){
+    return "还不错"
+  }else{
+    return "非常差"
+
+  }
 })
 
 function delImg(item){
   imgList.value.splice(item-1,1)
 }
 
+ const temList = ref([
+  "图书完整","按时归还","态度好","有礼貌","回复快","很细心"
+ ])
+ const selTemArr = ref(["图书完整"]);
 
-
-async function bindUser(){
-  showToast("绑定用户")
+function selTem(item){
+  let index= unref(selTemArr).indexOf(item);
+  console.log('index: ', index);
+  if(index==-1){
+    selTemArr.value.push(item);
+  }else{
+    selTemArr.value.splice(index,1);
+  }
 }
 
-async function switchUser(){
-  showToast("切换用户")
+async function sumbit(){
+
 }
 
 </script>
@@ -35,18 +51,15 @@ async function switchUser(){
       <div class="group">
         <div class="title">借阅评分</div>
         <div class="score-wrapper">
-          <div class="score-item" v-for='item in scoreArr' :key='item'>
+          <div class="score-item" v-for='item in scoreArr' :key='item' @click='score=item'>
             <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-star-red.png" alt="" class='red' v-if='score >= item'>
             <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-star-grey.png" alt="" class='gray' v-else>
           </div>
         </div>
         <div class="score-text">{{scoreText}}</div>
         <div class='tem-list'>
-          <div class="tem-item">
-            图书损坏
-          </div>
-          <div class="tem-item">
-            未按时归还
+          <div class="tem-item" v-for='item in temList' :key='item' @click='selTem(item)' :class='[selTemArr.indexOf(item)==-1 ? "":"active"]'>
+            {{item}}
           </div>
         </div>
         <div class="text-area-wrapper">
@@ -54,6 +67,10 @@ async function switchUser(){
           <div class='word-tooltip'>{{evaluateText.length}}/100</div>
         </div>
       </div>
+    </div>
+
+    <div class="btn-wrapper">
+      <div class="btn" @click='sumbit'>提交</div>
     </div>
 
   </div>
@@ -85,12 +102,12 @@ async function switchUser(){
         text-indent: 10px;
       }
       .score-wrapper{
-        .box-size(100%,30px);
+        .box-size(100%,80px);
         .flex-simple(flex-start,center);
+        padding:20px 30px;
         .score-item{
           .red,.gray{
             .box-size(50px,30px);
-            margin-right:20px;
           }
         }
       }
@@ -100,6 +117,7 @@ async function switchUser(){
       }
       .tem-list{
         margin-top:25px;
+        text-align: center;
         .tem-item{
           display: inline-block;
           margin:0 15px 12px 0 ;
@@ -118,6 +136,7 @@ async function switchUser(){
       .text-area-wrapper{
         position:relative;
         .box-size(100%,152px);
+        margin-top:25px;
         .text-area{
           .box-size(100%,152px,#FCF5B8);
           border-radius: 8px;
@@ -137,6 +156,19 @@ async function switchUser(){
     }
 
 
+  }
+
+  .btn-wrapper{
+    .box-size(100cvw,19.2vw,rgba(0,0,0,0.51));
+    .flex-simple(center,center);
+    .pos-absolute(unset,0,0,0);
+    .btn{
+      .box-size(58.667vw,13.867vw);
+      background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/upload-book-btn.png") 0 0/100% 100% no-repeat;
+      text-align:center;
+      .bold-font(6.4vw,white);
+      line-height:12vw;
+    }
   }
 
 }
