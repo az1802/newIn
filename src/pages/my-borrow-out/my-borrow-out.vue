@@ -9,7 +9,7 @@ import { navigateTo } from '@utils/wechat';
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
-    <scroll-view scroll-y class='borrowing-list'>
+    <scroll-view :show-scrollbar='false' enhanced scroll-y class='borrowing-list'>
       <div class="borrowing-item" v-for='item in [1,2,3,4,5]' :key='item' >
         <div class="left">
           <img src="" alt="" class='img'>

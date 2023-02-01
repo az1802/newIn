@@ -42,7 +42,10 @@
 			"path": "pages/rank-list/rank-list",
 		},
     {
-			"path": "pages/my-library/my-library",
+			"path": "pages/user-library/user-library",
+		},
+    {
+			"path": "pages/user-library/my-library",
 		},
     {
 			"path": "pages/my-borrow-out/my-borrow-out",

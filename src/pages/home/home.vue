@@ -1,16 +1,42 @@
 <script setup>
 import { navigateTo } from '@/utils/wechat';
-import {UploadBookMethodSel} from "./UploadBookMethodSel.vue";
+// import {UploadBookMethodSel} from "./UploadBookMethodSel.vue";
 import {ref} from "vue";
 
 
-let showUploadBookSel = ref(false)
+let showUploadBookSel = ref(false);
+
+
+function goToCategory(name){
+  let title=""
+  if(name=="story"){
+    title = "故事大王"
+  }else if(name=="keipu"){
+    title = "科普百科"
+  }else if(name=="nature"){
+    title = "大自然"
+  }else if(name=="children"){
+    title = "儿童文学"
+  }
+
+  navigateTo('/pages/category-detail/nature-books',{
+    title:title
+  })
+}
 
 </script>
 <template>
   <div class="page">
-    <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_toolbar.png" class="bg-top" />
-    <div class="notices-wrapper" @click='navigateTo("/pages/notices/notices")'>
+    <NavBar title="共享图书" />
+    <div class="bg-top-wrapper">
+        <TopCloud />
+    </div>
+    <!-- <div class="title-wrapper">
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_main_title_bg.png" class="bg-top-title" />
+      <div class="text">张文文的图书馆最棒</div>
+    </div> -->
+
+    <div class="notices-wrapper" @click='navigateTo("/pages/notices/notices",{})'>
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-notices.png" alt="" class='img'>
       <!-- <div class='text'>消息</div> -->
     </div>
@@ -23,20 +49,50 @@ let showUploadBookSel = ref(false)
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-rank.png" alt="" class='img'>
       <!-- <div class='text'>排行榜</div> -->
     </div>
-    <div class='category-item'>
-      故事大王
+    <div class='category-item story' @click='goToCategory("story")' >
+      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1.png" alt="" class='img' >
+      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1_d.png" alt="" class='img' >
+      <div class="text-wrapper">
+        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
+        <div class="text">故事大王</div>
+      </div>
     </div>
-    <div class='category-item'>
-      科普百科
+    <div class='category-item keipu' @click='goToCategory("keipu")'>
+      <img v-if='0' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2.png" alt="" class='img'>
+      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2_d.png" alt="" class='img' >
+      <div class="text-wrapper">
+        <img v-if='0' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
+        <div class="text">科普百科</div>
+      </div>
     </div>
-    <div class='category-item' @click="navigateTo('/pages/all-books/all-books')">
-      全部图书
+    <div class='category-item all' @click="navigateTo('/pages/all-books/all-books')">
+      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3.png" alt="" class='img'>
+      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3_d.png" alt="" class='img' >
+      <div class="text-wrapper">
+        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
+        <div class="text">全部图书</div>
+      </div>
     </div>
-    <div class='category-item' @click="navigateTo('/pages/category-detail/nature-books')">
-      大自然
+    <div class='category-item nature' @click='goToCategory("nature")'>
+      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4.png" alt="" class='img'>
+      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4_d.png" alt="" class='img' >
+      <div class="text-wrapper">
+        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
+        <div class="text">大自然</div>
+      </div>
     </div>
-    <div class='category-item'>
-      儿童文学
+    <div class='category-item children' @click='goToCategory("children")'>
+      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5.png" alt="" class='img '>
+      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5_d.png" alt="" class='img' >
+      <div class="text-wrapper">
+        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
+        <div class="text">儿童文学</div>
+      </div>
     </div>
     <HomeMenuTabs class='home-menu-tabs' active='share' />
 
@@ -51,12 +107,28 @@ let showUploadBookSel = ref(false)
   .full-screen();
   background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/theme_view_bg.jpg") 0 0/100% 100% no-repeat;
   position:relative;
-  .bg-top{
-    .box-size(100vw,23.88vw);
-    .pos-absolute(0,0,unset,unset);
+  .bg-top-wrapper{
+    .pos-absolute(0,0,unset,0);
+    z-index:1000;
+  }
+
+  .title-wrapper{
+    .box-size(286px,48px);
+    .pos-absolute(20px,0px,unset,0px);
+    margin:0 auto;
+    .bg-top-title{
+      .box-size(286px,48px);
+    }
+    .text-svg{
+      .box-size(286px,48px);
+      .text{
+        text-align:center;
+        .bold-font(16px,#782A00)
+      }
+    }
   }
   .notices-wrapper{
-    .pos-absolute(30.133vw,0,0,6.933vw);
+    .pos-absolute(30.133vw,unset,unset,6.933vw);
     width:60px;
     display: inline-block;
     .img{
@@ -68,10 +140,11 @@ let showUploadBookSel = ref(false)
     }
   }
   .upload-book-wrapper{
-    .pos-absolute(unset,6.933vw,42.667vw,unset);
+    .pos-absolute(unset,6.933vw,24.667vw,unset);
     display: inline-block;
     text-align: center;
     font-size:0px;
+    z-index: 1000;
     .img{
       .box-size(16vw,17.333vw);
     }
@@ -82,10 +155,11 @@ let showUploadBookSel = ref(false)
   }
 
   .rank-list-wrapper{
-    .pos-absolute(unset,unset,42.667vw,6.933vw);
+    .pos-absolute(unset,unset,24.667vw,6.933vw);
     display: inline-block;
     text-align: center;
     font-size:0px;
+    z-index: 1000;
     .img{
       .box-size(16.533vw,21.333vw);
     }
@@ -95,12 +169,82 @@ let showUploadBookSel = ref(false)
     }
   }
   .category-item{
-    padding:30px 0 0 100px;
     .bold-font(22px);
+    .text-wrapper{
+      .box-size(18.133vw,10.667vw);
+      z-index:999;
+      .text-bg{
+        .box-size(18.133vw,10.667vw);
+      }
+      .text{
+        .box-size(17.067vw,5.6vw);
+        .pos-absolute(1.333vw,unset,unset,0px);
+        .normal-font(3.2vw,#826926);
+        z-index:1000;
+        text-align:center;
+        line-height:5.6vw;
+      }
+    }
+
+    &.story{
+      // .box-size(37.6vw,145.999px);
+      .box-size(37.6vw,21.88vh);
+      .pos-absolute(26.83vh,unset,unset,5.867vw);
+      .img{
+        .box-size(37.6vw,21.88vh);
+      }
+      .text-wrapper{
+        .pos-absolute(unset,unset,0vh,11.2vw);
+      }
+
+
+    }
+    &.keipu{
+     .box-size(42.667vw,18.29vh);
+      .pos-absolute(25.78vh,5.333vw,unset,unset);
+      .img{
+        .box-size(42.667vw,18.30vh);
+      }
+      .text-wrapper{
+        .pos-absolute(4.04vh,unset,unset,-6.667vw);
+      }
+    }
+    &.all{
+      .box-size(35.467vw,18.59vh);
+      .pos-absolute(unset,16.8vw,36.88vh,unset);
+      .img{
+        .box-size(35.467vw,18.59vh);
+      }
+      .text-wrapper{
+        .pos-absolute(unset,unset,0px,11.2vw);
+      }
+    }
+    &.nature{
+      .box-size(39.467vw,17.80vh);
+      .pos-absolute(54vh,unset,unset,1.067vw);
+      .img{
+        .box-size(39.467vw,17.80vh);
+      }
+      .text-wrapper{
+        .pos-absolute(unset,unset,-1.46vh,18.933vw);
+      }
+    }
+    &.children{
+      .box-size(46.4vw,16.50vh);
+      .pos-absolute(67vh,15.467vw,unset,unset);
+      .img{
+        .box-size(46.4vw,16.50vh);
+      }
+      .text-wrapper{
+        .pos-absolute(unset,unset,-3.21vh,12.267vw);
+      }
+    }
+
   }
 }
 .home-menu-tabs{
-  .pos-absolute(unset,unset,20px,0);
+  .pos-absolute(unset,unset,5px,0);
+  z-index: 10000;
 }
 
 </style>

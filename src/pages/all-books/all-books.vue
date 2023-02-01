@@ -36,12 +36,15 @@ const searchStyle = ref({
     <NavBar>
       <template v-slot:title>
         <div class='title'>
-            <div class="text">全部图书</div>
+            <div class="text">全部类型</div>
+            <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/allbooks_down.png" alt="" class='down img'>
+            <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/allbooks_up.png" alt="" class='up img'>
         </div>
       </template>
     </NavBar>
     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-top-bg.png" class="bg-top" mode="scaleToFill" />
     <div class="search-wrapper" :style="searchStyle">
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/ic_allbook_hot.png" alt="" class='hot'>
       <div class="input-wrapper">
         <input type="text" class='search-input' v-model='searchText'/>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-icon-search.png" alt="" class='search-btn' @click='search' 	confirm-type='搜索' v-if='!searchOk'>
@@ -53,7 +56,9 @@ const searchStyle = ref({
       <div class="book-shelf-layer">
         <div class="book-item-wrapper">
           <div class="book-cover">
-            <img src="" alt="" class='img'>
+            <img v-if='1' src="" alt="" class='cover-img' >
+            <img v-else-if='1' src="" alt="" class='no-cover' >
+            <img v-else src="" alt="" class='borrow-out' >
           </div>
           <div class="name">神笔马良</div>
         </div>
@@ -72,10 +77,12 @@ const searchStyle = ref({
       </div>
       <div class="book-shelf-layer">
 
-</div>
-<div class="book-shelf-layer">
+      </div>
+      <div class="book-shelf-layer">
 
-</div>
+      </div>
+
+
     </div>
   </div>
 </template>
@@ -91,21 +98,29 @@ const searchStyle = ref({
   position:relative;
   z-index:0;
   .bg-top{
-    .box-size(100vw,22.133vw);
-    .pos-absolute(0,0,unset,unset);
+    .box-size(112vw,22.133vw);
+    .pos-absolute(0,0,unset,-6vw);
     z-index:100;
   }
   .title{
-    .box-size(100px,44px);
+    .box-size(172px,44px);
     background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-title.png") 0 0/100% 100% no-repeat;
     .flex-simple(center,center);
     .text{
-      .bold-font(16px,#6f3f12);
+      .normal-font(16px,#6f3f12);
+    }
+    .img{
+      .box-size(22px,22px);
+      margin-left:6px;
     }
   }
   .search-wrapper{
     .box-size(100vw,33px);
     .flex-simple(center,center);
+    .hot{
+      .box-size(32px,32px);
+      margin-right:6px;
+    }
     .input-wrapper{
       .box-size(245px,33px,#E1DB9A);
       border-radius: 17px;
@@ -129,7 +144,8 @@ const searchStyle = ref({
   }
   .book-shelf-wrapper{
     .box-size(calc(100vw - 44px),unset);
-    min-height:500px;
+    min-height:calc(100vh - 22.11vw - 66px);
+    // min-height:calc(100vh - 22.11vw - 80px);
     margin:12px auto 0 auto;
     background-color: #A46C1F;
     border-radius:10px 20px 20px 10px;
@@ -139,7 +155,7 @@ const searchStyle = ref({
       border-radius: 20px;
     }
     .book-shelf-layer{
-      .box-size(100%,180px);
+      .box-size(100%,26vh);
       background-image:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-shelf.png");
       background-size:100% ;
       background-position: left bottom;

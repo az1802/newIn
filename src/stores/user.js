@@ -5,7 +5,8 @@ export const useUserInfoStore = defineStore('userInfo', {
     return {
       xingming: "张恒",
        school:"大鹏中心小学",
-       identity:"other"//student teacher other
+       identity:"other",//student teacher other
+       bindUserList:[]
     }
   },
   // 也可以定义为
@@ -16,6 +17,7 @@ export const useUserInfoStore = defineStore('userInfo', {
         this[key] = info[key];
       }
     },
+    set
     setName(name) {
       this.name = name
     },

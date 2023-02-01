@@ -10,12 +10,16 @@ let isLogining = false;
 
 // 检测是否是学生,或者是老师
 onBeforeMount(async ()=>{
+  isLogining = true;
   let userInfo = await getWechatUserId();
+  isLogining = false
+  console.log('静默登录获取用户信息: ', userInfo);
   if(userInfo){
     userInfoStore.setUserInfo(userInfo);
     let {usertype} = userInfo
     console.log('usertype: ', usertype);
     if(usertype==0){
+      navigateTo("/pages/login/login")
     }else if(usertype==1){
       navigateTo("/pages/home/home")
     }else if(usertype==2){
@@ -48,7 +52,7 @@ async function loginSystem(){
 
   if(res){
     userInfoStore.setUserInfo(userInfo);
-    navigateTo("/pages/login/login")
+    navigateTo("/pages/login/login");
   }
 
   isLogining = false;

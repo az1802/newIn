@@ -8,8 +8,8 @@ const userInfoStore = useUserInfoStore();
 
 
 const identity = ref("student");
-const userName = ref("");
-const userPwd = ref("");
+const userName = ref("19999999919");
+const userPwd = ref("999919");
 
 
 async function bindIndetity(){
@@ -22,18 +22,20 @@ async function bindIndetity(){
     return ;
   }
   let params = {
-    userName:unref(userName),
-    userPwd:unref(userPwd),
-    identity:unref(identity),
+    username:unref(userName),
+    password:unref(userPwd),
+    usertype:unref(identity)=="student" ? 1 : 2,
     wxuser_id:userInfoStore.wxuser_id
   }
   let bindRes = await bindUser({
     params
   });
 
-  console.log('bindRes: ', bindRes);
+  console.log('绑定用户信息: ', bindRes);
   if(!bindRes){
     return
+  }else{
+    userInfoStore.setUserInfo(bindRes)
   }
 
   //根据身份跳转到不同页面

@@ -9,17 +9,25 @@ import {noop,navigateTo} from "@utils/wechat";
   })
   const emit = defineEmits(["update:show"]);
 
+function uploadBook(type){
 
+  if(type=='scan'){
+    navigateTo("/pages/upload-book/upload-book-scan")
+  }else{
+    navigateTo("/pages/upload-book/upload-book-manually")
+  }
+  emit('update:show',false);
+}
 </script>
 
 <template>
  <div class="modal-wrapper" v-if='props.show' @click='emit("update:show",false)'>
   <div class='content' @click.stop='noop'>
-    <div class="scan-add"  @click='navigateTo("/pages/upload-book/upload-book-scan")'>
+    <div class="scan-add"  @click='uploadBook("scan")'>
       <div class="area"></div>
         <div class="text">扫描添加</div>
     </div>
-    <div class="manually-add" @click='navigateTo("/pages/upload-book/upload-book-manually")'>
+    <div class="manually-add" @click='uploadBook("manually")'>
       <div class="area"></div>
       <div class="text">手动添加</div>
     </div>
@@ -38,7 +46,7 @@ import {noop,navigateTo} from "@utils/wechat";
   .box-size(75.467vw,52vw);
   background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/upload-book-method-background.png") 0 0/100% 100% no-repeat;
   .flex-simple(space-between);
-  .pos-absolute(unset,14.933vw,59.667vw,unset);
+  .pos-absolute(unset,14.933vw,41vw,unset);
   .scan-add,.manually-add{
     .area{
       .box-size(18vw,18vw);

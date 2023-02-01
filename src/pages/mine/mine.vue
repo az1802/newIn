@@ -38,9 +38,9 @@ async function signOut(){
     </div>
 
    <div class="mine-setting-wrapper">
-    <scroll-view class="mine-setting" scroll-y>
+    <scroll-view class="mine-setting" scroll-y :show-scrollbar='false' enhanced>
       <div class="setting-group">
-        <div class='setting-item' @click='navigateTo("/pages/my-library/my-library")'>
+        <div class='setting-item' @click='navigateTo("/pages/user-library/my-library")'>
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-icon-library.png" alt="" class='img' />
           <!-- <div class="text">我的图书馆</div> -->
         </div>
@@ -64,7 +64,7 @@ async function signOut(){
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-icon-integral.png" alt="" class='img' />
           <!-- <div class="text">积分</div> -->
         </div>
-        <div class='setting-item'  @click='navigateTo("/pages/parent-confirm/parent-confirm")'>
+        <div class='setting-item'  >
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-icon-parent.png" alt="" class='img' />
           <!-- <div class="text">家长确认</div> -->
         </div>
@@ -150,13 +150,13 @@ async function signOut(){
 
   }
   .mine-setting-wrapper{
-    .box-size(calc(100vw - 30px),372px,#F7B053);
-    margin:17px auto 0 auto;
-    padding:6px 6px 12px 6px;
+    .box-size(calc(100vw - 30px),99.2vw,#F7B053);
+    margin:4.533vw auto 0 auto;
+    padding:1.6vw 1.6vw 3.2vw 1.6vw;
     box-shadow: 0px 6px 0px 0px rgba(208,135.595,40.786,1);
     border-radius: 30px 30px 30px 30px;
     .mine-setting{
-      .box-size(100%,354px,#FEFBD7);
+      .box-size(100%,94.4vw,#FEFBD7);
       padding-top:18px;
       border-radius:25px;
       .setting-group{
@@ -185,5 +185,6 @@ async function signOut(){
 
 .home-menu-tabs {
   .pos-fixed(unset, unset, 20px, 0);
+  z-index: 10000;
 }
 </style>

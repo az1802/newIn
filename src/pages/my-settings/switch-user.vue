@@ -1,15 +1,54 @@
 <script setup >
 import { navigateTo ,showToast} from '@utils/wechat';
-import {ref} from "vue";
-let selUser = ref("");
-let userList = ref([1,2,3,4,5,6,7]);
+import {ref,onBeforeMount,unref} from "vue";
+import { useUserInfoStore } from '@/stores/user';
+import {getBindUserlist,switchCurBindUser} from "@/api/user";
+
+
+const userInfo = useUserInfoStore();
+let selUserId = ref('');
+
+
+onBeforeMount(async ()=>{
+  let listRes = await getBindUserlist({
+    params:{
+      wxuser_id:userInfo.wxuser_id
+    }
+  })
+  if(listRes){
+    userInfo.setUserInfo({
+      bindUserList:listRes.items || [],
+    })
+    selUserId.value = listRes.default
+  }
+  console.log('listRes: ', listRes);
+})
+
+function changeSelUserId(item){
+  selUserId.value = item.binding_id
+}
 
 async function bindUser(){
-  showToast("绑定用户")
+  navigateTo("/pages/login/login");
 }
 
 async function switchUser(){
-  showToast("切换用户")
+  if(!unref(selUserId)){
+    return
+  }
+  let switchRes = await switchCurBindUser({
+    params:{
+      wxuser_id:userInfo.wxuser_id,
+      selected:unref(selUserId)
+    }
+  })
+  console.log('切换身份结果: ', switchRes);
+  if(switchRes){
+    showToast("切换身份成功");
+    userInfo.setUserInfo(switchRes)
+    // TODO 同时更新其它所有信息,或者其他页面重新加载时重新请求信息
+  }
+
 }
 
 </script>
@@ -23,17 +62,17 @@ async function switchUser(){
     <div class="group-wrapper">
       <div class="group">
         <div class="current-info">
-          <img src="" alt="" class='img'>
-          <div class="name">张恒</div>
-          <div class="class">一年级三班</div>
+          <img :src="userInfo.photo" alt="" class='img'>
+          <div class="name">{{userInfo.xingming}}</div>
+          <div class="class">{{userInfo.banji}}</div>
         </div>
         <div class="title">
           全部用户
         </div>
-        <scroll-view class='list' scroll-x>
-          <div class="user-item" v-for='item in userList' :key='item'>
+        <scroll-view :show-scrollbar='false' enhanced class='list' scroll-x>
+          <div class="user-item" v-for='item in userInfo.bindUserList' :key='item.binding_id' :class='[selUserId==item.binding_id ? "active" :""]' @click='changeSelUserId(item)'>
             <img src="" alt="" class='img'>
-            <div class="name">张恒</div>
+            <div class="name">{{item.text}}</div>
             <div class="class">一年级三班</div>
           </div>
         </scroll-view>
@@ -98,6 +137,9 @@ async function switchUser(){
           margin-right:40px;
           &:last-child{
             margin-right:0px;
+          }
+          &.active{
+            border:1px solid red;
           }
           .img{
             .box-size(45px,45px,#ccc);

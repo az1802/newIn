@@ -93,7 +93,7 @@ function switchTab(tabName) {
 @import '@static/index.less';
 .page{
   .full-screen();
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
   position:relative;
   .rank-wrapper{
     .box-size(calc(100vw - 8.533vw),169.6vw);

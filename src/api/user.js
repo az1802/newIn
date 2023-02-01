@@ -18,9 +18,28 @@ export async function signUp(data){
   }
 }
 
-export async function bindUser(config){
+export async function bindUser(params){
   try{
-    let res = await http.get("/bindingUser", config);
+    let res = await http.get("/bindingUser", params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+export async function getBindUserlist(params){
+  try{
+    let res = await http.get("/getUserTypeList",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+export async function switchCurBindUser(params){
+  try{
+    let res = await http.get("/switchIdentity",params);
     return res;
   }catch(err){
     showToast(err);

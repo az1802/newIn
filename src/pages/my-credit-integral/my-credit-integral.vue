@@ -23,7 +23,7 @@
     <div class="diandi-wrapper">
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/intergal-diandi.png" alt="" class='diandi-record'>
     </div>
-    <scroll-view class="record-list" scroll-y>
+    <scroll-view :show-scrollbar='false' enhanced class="record-list" scroll-y>
       <div class='one'></div>
       <div class='one'></div>
       <div class='one'></div>

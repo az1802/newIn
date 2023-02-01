@@ -42,13 +42,13 @@ const tabActive = ref("uploadBook");
       </div>
       <div class="tab-contents">
         <div class="tab-content-item" v-show='tabActive=="uploadBook"'>
-          <scroll-view class='content'>
+          <scroll-view class='content' :show-scrollbar='false' enhanced>
             <RankList type='upload'/>
           </scroll-view>
         </div>
         <div class="tab-content-item" v-show='tabActive=="borrowOut"'>2</div>
         <div class="tab-content-item" v-show='tabActive=="readBook"'>
-          <scroll-view class='content'>
+          <scroll-view class='content' :show-scrollbar='false' enhanced>
             <RankList type='read'/>
           </scroll-view>
         </div>

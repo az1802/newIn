@@ -1,8 +1,9 @@
 <script setup >
 import { navigateTo } from '@utils/wechat';
 import { showToast } from '../../utils/wechat';
+import { useUserInfoStore } from '@/stores/user'
 
-
+const userInfo = useUserInfoStore();
 
 async function signOut(){
   showToast("登出")
@@ -17,21 +18,21 @@ async function signOut(){
     </div>
     <div class="user-info-wrapper">
         <div class="avatar">
-          <img src="" alt="">
-          <div class="text">修改头像</div>
+          <img :src="userInfo.photo" alt="" class='img'>
+          <!-- <div class="text">修改头像</div> -->
         </div>
         <div class="info">
           <div class="form-item">
             <div class="label">姓名</div>
-            <div class="value">张家明</div>
+            <div class="value">{{userInfo.xingming}}</div>
           </div>
           <div class="form-item">
             <div class="label">学校</div>
-            <div class="value">平洲小学</div>
+            <div class="value">{{userInfo.school}}</div>
           </div>
           <div class="form-item">
             <div class="label">班级</div>
-            <div class="value">二年级三班</div>
+            <div class="value">{{userInfo.banji}}</div>
           </div>
         </div>
     </div>
@@ -62,8 +63,13 @@ async function signOut(){
       margin:0 auto;
       .pos-absolute(20px,unset,unset,50%);
       transform: translateX(-50%);
+      z-index: 1000;
       .img{
         .box-size(94px,94px,#ccc);
+        border-radius:50%;
+      }
+      .text{
+        text-align:center;
       }
     }
     .info{

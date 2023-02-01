@@ -1,8 +1,9 @@
 <script setup >
 import {ref} from "vue";
+import {navigateTo} from "@utils/wechat";
 
 
-const noticeList = ref([
+const borrowingMsgList = ref([
   {
     id:1,
     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
@@ -46,11 +47,35 @@ const noticeList = ref([
     btnText:"立即查看"
   },
 ]);
+const creditMsgList = ref([
+  {
+    id:1,
+    content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
+    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
+    type:"jieyue",
+    btnText:"去同意"
+  },
+  {
+    id:2,
+    content:"李大锤向你申请借阅",
+    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
+    type:"xinyongjifen",
+    btnText:"立即查看"
+  },
+]);
+
+const integralMsgList = ref([
+
+]);
 
 const tabActive = ref("one");
 
  function toggleTab(value){
   tabActive.value = value
+ }
+
+ function viewBorrowDetail(noticeItem){
+  navigateTo("/pages/my-borrow-out/borrow-out-detail");
  }
 
 </script>
@@ -68,8 +93,20 @@ const tabActive = ref("one");
         <div class="tab-item" :class='[tabActive=="three" ? "active":""]' @click='toggleTab("three")'>积分</div>
       </div>
       <div class="tab-contents">
-        <scroll-view scroll-y class='scroll-view' v-show='tabActive=="one"'>
-          <div class="notice-item-wrapper" v-for='noticeItem in noticeList' :key='noticeItem.id'>
+        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="one"'>
+          <div class="notice-item-wrapper" v-for='noticeItem in borrowingMsgList' :key='noticeItem.id'>
+            <div class="notice-item">
+              <img src="" alt="" class="left">
+              <div class="right">
+                <div class="info">{{noticeItem.content}}</div>
+                  <div class="time">今天15：02</div>
+                  <div class="btn"  @click='viewBorrowDetail(noticeItem)'>去同意</div>
+              </div>
+            </div>
+          </div>
+        </scroll-view>
+        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="two"'>
+          <div class="notice-item-wrapper" v-for='noticeItem in creditMsgList' :key='noticeItem.id'>
             <div class="notice-item">
               <img src="" alt="" class="left">
               <div class="right">
@@ -80,34 +117,25 @@ const tabActive = ref("one");
             </div>
           </div>
         </scroll-view>
-        <scroll-view scroll-y class='scroll-view' v-show='tabActive=="two"'>
-          <div class="notice-item-wrapper" >
+        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="three"'>
+          <div class="notice-item-wrapper" v-for='noticeItem in integralMsgList' :key='noticeItem.id'>
             <div class="notice-item">
               <img src="" alt="" class="left">
               <div class="right">
-                <div class="info">李大锤向你申请借阅《窗边的小豆豆》 赶紧去同意吧 !</div>
+                <div class="info">{{noticeItem.content}}</div>
                   <div class="time">今天15：02</div>
-                  <div class="btn">去查看</div>
+                  <div class="btn">去同意</div>
               </div>
             </div>
           </div>
-        </scroll-view>
-        <scroll-view scroll-y class='scroll-view' v-show='tabActive=="three"'>
-          <div class="notice-item-wrapper">
-            <div class="notice-item">
-              <img src="" alt="" class="left">
-              <div class="right">
-                <div class="info">李大锤向你申请借阅《窗边的小豆豆》 赶紧去同意吧 !</div>
-                  <div class="time">今天16：02</div>
-                  <div class="btn">去查看</div>
-              </div>
-            </div>
+          <div v-if='integralMsgList.length==0' class='empty'>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/message-empty-tooltip.png" alt="" class='img'>
           </div>
         </scroll-view>
       </div>
     </div>
     <!-- <scroll-view class='notice-list-wrapper' scroll-y>
-      <div class="notice-item" v-for='item in noticeList' :key='item.id'>
+      <div class="notice-item" v-for='item in borrowingMsgList' :key='item.id'>
         <div class="content">
           <img :src="item.img" alt="" class='img'/>
           <div class="text">{{item.content}}</div>
@@ -125,7 +153,7 @@ const tabActive = ref("one");
 @import '@static/index.less';
 .page{
   .full-screen();
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
   position:relative;
   .bg-top-wrapper{
     .pos-absolute(0,0,unset,0);
@@ -163,7 +191,7 @@ const tabActive = ref("one");
       }
     }
     .tab-contents{
-      .box-size(calc(100% - 20px),calc(100% -  62px),#FEFBD7);
+      .box-size(calc(100% - 20px),calc(100% -  70px),#FEFBD7);
       border-radius: 25px;
       margin:-2px auto 0 auto;
       .scroll-view{
@@ -210,6 +238,14 @@ const tabActive = ref("one");
               z-index:10;
               .bold-font(14px,white);
             }
+          }
+        }
+        .empty{
+          .box-size(100%,100%);
+          text-align:center;
+          .img{
+            .box-size(30.133vw,30.4vw);
+            margin:37.333vw auto 0 auto;
           }
         }
       }
