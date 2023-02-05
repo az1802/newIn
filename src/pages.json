@@ -108,6 +108,42 @@
         "style": {
           "disableScroll": true
         }
+      },{
+        "path": "total-borrow/total-borrow",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "total-borrow/total-upload",
+        "style": {
+          "disableScroll": true
+        }
+      },
+      {
+        "path": "integral/integral",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "student-info/student-info",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "borrow-status/borrow-status",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "borrow-status/borrow-detail",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "total-borrow/upload-book-detail",
+        "style": {
+          "disableScroll": true
+        }
       }]
     }
   ],

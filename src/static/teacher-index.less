@@ -46,6 +46,7 @@
   font-size:@font-size;
   font-weight: bold;
   color:@color;
+  font-family: PingFang-SC-Medium, PingFang-SC;
   // font-family: 'HYCuYuanJ';
 }
 
@@ -53,6 +54,7 @@
 .normal-font(@font-size:18px,@color:#332e2b){
   font-size:@font-size;
   color:@color;
+  font-family: PingFang-SC-Medium, PingFang-SC;
   // font-family: 'HYCuYuanJ';
 }
 
@@ -78,3 +80,10 @@
 //   @{prop}: @value;
 //   @{prop}: @result;
 // }
+
+
+.no-wrap(){
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

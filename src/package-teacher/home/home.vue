@@ -1,6 +1,8 @@
 <script setup >
 import {ref} from "vue";
-import RankList from "../components/rank-list.vue"
+import UploadRankList from "../components/upload-rank-list.vue";
+import ReadRankList from "../components/read-rank-list.vue";
+import {navigateTo} from "@utils/wechat"
 
 const tabActive = ref("uploadBook");
 
@@ -9,27 +11,31 @@ const tabActive = ref("uploadBook");
   tabActive.value = value
  }
 
+
+  const uploadList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
+  const readList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
+
 </script>
 
 <template>
   <div class='page'>
     <TeacherNavBar :showBackIcon='false' title="二年级三班" />
     <div class='card-list'>
-      <div class="card-item upload">
-        <div class="text">265本</div>
+      <div class="card-item upload" @click='navigateTo("/package-teacher/total-borrow/total-upload")'>
+        <div class="text ben">265</div>
         <div class="sub-text">总上传</div>
       </div>
-      <div class="card-item borrow">
-        <div class="text">126本</div>
+      <div class="card-item borrow"  @click='navigateTo("/package-teacher/total-borrow/total-borrow")'>
+        <div class="text ben">126</div>
         <div class="sub-text">总借阅</div>
       </div>
-      <div class="card-item credit">
+      <div class="card-item credit"  @click='navigateTo("/package-teacher/integral/integral")'>
         <div class="text">积分/信用</div>
         <div class="sub-text">排行榜</div>
       </div>
-      <div class="card-item class">
-        <div class="text">班级</div>
-        <div class="sub-text">学生状态</div>
+      <div class="card-item class" @click='navigateTo("/package-teacher/borrow-status/borrow-status")'>
+        <div class="text">消息</div>
+        <div class="sub-text">借阅状态</div>
       </div>
     </div>
 
@@ -42,14 +48,14 @@ const tabActive = ref("uploadBook");
       </div>
       <div class="tab-contents">
         <div class="tab-content-item" v-show='tabActive=="uploadBook"'>
-          <scroll-view class='content' :show-scrollbar='false' enhanced>
-            <RankList type='upload'/>
+          <scroll-view class='content' :show-scrollbar='false' enhanced scroll-y>
+            <UploadRankList :list='uploadList'/>
           </scroll-view>
         </div>
         <div class="tab-content-item" v-show='tabActive=="borrowOut"'>2</div>
         <div class="tab-content-item" v-show='tabActive=="readBook"'>
-          <scroll-view class='content' :show-scrollbar='false' enhanced>
-            <RankList type='read'/>
+          <scroll-view class='content' :show-scrollbar='false' enhanced scroll-y>
+            <ReadRankList :list='readList'/>
           </scroll-view>
         </div>
         <div class="tab-content-item" v-show='tabActive=="hotBook"'>4</div>
@@ -70,6 +76,7 @@ const tabActive = ref("uploadBook");
     padding:4.267vw 3.2vw;
     .card-item{
       .box-size(21.6vw,21.6vw);
+      padding:12px 9px;
       &.upload{
         background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/cad-zi.png") 0 0/100% 100% no-repeat;
       }
@@ -83,10 +90,16 @@ const tabActive = ref("uploadBook");
         background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/cad-ls.png") 0 0/100% 100% no-repeat;
       }
       .text{
-        .bold-font(22px,white);
+        .bold-font(13px,white);
+        &.ben::after{
+          content:"本";
+          .normal-font(10px,white);
+          margin-left:2px;
+        }
       }
       .sub-text{
-        .normal-font(16px,white);
+        .normal-font(9px,white);
+        margin-top:2px;
       }
     }
   }
@@ -94,28 +107,30 @@ const tabActive = ref("uploadBook");
     margin-top:6px;
     background: white;
     .tabs{
-      .box-size(100%,40px);
-      padding:23px;
+      .box-size(100%,44px);
+      padding:15px 23px;
       .flex-simple(space-between,center);
       border-bottom:1px solid #E9E9E9;
       .tab-item{
         .normal-font(14px,#2D2D2D);
+        .line-center(14px);
         position:relative;
-        height:100%;
         &.active{
           .normal-font(14px,#FF8100);
           &::after{
             content:"";
             display: inline-block;
             .box-size(18px,2px,#FF8100);
-            .pos-absolute(unset,unset,-23px,50%);
+            .pos-absolute(unset,unset,-15px,50%);
             transform: translateX(-50%);
           }
         }
       }
     }
     .tab-contents{
+      .box-size(100%,calc(100vh - 43.733vw - 70px));
       .tab-content-item{
+         .box-size(100%,100%);
         .content{
           .box-size(100%,100%);
         }

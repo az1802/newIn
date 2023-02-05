@@ -3,6 +3,7 @@
 import BookItem from "./book-item.vue";
 import {ref ,reactive,computed,unref,watch,onBeforeMount} from 'vue';
 import {useSystemInfo} from "@hooks/commonHooks";
+import {navigateTo} from "@utils/wechat"
 
 const systemInfo = useSystemInfo();
 
@@ -58,11 +59,10 @@ function viewBookDetail(item){
   navigateTo("/package-teacher/total-borrow/upload-book-detail")
 }
 
-
 </script>
 <template>
   <div class='page'>
-    <TeacherNavBar  title="总借阅" background='transparent' />
+    <TeacherNavBar  title="总上传" background='transparent' />
     <div class="bg-top-wrapper">
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-zsc-bg.png" alt="" class='bg-top'>
     </div>
@@ -83,8 +83,8 @@ function viewBookDetail(item){
         </div>
       </div>
       <scroll-view :show-scrollbar='false' enhanced scroll-y class='book-list' :style='listStyle'>
-        <div class="book-item" v-for='item in showBookList' :key='item'  @click='viewBookDetail'>
-          <BookItem />
+        <div class="book-item" v-for='item in showBookList' :key='item' @click='viewBookDetail'>
+          <BookItem type='upload' />
         </div>
         <div style='height:1px'></div>
       </scroll-view>

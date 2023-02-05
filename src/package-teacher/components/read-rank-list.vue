@@ -19,30 +19,30 @@ const props = defineProps({
       <div class="top-item one">
         <img src="" alt="" class="img">
         <div class="name">张文君</div>
-        <CountNum text='130本' :type='props.type'/>
+        <CountNum text='2.72W' type='read'/>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/jp-one.png" alt="" class="tag">
       </div>
       <div class="top-item two">
         <img src="" alt="" class="img">
         <div class="name">张文君</div>
-        <CountNum text='130本' :type='props.type'/>
+        <CountNum text='2.72W' type='read'/>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/jp-two.png" alt="" class="tag">
       </div>
       <div class="top-item three">
         <img src="" alt="" class="img">
         <div class="name">张文君</div>
-        <CountNum text='130本' :type='props.type'/>
+        <CountNum text='2.72W' type='read'/>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/jp-three.png" alt="" class="tag">
       </div>
     </div>
-    <div class="list-item" v-for='item in [1,2,3,4,5,6,7,8,9,10,11,12,13]' :key='item'>
+    <div class="list-item" v-for='item in props.list' :key='item'>
       <div class="left">
         <div class="num">{{item+3}}</div>
         <img src="" alt="" class='img'>
         <div class="name">张文君</div>
       </div>
       <div class="right">
-        <CountNum text='130本' :type='props.type'/>
+        <CountNum text='2.72W' type='read'/>
       </div>
 
 
@@ -71,8 +71,9 @@ const props = defineProps({
         border:1px solid transparent;
       }
       .name{
-        .normal-font(13px,#EEEEEE);
-        margin-top:9px;
+        .normal-font(13px,#2D2D2D);
+        margin:9px 0 2px 0;
+        .line-center(13px);
       }
       .tag{
         .box-size(18px,21px);

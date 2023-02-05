@@ -17,6 +17,10 @@
     showBackIcon:{
       type:Boolean,
       default:true
+    },
+    background:{
+      type:String,
+      default:'url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-xsxx-bg.png") 0 0/100% auto no-repeat'
     }
   })
   const emits = defineEmits(['back']);
@@ -35,11 +39,12 @@
 <template>
   <div class="nav-bar" :style="{
       paddingTop: systemInfo.statusBarHeight + 'px',
+      background:props.background
     }">
     <div class="back-wrapper" @click='goBack' :style="{
       top: systemInfo.statusBarHeight + 'px',
     }">
-      <img v-if='showBackIcon' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/ic_back.png" alt="" class='img' />
+      <img v-if='showBackIcon' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-icon-fh.png" alt="" class='img' />
     </div>
     <slot name='title' v-if='slots.title'/>
     <div class='title' v-else>
@@ -49,21 +54,21 @@
 </template>
 
 <style lang="less" scoped>
-@import '@static/index.less';
+@import '@static/teacher-index.less';
 
 .nav-bar{
   .box-size(100vw,44px);
   .flex-simple(center,center);
   z-index:10000;
   box-sizing: content-box;
-  background: ulr("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-sy.png") 0 0/100% 100% no-repeat;
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-xsxx-bg.png") 0 0/100% auto no-repeat;
   .back-wrapper{
-    .box-size(44px,unset);
-    .pos-absolute(0 ,0 ,0 ,30px);
+    .box-size(33px,unset);
+    .pos-absolute(0 ,0 ,0 ,6px);
     z-index: 100;
-    // .flex-simple(center,center);
+    .flex-simple(center,center);
     .img{
-      .box-size(40px,40px);
+      .box-size(33px,33px);
     }
   }
   .title{

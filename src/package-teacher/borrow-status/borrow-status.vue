@@ -1,7 +1,8 @@
 
 <script setup>
-import BookItem from "./book-item.vue";
+import BookStatusItem from "./book-status-item.vue";
 import {ref ,reactive,computed,unref,watch,onBeforeMount} from 'vue';
+import {showToast,navigateTo,getUserInfo} from "@utils/wechat"
 import {useSystemInfo} from "@hooks/commonHooks";
 
 const systemInfo = useSystemInfo();
@@ -12,20 +13,16 @@ const tabs = ref([
   text:"全部",
   count:296,
 },{
-  type:"nature",
-  text:"大自然",
+  type:"applying",
+  text:"申请中",
   count:100
 },{
-  type:"ertongwenxue",
-  text:"儿童文学",
+  type:"agreed",
+  text:"已同意",
   count:36
 },{
-  type:"store",
-  text:"故事大王",
-  count:56
-},{
-  type:"kepu",
-  text:"科普",
+  type:"jieyue",
+  text:"借阅中",
   count:56
 }
 ]
@@ -35,10 +32,30 @@ const activeTab=ref(tabs.value[0] || {
 
 })
 
-const showBookList = ref([1,2,3,4,5,6,7,8]);
+function genMockData(len){
+  let res = [];
+  let statusMap = ['applying','agreed','jieyue','returned']
+  let classMap = ["申请中","已同意","借阅中","已归还"];
+
+  for(let i = 0 ; i < len ;i++){
+    res.push(
+      {
+        id:i+1,
+        name:`流浪的地球（刘慈欣著，无删${i+1}`,
+        detailText:"童话故事类·67页·3600字·期限36天",
+        status:statusMap[i%4],
+        statusText:classMap[i%4],
+      }
+    )
+  }
+
+  return res;
+}
+
+const showBookList = ref(genMockData(12));
 
 const listStyle = ref({
-  height:`calc(100vh - 44px - ${systemInfo.statusBarHeight}px - 95px)`
+  height:`calc(100vh - 6px - ${systemInfo.statusBarHeight}px - 95px)`
 })
 
 function switchTab(item){
@@ -53,16 +70,15 @@ function toogleSort(){
   sort.value = (unref(sort) == "zx" ? "dx" :"zx");
 }
 
-
-function viewBookDetail(item){
-  navigateTo("/package-teacher/total-borrow/upload-book-detail")
+function viewBorrowDetail(item){
+  navigateTo("/package-teacher/borrow-status/borrow-detail",item)
 }
 
 
 </script>
 <template>
   <div class='page'>
-    <TeacherNavBar  title="总借阅" background='transparent' />
+    <TeacherNavBar  title="借阅状态" background='transparent' />
     <div class="bg-top-wrapper">
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-zsc-bg.png" alt="" class='bg-top'>
     </div>
@@ -74,17 +90,17 @@ function viewBookDetail(item){
       </div>
     </scroll-view>
     <div class="tab-content">
-      <div class="top">
+      <!-- <div class="top">
         <div class="count">共{{ activeTab.count || 0}}条</div>
         <div class="sort" @click='toogleSort'>
           <div class="text">时间</div>
           <img v-if='sort=="zx"' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/icon-zhengxu.png" alt="" class='img'>
           <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/icon-daoxu.png" alt="" class='img'>
         </div>
-      </div>
+      </div> -->
       <scroll-view :show-scrollbar='false' enhanced scroll-y class='book-list' :style='listStyle'>
-        <div class="book-item" v-for='item in showBookList' :key='item'  @click='viewBookDetail'>
-          <BookItem />
+        <div class="book-item" v-for='item in showBookList' :key="item.id" @click="viewBorrowDetail(item)">
+          <BookStatusItem :info='item'/>
         </div>
         <div style='height:1px'></div>
       </scroll-view>
@@ -164,9 +180,9 @@ function viewBookDetail(item){
     }
     .book-list{
       .box-size(100%,unset);
-      margin-top:25px;
+      // margin-top:25px;
       .book-item{
-        margin-bottom:25px;
+        margin-bottom:6px;
       }
     }
   }

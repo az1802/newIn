@@ -1,35 +1,76 @@
 <script setup>
 import AllBooksNavBar from "./all-books-nav-bar.vue";
 import {useSystemInfo} from "@hooks/commonHooks";
-import {ref} from "vue";
+import {ref,unref,computed,shallowRef} from "vue";
+import { navigateTo } from '../../utils/wechat';
 const systemInfo = useSystemInfo();
 
 let searchText = ref("");
 let searchOk = ref(false);
 
-let bookList = []
+let bookList = [];
 
-for(let i= 1 ; i<20;i++){
-  bookList.push({
-    name:"书籍"+i,
-    id:i,
-    type:"active"
-  })
+
+function mockBookList(){
+  let statusMap = {
+    0 : "no-cover",
+    1:'cover',
+    2 :"borrow-out"
+  }
+  let mockList=[]
+  for(let i= 1 ; i<20;i++){
+    mockList.push({
+      name:"书籍"+i,
+      id:i,
+      type:"active",
+      status:statusMap[i%2],
+      cover:i%3==0,
+    })
+
+  }
+  bookList = mockList;
 }
-bookList = ref(bookList)
+mockBookList();
+
+function transformBookList(list){
+  let selArr = [],res=[];
+  for(let i= 0 ; i<list.length;i++){
+    selArr.push(list[i]);
+    if((i+1)%3==0){
+      res.push(selArr);
+      selArr = [];
+    }
+  }
+  if(selArr.length>0){
+    res.push(selArr);
+  }
+  return res;
+}
+let showShelfList = shallowRef(transformBookList(bookList));
 
 function search(){
   searchOk.value = "true";
+  showShelfList.value = transformBookList(bookList.filter(item=>item.name.indexOf(unref(searchText).trim())!==-1))
 }
 
 function cancelSearch(){
+  if(!searchOk.value){
+    return
+  }
   searchOk.value = false;
   searchText.value=""
+  showShelfList.value = transformBookList(bookList);
 }
 
 const searchStyle = ref({
-  marginTop:systemInfo.statusBarHeight ? `calc(22.133vw - 44px - ${systemInfo.statusBarHeight}px)` : "calc(22.133vw - 44px)"
+  marginTop:systemInfo.statusBarHeight ? `calc(24.133vw - 44px - ${systemInfo.statusBarHeight}px)` : "calc(22.133vw - 44px)"
 })
+
+
+
+function viewBookDetail(bookItem){
+  navigateTo("/pages/book-detail/book-detail",bookItem)
+}
 </script>
 <template>
   <div class="page">
@@ -42,48 +83,28 @@ const searchStyle = ref({
         </div>
       </template>
     </NavBar>
-    <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-top-bg.png" class="bg-top" mode="scaleToFill" />
+    <!-- <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-top-bg.png" class="bg-top" mode="scaleToFill" /> -->
     <div class="search-wrapper" :style="searchStyle">
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/ic_allbook_hot.png" alt="" class='hot'>
       <div class="input-wrapper">
         <input type="text" class='search-input' v-model='searchText'/>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-icon-search.png" alt="" class='search-btn' @click='search' 	confirm-type='搜索' v-if='!searchOk'>
       </div>
-      <div class="text" v-if='searchOk' @click='cancelSearch'>取消</div>
+      <div class="text" :class='[searchOk ? "" :"hide"]' @click='cancelSearch'>取消</div>
     </div>
-    <div class="book-shelf-wrapper">
-      <div class="bg"></div>
-      <div class="book-shelf-layer">
-        <div class="book-item-wrapper">
-          <div class="book-cover">
-            <img v-if='1' src="" alt="" class='cover-img' >
-            <img v-else-if='1' src="" alt="" class='no-cover' >
-            <img v-else src="" alt="" class='borrow-out' >
+    <scroll-view class="shelf-list-wrapper" scroll-y :show-scrollbar='false' enhanced>
+        <!-- <div class="bg"></div> -->
+        <div class="book-shelf-layer" v-for='(shelfItem,index) in showShelfList' :key='index'>
+          <div class="book-item-wrapper" v-for='bookItem in shelfItem' :key='bookItem.id' @click='viewBookDetail(bookItem)'>
+            <div class="book-cover" :class='[bookItem.cover?"":"no-cover"]'>
+              <img :src="bookItem.coverUrl" alt="" v-if='bookItem.cover' class='cover-img'>
+              <img v-if='bookItem.status=="borrow-out"' src="" alt="" class='borrow-out img' >
+            </div>
+            <div class="name">{{bookItem.name}}</div>
           </div>
-          <div class="name">神笔马良</div>
         </div>
-        <div class="book-item-wrapper">
-          <div class="book-cover">
-            <img src="" alt="" class='img'>
-          </div>
-          <div class="name">神笔马良</div>
-        </div>
-        <div class="book-item-wrapper">
-          <div class="book-cover">
-            <img src="" alt="" class='img'>
-          </div>
-          <div class="name">神笔马良</div>
-        </div>
-      </div>
-      <div class="book-shelf-layer">
-
-      </div>
-      <div class="book-shelf-layer">
-
-      </div>
-
-
-    </div>
+        <img v-if='showShelfList.length==0' src="https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/search-picture.png" alt="" class='empty' >
+    </scroll-view>
   </div>
 </template>
 
@@ -94,9 +115,11 @@ const searchStyle = ref({
 .page{
   .full-screen();
   background-color: white;
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-page-bg.png") 0 0/100% 100% no-repeat;
+  // background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-page-bg.png") 0 0/100% 100% no-repeat;
+  background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/Allbooks-bg.png") 0 0/100% 100% no-repeat;
   position:relative;
   z-index:0;
+
   .bg-top{
     .box-size(112vw,22.133vw);
     .pos-absolute(0,0,unset,-6vw);
@@ -117,9 +140,10 @@ const searchStyle = ref({
   .search-wrapper{
     .box-size(100vw,33px);
     .flex-simple(center,center);
+
     .hot{
       .box-size(32px,32px);
-      margin-right:6px;
+      margin:0 6px 0 24px;
     }
     .input-wrapper{
       .box-size(245px,33px,#E1DB9A);
@@ -137,50 +161,64 @@ const searchStyle = ref({
     }
     .text{
       .normal-font(18px,#8F5926);
-      margin-left:2px;
-      position: absolute;
-      right:34px;
+      margin-left:10px;
+      &.hide{
+        opacity: 0;
+      }
+      // position: absolute;
+      // right:34px;
     }
   }
-  .book-shelf-wrapper{
-    .box-size(calc(100vw - 44px),unset);
-    min-height:calc(100vh - 22.11vw - 66px);
-    // min-height:calc(100vh - 22.11vw - 80px);
+  .shelf-list-wrapper{
+    width:calc(100vw - 44px);
     margin:12px auto 0 auto;
-    background-color: #A46C1F;
+    min-height:calc(100vh - 22.11vw - 66px);
+    max-height:calc(100vh - 22.11vw - 40px);
     border-radius:10px 20px 20px 10px;
-    .bg{
-      .pos-absolute(20px,20px,20px,20px);
-      background-color: #C48830;
-      border-radius: 20px;
+    background-color: #A46C1F;
+    background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/Allbooks-bottomborder.png") 0 0/100% 100% no-repeat;
+    text-align:center;
+    .empty{
+      .box-size(218px,222px);
+      margin:calc((100vh - 22.11vw - 66px - 222px)/2) auto 0 auto;
     }
     .book-shelf-layer{
-      .box-size(100%,26vh);
-      background-image:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-shelf.png");
-      background-size:100% ;
-      background-position: left bottom;
-      background-repeat: no-repeat;
-      .flex-simple(flex-start,flex-end);
+      .box-size(100%,174px);
+      background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-shelf.png") left bottom / 100%  no-repeat;
       padding:0 20px;
+      display: flex;
+      align-items:flex-end;
       .book-item-wrapper{
-        .box-size(100px,160px);
+        .box-size(33%,120px);
+        display:inline-block;
+        text-align: center;
+        font-size:0px;
+        margin-bottom:25px;
         .book-cover{
-          .box-size(100%,120px);
-          background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/all-books-book-bg.png") 0 0/100% 100% no-repeat;
-          .img{
-            .box-size(100%,100%);
+          .box-size(73px,95px);
+          background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/allbooks-cover.png") 0 0/100% 100% no-repeat;
+          display: inline-block;
+          &.no-cover{
+            background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/allbooks-no-cover.png") 0 0/100% 100% no-repeat;
           }
-          .status-img{
-
+          .cover-img{
+            .box-size(40px,50px,#ccc);
+            margin:10px auto 0 auto;
+          }
+          .borrow-out{
+            .pos-absolute(0,0,0,0);
+            background-color: #ccc;
           }
         }
         .name{
-          .box-size(88px,19px,#F6EAD0);
+          display: inline-block;
+          .box-size(88px,20px,#F6EAD0);
           flex-basis: unset;
-          .line-center(19px);
+          .line-center(20px);
           text-align: center;
           .normal-font(12px,#813F01);
           border-radius: 10px;
+          margin-top:5px;
         }
       }
 

@@ -16,7 +16,7 @@ const props = defineProps({
   <div class="count-num">
     <img  v-if="props.type=='upload'" src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/icon-shu.png" alt="" class="icon" />
     <img  v-else-if="props.type=='read'"  src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/icon-yj.png" alt="" class="icon" />
-    {{props.text}}
+    <div class="text">{{props.text}}</div>
   </div>
 </template>
 
@@ -26,11 +26,11 @@ const props = defineProps({
   .flex-simple(flex-end,center);
   .normal-font(14px,#EEEEEE);
   .icon{
-    .box-size(9px,11px);
+    .box-size(10px,10px);
     margin-right:6px;
   }
   .text{
-    .normal-font(14px,#2D2D2D);
+    .normal-font(13px,#2D2D2D);
   }
 }
 
