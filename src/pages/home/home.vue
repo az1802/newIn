@@ -39,6 +39,7 @@ function goToCategory(name){
     <div class="notices-wrapper" @click='navigateTo("/pages/notices/notices",{})'>
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-notices.png" alt="" class='img'>
       <!-- <div class='text'>消息</div> -->
+      <div class="tag">11</div>
     </div>
     <div class="upload-book-wrapper" @click='showUploadBookSel=true'>
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-add-book.png" alt="" class='img'>
@@ -137,6 +138,14 @@ function goToCategory(name){
     .text{
       text-align: center;
       .normal-font(16px);
+    }
+    .tag{
+      .box-size(17px,17px,#F64E2D);
+      border-radius:50%;
+      .line-center(17px);
+      text-align:center;
+      .normal-font(11px,white);
+      .pos-absolute(-8px,-5px,unset,unset);
     }
   }
   .upload-book-wrapper{

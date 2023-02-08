@@ -1,57 +1,81 @@
-<script setup >
-import {ref,unref} from "vue";
+<script>
+import {ref,unref,onBeforeMount} from "vue";
 import {showToast,navigateTo,getUserInfo} from "@utils/wechat"
 import { useUserInfoStore } from '@/stores/user';
 import {bindUser} from "@/api/user";
 
-const userInfoStore = useUserInfoStore();
+let opts ;
+ export default{
+  onLoad(options){
+    opts = options || {};
+  },
+  setup(){
+    const userInfoStore = useUserInfoStore();
 
 
-const identity = ref("student");
-const userName = ref("19999999919");
-const userPwd = ref("999919");
+    const identity = ref("student");
+    const userName = ref("19999999919");
+    const userPwd = ref("999919");
+    let showBack = ref(false);
 
+    onBeforeMount(()=>{
+      if(opts.showBack){
+        showBack.value = true;
+      }
+    })
+    async function bindIndetity(){
+      if(!unref(userName).trim()){
+        showToast("用户名不能为空");
+        return ;
+      }
+      if(!unref(userPwd).trim()){
+        showToast("密码不能为空");
+        return ;
+      }
+      let params = {
+        username:unref(userName),
+        password:unref(userPwd),
+        usertype:unref(identity)=="student" ? 1 : 2,
+        wxuser_id:userInfoStore.wxuser_id
+      }
+      let bindRes = await bindUser({
+        params
+      });
 
-async function bindIndetity(){
-  if(!unref(userName).trim()){
-    showToast("用户名不能为空");
-    return ;
+      console.log('绑定用户信息: ', bindRes);
+      if(!bindRes){
+        return
+      }else{
+        userInfoStore.setUserInfo(bindRes)
+      }
+
+      //根据身份跳转到不同页面
+      if(unref(identity)=="student"){
+        navigateTo("/pages/home/home")
+      }else{
+        navigateTo("/package-teacher/home/home")
+      }
+
+    }
+
+    return {
+      bindIndetity,
+      identity,
+      userInfoStore,
+      userName,
+      userPwd,
+      showBack
+    }
   }
-  if(!unref(userPwd).trim()){
-    showToast("密码不能为空");
-    return ;
-  }
-  let params = {
-    username:unref(userName),
-    password:unref(userPwd),
-    usertype:unref(identity)=="student" ? 1 : 2,
-    wxuser_id:userInfoStore.wxuser_id
-  }
-  let bindRes = await bindUser({
-    params
-  });
-
-  console.log('绑定用户信息: ', bindRes);
-  if(!bindRes){
-    return
-  }else{
-    userInfoStore.setUserInfo(bindRes)
-  }
-
-  //根据身份跳转到不同页面
-  if(unref(identity)=="student"){
-    navigateTo("/pages/home/home")
-  }else{
-    navigateTo("/package-teacher/home/home")
-  }
-
-}
 
 
+ }
 </script>
+
 
 <template>
   <div class='page'>
+    <NavBar title='' v-if='showBack' />
     <div class="login-wrapper">
       <div class="identity-sel">
         <div class="label">用户身份:</div>
@@ -83,7 +107,7 @@ async function bindIndetity(){
     .box-size(311px,350px);
     background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/login-bind.png") 0 0/100% 100% no-repeat;
     margin: 0 auto 0 auto;
-    .pos-absolute(20.8vw,0,unset,0);
+    .pos-absolute(11.70vh,0,unset,0);
     .identity-sel{
       .pos-absolute(94px,unset,unset,36px);
       .flex-simple(flex-start,center);

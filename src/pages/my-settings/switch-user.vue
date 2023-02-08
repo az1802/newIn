@@ -29,7 +29,7 @@ function changeSelUserId(item){
 }
 
 async function bindUser(){
-  navigateTo("/pages/login/login");
+  navigateTo("/pages/login/login",{showBack:1});
 }
 
 async function switchUser(){
@@ -71,7 +71,10 @@ async function switchUser(){
         </div>
         <scroll-view :show-scrollbar='false' enhanced class='list' scroll-x>
           <div class="user-item" v-for='item in userInfo.bindUserList' :key='item.binding_id' :class='[selUserId==item.binding_id ? "active" :""]' @click='changeSelUserId(item)'>
-            <img src="" alt="" class='img'>
+            <div class="avatar-wrapper">
+                <img src="" alt="" class="img" />
+                <img v-if="selUserId == item.binding_id " src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/switch-user-bg.png" alt="" class='active-img'>
+              </div>
             <div class="name">{{item.text}}</div>
             <div class="class">一年级三班</div>
           </div>
@@ -138,12 +141,20 @@ async function switchUser(){
           &:last-child{
             margin-right:0px;
           }
-          &.active{
-            border:1px solid red;
-          }
-          .img{
+          .avatar-wrapper{
             .box-size(45px,45px,#ccc);
             border-radius: 50%;
+            position:relative;
+            .img,{
+              .box-size(45px,45px,#ccc);
+              border-radius: 50%;
+            }
+            .active-img{
+              .box-size(45px,45px);
+              border-radius: 50%;
+              .pos-absolute(0,0,unset,unset);
+              opacity:0.5;
+            }
           }
           .name{
             margin-top:10px;

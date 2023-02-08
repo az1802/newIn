@@ -1,9 +1,10 @@
 <script setup>
-import {ref,unref,computed} from "vue";
+import {ref,unref,computed,onMounted} from "vue";
 import memberInfo from './memberInfo.vue';
 import TreeTop from "./treeTop.vue"
 import TreeMiddle from './treeMiddle.vue';
 import TreeBottom from "./treeBottom.vue"
+import RankingDialog from "./RankingDialog.vue"
 
 
 
@@ -51,6 +52,14 @@ const treeTopUsers = computed(()=>{
 console.log('userList: ', mockUserList);
 
 
+let showRankDialog = ref(false);
+onMounted(async ()=>{
+  setTimeout(()=>{
+    console.log('mounted')
+    showRankDialog.value = true;
+  },1000)
+})
+
 </script>
 
 <template>
@@ -60,9 +69,6 @@ console.log('userList: ', mockUserList);
         <TopCloud />
     </div>
 
-
-
-
     <scroll-view :show-scrollbar='false' enhanced scroll-y class='tree-wrapper'>
      <TreeTop :users='treeTopUsers'  />
      <TreeMiddle />
@@ -71,6 +77,7 @@ console.log('userList: ', mockUserList);
     </scroll-view>
 
     <HomeMenuTabs class='home-menu-tabs' active='class-library' />
+    <RankingDialog v-if="showRankDialog"   ></RankingDialog>
   </div>
 </template>
 

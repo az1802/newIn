@@ -103,7 +103,10 @@ function viewBookDetail(bookItem){
             <div class="name">{{bookItem.name}}</div>
           </div>
         </div>
-        <img v-if='showShelfList.length==0' src="https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/search-picture.png" alt="" class='empty' >
+        <div class="empty-wrapper" v-if='showShelfList.length==0' >
+          <img src="https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/search-picture.png" alt="" class='empty' >
+          <div class="text">暂时没有你想要的内容！</div>
+        </div>
     </scroll-view>
   </div>
 </template>
@@ -178,9 +181,20 @@ function viewBookDetail(bookItem){
     background-color: #A46C1F;
     background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/Allbooks-bottomborder.png") 0 0/100% 100% no-repeat;
     text-align:center;
-    .empty{
-      .box-size(218px,222px);
-      margin:calc((100vh - 22.11vw - 66px - 222px)/2) auto 0 auto;
+    .empty-wrapper{
+      .box-size(218px,unset);
+      // margin:calc((100vh - 22.11vw - 66px - 222px)/2) auto 0 auto;
+      margin:calc((100vh - 22.11vw - 150px - 222px)/2) auto 0 auto;
+      font-size:0px;
+      .empty{
+        .box-size(218px,222px);
+      }
+      .text{
+        text-align:center;
+        .line-center(15px);
+        .bold-font(15px,white);
+        margin-top:15px;
+      }
     }
     .book-shelf-layer{
       .box-size(100%,174px);
@@ -202,8 +216,9 @@ function viewBookDetail(bookItem){
             background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/allbooks-no-cover.png") 0 0/100% 100% no-repeat;
           }
           .cover-img{
-            .box-size(40px,50px,#ccc);
-            margin:10px auto 0 auto;
+            .box-size(46px,64px,#ccc);
+            margin-top:9px;
+            margin-left:4px;
           }
           .borrow-out{
             .pos-absolute(0,0,0,0);

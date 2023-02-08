@@ -1,3 +1,12 @@
+<script>
+
+let opts;
+export default{
+  onLoad(options){
+    opts = options || {}
+  }
+}
+</script>
 <script setup>
 import { navigateTo ,wechatSignUp,getUserInfo,showToast,getWechatUserId} from '@/utils/wechat';
 import { useUserInfoStore } from '@/stores/user'
@@ -10,6 +19,9 @@ let isLogining = false;
 
 // 检测是否是学生,或者是老师
 onBeforeMount(async ()=>{
+  if(opts.autoLogin=="false"){
+      return;
+  }
   isLogining = true;
   let userInfo = await getWechatUserId();
   isLogining = false

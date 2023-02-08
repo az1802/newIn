@@ -1,16 +1,34 @@
 <script setup >
-import { navigateTo } from '@utils/wechat';
-import { showToast } from '../../utils/wechat';
+import {ref,unref} from "vue";
+import { navigateTo ,showToast} from '@utils/wechat';
+import SignOutDialog from "./SignOutDialog.vue";
+import AddParentConfirmPwd from './AddParentConfirmPwd.vue';
 
-
+ const showSignOutDialog = ref(false);
 
 async function signOut(){
-  showToast("登出")
+  showSignOutDialog.value = true;
 }
+
+
+let addPwdDialog = ref(false),index=0
+function handleParentConfirmPwd(){
+  index++;
+  if(index%2==0){
+    addPwdDialog.value = true;
+  }else{
+    navigateTo("/pages/change-pwd/change-pwd")
+  }
+
+}
+
+
+
 </script>
 
 <template>
   <div class="page">
+    <SignOutDialog  v-model:show='showSignOutDialog'></SignOutDialog>
     <NavBar title='设置' />
     <div class="bg-top-wrapper">
         <TopCloud />
@@ -25,9 +43,17 @@ async function signOut(){
           <div class="text">个人信息</div>
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-qt.png" alt="" class='img'>
         </div>
+        <div class="parent-confirm" @click='handleParentConfirmPwd'>
+          <div class="text">家长确认</div>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-qt.png" alt="" class='img'>
+        </div>
         <div class="sign-out" @click='signOut'>退出登录</div>
       </div>
     </div>
+
+
+    <AddParentConfirmPwd v-model:show='addPwdDialog' />
+
 
   </div>
 
@@ -54,7 +80,7 @@ async function signOut(){
       padding:8vw 2.667vw 0 2.667vw;
       border-radius:6.667vw;
     }
-    .switch-user,.user-info{
+    .switch-user,.user-info,.parent-confirm{
       .box-size(100%,80px,white);
       .flex-simple(space-between,center);
       padding:0 15px;
@@ -75,7 +101,7 @@ async function signOut(){
       text-align: center;
       background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/sign-out-btn.png") 0 0/100% 100% no-repeat;
       .bold-font(22px,white);
-      margin:70px auto 0 auto;
+      margin:60px auto 0 auto;
 
     }
   }

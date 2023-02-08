@@ -8,6 +8,11 @@ const userInfo = useUserInfoStore();
 async function signOut(){
   showToast("登出")
 }
+
+
+function changePwd(){
+  navigateTo("/pages/change-pwd/change-pwd")
+}
 </script>
 
 <template>
@@ -19,7 +24,7 @@ async function signOut(){
     <div class="user-info-wrapper">
         <div class="avatar">
           <img :src="userInfo.photo" alt="" class='img'>
-          <!-- <div class="text">修改头像</div> -->
+          <div class="tag" @click='changePwd'>修改密码</div>
         </div>
         <div class="info">
           <div class="form-item">
@@ -64,12 +69,23 @@ async function signOut(){
       .pos-absolute(20px,unset,unset,50%);
       transform: translateX(-50%);
       z-index: 1000;
+      text-align:center;
       .img{
         .box-size(94px,94px,#ccc);
         border-radius:50%;
       }
       .text{
         text-align:center;
+      }
+      .tag{
+        display:inline-block;
+        .line-center(32px);
+        text-align: center;
+        padding:0 12px;
+        border:1px solid #88CF63;
+        border-radius: 16px;
+        .normal-font(16px,#6BCA38);
+        margin-top:10px;
       }
     }
     .info{

@@ -84,7 +84,7 @@ async function uploadBook (){
 @import '@static/index.less';
 .page{
   .full-screen();
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
+  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_activity_5.jpg") 0 0/100% 100% no-repeat;
   position:relative;
   .bg-top-wrapper{
     .pos-absolute(0,0,unset,0);

@@ -52,7 +52,11 @@ const tabActive = ref("uploadBook");
             <UploadRankList :list='uploadList'/>
           </scroll-view>
         </div>
-        <div class="tab-content-item" v-show='tabActive=="borrowOut"'>2</div>
+        <div class="tab-content-item" v-show='tabActive=="borrowOut"'>
+          <scroll-view class='content' :show-scrollbar='false' enhanced scroll-y>
+            <UploadRankList :list='uploadList'/>
+          </scroll-view>
+        </div>
         <div class="tab-content-item" v-show='tabActive=="readBook"'>
           <scroll-view class='content' :show-scrollbar='false' enhanced scroll-y>
             <ReadRankList :list='readList'/>

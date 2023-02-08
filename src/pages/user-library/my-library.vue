@@ -72,10 +72,11 @@ let classmateInfo = ref({
 
 function handleScroll(e){
   let scrollTop = e.detail.scrollTop;
+  console.log('scrollTop: ', scrollTop);
 
   unref(classmateInfo).bookList.forEach(item=>{
      let temp = item.style.left;
-     item.style.left = (parseFloat(temp) + scrollTop/3)%300 + "px";
+     item.style.left = (parseFloat(temp) + scrollTop/10)%300 + "px";
   })
 
 }
