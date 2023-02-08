@@ -90,6 +90,7 @@ const statusList = ref([
           <div class="borrowing-item">
             <div class="left">
               <img src="" alt="" class="img" />
+              <div class="tag"  @click="navigateTo('/pages/my-borrowing/concat-teacher')">联系老师</div>
             </div>
             <div class="info">
               <div class="name">{{ borrowingInfo.bookName }}</div>
@@ -113,6 +114,7 @@ const statusList = ref([
               ></div>
             </div>
           </div>
+
           <div class="pingjia-wrapper">
             <div class="title">借阅评价</div>
             <div class="pingjia-item">
@@ -167,7 +169,7 @@ const statusList = ref([
                   </div>
               </div>
             </div>
-            <div style='height:1px'></div>
+            <div style="height:1px"></div>
           </div>
           </ContentBlock>
 
@@ -186,11 +188,12 @@ const statusList = ref([
   position: relative;
   .bg-top-wrapper {
     .pos-absolute(0,0,unset,0);
-    z-index: 10;
+    z-index: 100;
   }
   .borrowing-list {
     .box-size(100%,unset);
-    margin-top: 10px;
+    // margin-top: 10px;
+    z-index: 10;
     .borrowing-item {
       .box-size(342px,unset);
       .flex-simple(flex-start,flex-start);
@@ -204,6 +207,17 @@ const statusList = ref([
           .box-size(66px,90px,#ccc);
           border-radius: 0px;
           margin: 2px 0 0 6px;
+        }
+        .tag{
+          .pos-absolute(unset,unset,-36px,5px);
+          display:inline-block;
+          .line-center(26px);
+          text-align: center;
+          padding:0 10px;
+          border:1px solid #88CF63;
+          border-radius: 13px;
+          .normal-font(14px,#6BCA38);
+          width:62px;
         }
       }
       .info {

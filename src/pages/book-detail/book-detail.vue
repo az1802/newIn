@@ -131,7 +131,7 @@ let borrowDays = ref('');
           </div>
         </div>
       </div>
-      <ContentBlock>
+      <ContentBlock topLong>
         <div class="title">拥有此书的同学</div>
         <div class="book-owner-list">
           <div

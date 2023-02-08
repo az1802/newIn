@@ -87,10 +87,11 @@ function agreeBorrowOut(){
 <template>
   <div class="page">
     <NavBar title="借出详情" />
-    <BorrowOutAgreenDialog v-model:show='agreeBorrowOutDialog' />
     <div class="bg-top-wrapper">
       <TopCloud />
     </div>
+    <BorrowOutAgreenDialog v-model:show='agreeBorrowOutDialog' />
+
     <scroll-view  :show-scrollbar="false"
       enhanced
       scroll-y
@@ -205,11 +206,12 @@ function agreeBorrowOut(){
   position: relative;
   .bg-top-wrapper {
     .pos-absolute(0,0,unset,0);
-    z-index: 10;
+    z-index: 100;
   }
   .borrowing-list {
     .box-size(100%,unset);
-    margin-top: 10px;
+    // margin-top: 10px;
+    z-index: 10;
     .borrowing-item {
       .box-size(342px,unset);
       .flex-simple(flex-start,flex-start);

@@ -1,10 +1,10 @@
 <script setup >
 import RankItem from "./RankItem.vue";
 import MyRank from "./MyRank.vue"
-import {ref} from "vue";
+import {ref,shallowRef,unref,shallowReactive,reactive} from "vue";
 
 const activeTab = ref("grade");
-const classRankList=[{
+const classRankList=reactive([{
   id:1,
   img:"",
   name:"张凡",
@@ -14,10 +14,10 @@ const classRankList=[{
   img:"",
   name:"张凡",
   num:300
-}]
+}])
 
 
-const gradeRankList=[{
+const gradeRankList=reactive([{
   id:1,
   img:"",
   name:"张凡1",
@@ -47,7 +47,7 @@ const gradeRankList=[{
   img:"",
   name:"张凡3",
   num:200
-}]
+}])
 
 const mineRankInfo = {
   id:2,
@@ -62,12 +62,22 @@ function switchTab(tabName) {
   activeTab.value = tabName
 }
 
+function sortJifen(){
+  // classRankList.value = classRankList.value.reverse();
+  // gradeRankList.value= gradeRankList.value.reverse();
+
+
+  classRankList.reverse();
+  gradeRankList.reverse();
+}
+
 </script>
 
 <template>
   <div class='page'>
     <NavBar title='' />
     <div class="rank-wrapper">
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/ic_start.png" alt="" class='sort-img' @click='sortJifen'>
       <div class='tabs'>
         <div class="tab-item" :class='[activeTab=="class" ? "active":""]' @click='switchTab("class")'>班级榜</div>
         <div class="tab-item" :class='[activeTab=="grade" ? "active":""]' @click='switchTab("grade")'>年级榜</div>
@@ -95,11 +105,17 @@ function switchTab(tabName) {
   .full-screen();
   background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/bg_activity_2.jpg") 0 0/100% 100% no-repeat;
   position:relative;
+
   .rank-wrapper{
     .box-size(calc(100vw - 8.533vw),169.6vw);
     padding:38.667vw 2.667vw 0;
     background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-bg.png") 0 0/100% 100% no-repeat;
     margin:0 auto;
+    .sort-img{
+      .box-size(44px,44px);
+      .pos-absolute(10px,unset,unset,calc(30px - 4.2665vw));
+
+    }
     .tabs{
       .flex-simple(space-between,center);
       .box-size(100%,9.6vw);

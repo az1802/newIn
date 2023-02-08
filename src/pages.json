@@ -63,6 +63,9 @@
 			"path": "pages/my-borrowing/borrowing-detail",
 		},
     {
+			"path": "pages/my-borrowing/concat-teacher",
+		},
+    {
 			"path": "pages/my-borrowing/borrow-evaluate",
 		},
     {

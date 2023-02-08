@@ -252,8 +252,8 @@ function goToCategory(name){
   }
 }
 .home-menu-tabs{
-  .pos-absolute(unset,unset,5px,0);
-  z-index: 10000;
+  // .pos-absolute(unset,unset,0px,0);
+  // z-index: 10000;
 }
 
 </style>

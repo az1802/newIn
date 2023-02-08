@@ -184,7 +184,7 @@ async function signOut(){
 }
 
 .home-menu-tabs {
-  .pos-fixed(unset, unset, 20px, 0);
-  z-index: 10000;
+  // .pos-fixed(unset, unset, 20px, 0);
+  // z-index: 10000;
 }
 </style>

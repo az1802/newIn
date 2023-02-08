@@ -1,8 +1,11 @@
 <script setup >
 import {ref} from "vue";
+import {navigateTo} from "@utils/wechat";
 import UploadRankList from "../components/upload-rank-list.vue";
 import ReadRankList from "../components/read-rank-list.vue";
-import {navigateTo} from "@utils/wechat"
+import HotBook from "../components/hoot-book.vue"
+
+
 
 const tabActive = ref("uploadBook");
 
@@ -14,6 +17,7 @@ const tabActive = ref("uploadBook");
 
   const uploadList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
   const readList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
+  const hotList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
 
 </script>
 
@@ -62,7 +66,11 @@ const tabActive = ref("uploadBook");
             <ReadRankList :list='readList'/>
           </scroll-view>
         </div>
-        <div class="tab-content-item" v-show='tabActive=="hotBook"'>4</div>
+        <div class="tab-content-item" v-show='tabActive=="hotBook"'>
+          <scroll-view class='content' :show-scrollbar='false' enhanced scroll-y>
+            <HotBook :list='hotList'/>
+          </scroll-view>
+        </div>
       </div>
 
     </div>

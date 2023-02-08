@@ -38,6 +38,11 @@ const props = defineProps({
   .box-size(100vw,unset);
   .flex-simple(space-between,flex-end);
   padding:0 6vw;
+  background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/Navigationbackground.png") left bottom / 100vw 20.184vw no-repeat;
+  top:6px;
+  .pos-absolute(unset,unset,0px,0);
+  z-index: 10000;
+  padding-bottom:12px;
   .menu-item{
     font-size:0px;
     .library-img,.share-img,.my-img{

@@ -2,6 +2,14 @@
 import { navigateTo } from '@utils/wechat';
 import {ref} from "vue";
 
+import {useSystemInfo} from "@hooks/commonHooks";
+
+const systemInfo = useSystemInfo();
+
+const listStyle = ref({
+  height:`calc(100vh - 44px - ${systemInfo.statusBarHeight}px)`
+})
+
 const borrowingList = ref([
   {
     id:"1",
@@ -55,8 +63,9 @@ const borrowingList = ref([
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
-    <scroll-view :show-scrollbar='false' enhanced scroll-y class='borrowing-list'>
-      <div class="borrowing-item" v-for='item in borrowingList' :key='item.id' >
+    <scroll-view :show-scrollbar='false' enhanced scroll-y class='borrowing-list' :style='listStyle'>
+      <ContentBlock :topLong='index==0' :bottomRattan='index!=borrowingList.length-1' v-for='(item,index) in borrowingList' :key='item.id' >
+        <div class="borrowing-item" >
         <div class="left">
           <img src="" alt="" class='img'>
         </div>
@@ -73,6 +82,8 @@ const borrowingList = ref([
           <div class="view-btn" @click='navigateTo("/pages/my-borrowing/borrowing-detail")'></div>
         </div>
       </div>
+      </ContentBlock>
+
       <div class="" style='height:40px'></div>
     </scroll-view>
   </div>
@@ -87,16 +98,17 @@ const borrowingList = ref([
   position:relative;
   .bg-top-wrapper{
     .pos-absolute(0,0,unset,0);
-    z-index:0;
+    z-index:100;
   }
   .borrowing-list{
-    .box-size(100%,calc(100vh - 80px));
-    margin-top:20px;
+    .box-size(100%,unset);
+    // margin-top:10px;
+    z-index:10;
     .borrowing-item{
-      .box-size(342px,241px);
-      background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-borrowing-item-bg.png") 0 0/100% 100% no-repeat;
-      margin:-20px auto 0 auto;
-      padding:73px 0 0 0;
+      // .box-size(342px,241px);
+      // background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-borrowing-item-bg.png") 0 0/100% 100% no-repeat;
+      // margin:-20px auto 0 auto;
+      // padding:73px 0 0 0;
       .flex-simple(flex-start,flex-start);
       .left{
         .box-size(95.5px,130px);
