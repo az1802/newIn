@@ -35,6 +35,7 @@ function changeTheme(val){
 .theme-sel{
   .box-size(48px,48px);
   .pos-fixed(12vh,15px,unset,unset);
+  z-index:100;
   .change-btn{
     .box-size(48px,48px);
   }

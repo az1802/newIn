@@ -39,14 +39,16 @@
   margin:0 auto;
   .top{
     .box-size(345px,44px);
-    background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-Board2.png") 0 0/100% 100% no-repeat;
-    &.no-rattan{
-      background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-Board5.png") 0 0/100% 100% no-repeat;
-      transform:rotate(180deg) ;
+    background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-Board5.png") 0 0/100% 100% no-repeat;
+    transform:rotate(180deg);
+    &.rattan{
+      background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-Board2.png") 0 0/100% 100% no-repeat;
+      transform:rotate(0deg);
     }
     &.rattan.long{
       height:67px;
       background:url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/my-Board4.png") 0 0/100% 100% no-repeat;
+      transform:rotate(0deg);
     }
   }
   .content{

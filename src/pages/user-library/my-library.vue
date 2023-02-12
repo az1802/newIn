@@ -1,5 +1,6 @@
 <script>
 
+
 export default{
   onLoad(opts){
     console.log('opts: ', opts);
@@ -11,74 +12,62 @@ import { useUserInfoStore } from '@/stores/user';
 import {navigateTo} from "@utils/wechat";
 import {ref,unref,computed} from "vue";
 import ThemeSel from './ThemeSel.vue';
+import BookItem from "./BookItem.vue"
+import {useSystemInfo} from "@hooks/commonHooks";
+const systemInfo = useSystemInfo();
+// console.log('systemInfo: ', systemInfo);
+
+
 const userInfo = useUserInfoStore();
 
+ function genMockList(n){
+   let arr = [];
+
+  for(let  i = 1 ; i<= n;i++){
+    let left = '55'
+    arr.push({
+      id:i,
+      name:`书本${i}`,
+      style:{
+        left:`${left}%`
+      }
+    })
+  }
+  calcPos(0,arr);
+   return arr;
+ }
 
 let classmateInfo = ref({
   name:"李文文",
-  bookList:[
-    {
-      id:1,
-      name:"书本1",
-      style:{
-        top:"0px",
-        left:"180px"
-      }
-    },
-    {
-      id:2,
-      name:"书本2",
-      style:{
-        top:"0px",
-        left:"220px"
-      }
-    },
-    {
-      id:3,
-      name:"书本3",
-      style:{
-        top:"0px",
-        left:"150px"
-      }
-    },
-    {
-      id:4,
-      name:"书本4",
-      style:{
-        top:"0px",
-        left:"100px"
-      }
-    },
-    {
-      id:5,
-      name:"书本5",
-      style:{
-        top:"0px",
-        left:"150px"
-      }
-    },
-    {
-      id:6,
-      name:"书本6",
-      style:{
-        top:"0px",
-        left:"170px"
-      }
-    },
-  ]
+  bookList:genMockList(12)
 })
+
+
+function calcPos(scrollTop,list){
+  let leftArr = [36,66,19,55];
+  let {screenWidth,screenHeight,statusBarHeight} = systemInfo;
+  let listHeight = screenHeight - parseInt(statusBarHeight) - 44;
+  // let {screenHeight,screenWidth} = systemInfo;
+  list.forEach((item,index)=>{
+    let h = (125*(index+1) - scrollTop)%listHeight,left;
+    if(h < listHeight*0.33){
+      left = 36 + 30*(h/(listHeight*0.33));
+    }else if(h > listHeight*0.33 && h < listHeight*0.66){
+      left = 66 - 47*((h- listHeight*0.33)/(listHeight*0.33));
+    }else{
+      left = 19 + 36*((h - listHeight*0.66)/(listHeight*0.33));
+    }
+    item.style.left = left + "%";
+  })
+
+}
 
 
 
 function handleScroll(e){
   let scrollTop = e.detail.scrollTop;
-  console.log('scrollTop: ', scrollTop);
-
-  unref(classmateInfo).bookList.forEach(item=>{
-     let temp = item.style.left;
-     item.style.left = (parseFloat(temp) + scrollTop/10)%300 + "px";
-  })
-
+  // console.log('scrollTop: ', scrollTop);
+  calcPos(scrollTop,unref(classmateInfo).bookList)
 }
 
 
@@ -103,6 +92,9 @@ const bgStyle=computed(()=>{
 
 let showUploadBookSel = ref(false)
 
+const listStyle = ref({
+  height:`calc(100vh - 44px - ${systemInfo.statusBarHeight}px)`
+})
 
 
 </script>
@@ -110,10 +102,12 @@ let showUploadBookSel = ref(false)
 <template>
   <div class="page" :style='bgStyle'>
     <NavBar :title='classmateInfo.name+"的图书馆"' />
-    <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_toolbar.png" class="bg-top" />
-    <scroll-view class="list-wrapper" scroll-y  :show-scrollbar='false' enhanced @scroll='handleScroll'>
+    <div class="bg-top-wrapper">
+        <TopCloud />
+    </div>
+    <scroll-view class="list-wrapper" scroll-y  :show-scrollbar='false' 	enable-passive 	 @scroll='handleScroll' :style='listStyle'>
       <div class="book-item-wrapper" v-for='item in classmateInfo.bookList' :key='item.id' :style='item.style'>
-        <div class="name">{{item.name}}</div>
+        <BookItem :info='item' :theme='theme'/>
       </div>
     </scroll-view>
     <div class="btn-group">
@@ -142,16 +136,17 @@ let showUploadBookSel = ref(false)
   .full-screen();
   background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg") 0 0/100% 100% no-repeat;
   position:relative;
-  .bg-top{
-    .box-size(100vw,23.88vw);
-    .pos-absolute(0,0,unset,unset);
+  .bg-top-wrapper{
+    .pos-absolute(0,0,unset,0);
+    z-index:1000;
   }
   .list-wrapper{
-    .box-size(100vw,100vh);
-    padding-top:60px;
+    .box-size(100vw,unset);
+    // padding-top:60px;
     .book-item-wrapper{
-      .box-size(80px,140px,red);
+      .box-size(90px,125px);
       position:relative;
+      padding-top:25px;
     }
   }
   .btn-group{

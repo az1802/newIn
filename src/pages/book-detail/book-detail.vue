@@ -131,7 +131,10 @@ let borrowDays = ref('');
           </div>
         </div>
       </div>
-      <ContentBlock topLong>
+      <div class="concat-ratten">
+        <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/icon-ratten.png" alt="" class='ratten-img'>
+      </div>
+      <ContentBlock :topRattan="false">
         <div class="title">拥有此书的同学</div>
         <div class="book-owner-list">
           <div
@@ -201,7 +204,7 @@ let borrowDays = ref('');
   .container {
     .box-size(100%,unset);
     .bottom-placeholder{
-      .box-size(58.667vw,13.867vw);
+      .box-size(58.667vw,19.2vw);
     }
   }
   .book-info {
@@ -243,6 +246,15 @@ let borrowDays = ref('');
           }
         }
       }
+    }
+  }
+  .concat-ratten{
+    .box-size(100%,6px);
+    .flex-simple(center,center);
+    .ratten-img{
+      .box-size(242px,56px);
+      margin:16px auto 0 auto;
+      z-index:10;
     }
   }
   .title{
