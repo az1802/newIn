@@ -1,12 +1,13 @@
 <script setup >
 import {ref,unref}  from "vue";
-  import {useSystemInfo} from "@hooks/commonHooks";
+import {useSystemInfo} from "@hooks/commonHooks";
   const systemInfo = useSystemInfo();
 
 
 
 const listStyle = ref({
-  height: `calc(100vh - 44px - ${systemInfo.statusBarHeight}px - 20px - 91.9vw)`,
+  height: `calc(100vh - 44px - ${systemInfo.statusBarHeight}px - 20px - 92vw)`,
+  // height:"63vw"
 });
 
 function genMockList(n){
@@ -200,7 +201,8 @@ function handleScroll(e){
     <div class="diandi-wrapper">
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/intergal-diandi.png" alt="" class='diandi-record'>
     </div>
-    <scroll-view :show-scrollbar='false' class="record-list" @scroll='handleScroll' scroll-y enable-passive>
+    <div class="list-wrapper" :style='listStyle'>
+      <scroll-view :show-scrollbar='false' class="record-list" @scroll='handleScroll' scroll-y enable-passive>
       <div class='item' v-for='item in list' :key='item.id'>
         <div class="info" :style='item.style.itemStyle'>
           <div class="left">
@@ -218,6 +220,8 @@ function handleScroll(e){
       </div>
 
     </scroll-view>
+    </div>
+
   </div>
 
 </template>
@@ -273,6 +277,10 @@ function handleScroll(e){
       .box-size(30.667vw,12vw);
     }
   }
+  .list-wrapper{
+    .box-size(100vw,unset);
+    .flex-simple(center,center);
+  }
   .record-list{
     .flex-simple(center,flex-start);
     .box-size(100vw,240px);
@@ -283,7 +291,7 @@ function handleScroll(e){
       // .flex-simple(center,flex-start);
       .flex-simple(center,center);
       .info{
-        background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/intergral-rect.png") 0 0/100% 100% no-repeat;
+        background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_item_integral_bg.png") 0 0/100% 100% no-repeat;
         margin: 0 auto 0 auto;
         .flex-simple(space-between,center);
         box-sizing: border-box;

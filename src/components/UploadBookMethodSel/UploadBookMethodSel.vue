@@ -1,6 +1,6 @@
 <script setup >
 
-import {noop,navigateTo} from "@utils/wechat";
+import {noop,navigateTo,scanCode,showToast} from "@utils/wechat";
   const props = defineProps({
     show:{
       type:Boolean,
@@ -9,10 +9,28 @@ import {noop,navigateTo} from "@utils/wechat";
   })
   const emit = defineEmits(["update:show"]);
 
+ async function scanIsbn(){
+  try{
+    let res = await scanCode();
+    console.log('res: ', res);
+    if(res){
+    // if(res&&res.scanType=="EAN_13"){
+      navigateTo("/pages/upload-book/upload-book-scan",{
+        scanCode:res.result
+      });
+    }else{
+      showToast("ISBN码识别错误")
+    }
+  }catch(err){
+    console.log('err: ', err);
+    showToast("ISBN码识别错误")
+  }
+}
+
 function uploadBook(type){
 
   if(type=='scan'){
-    navigateTo("/pages/upload-book/upload-book-scan")
+    scanIsbn();
   }else{
     navigateTo("/pages/upload-book/upload-book-manually")
   }

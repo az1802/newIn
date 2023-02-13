@@ -46,6 +46,20 @@ const borrowingMsgList = ref([
     type:"jifen",
     btnText:"立即查看"
   },
+  {
+    id:7,
+    content:"李大锤向你申请借阅",
+    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+    type:"jifen",
+    btnText:"立即查看"
+  },
+  {
+    id:8,
+    content:"李大锤向你申请借阅",
+    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+    type:"jifen",
+    btnText:"立即查看"
+  },
 ]);
 const creditMsgList = ref([
   {
@@ -160,7 +174,8 @@ const tabActive = ref("one");
     z-index:0;
   }
   .notice-list-wrapper{
-    .box-size(calc(100vw - 12px),calc(100vh - 154px),#D08728);
+    .box-size(calc(100vw - 12px),calc(100vh - 14vh),#D08728);
+    background:url(https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/notices-bg.png) 0 0/100% 100% no-repeat;
     border-radius: 30px;
     opacity: 1;
     margin:60px auto 0 auto;
@@ -196,7 +211,7 @@ const tabActive = ref("one");
       margin:-2px auto 0 auto;
       .scroll-view{
         .box-size(100%,100%);
-        padding:21px 9px 21px 9px;
+        padding:21px 9px 40px 9px;
         .notice-item-wrapper{
           border-radius: 13px;
           min-height:70px;

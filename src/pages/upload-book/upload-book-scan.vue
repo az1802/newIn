@@ -1,15 +1,34 @@
+<script>
+let opts;
+export default{
+  onLoad(options){
+    console.log('options: ', options);
+    opts = options || {};
+  }
+}
+</script>
+
 <script setup >
-import {ref,unref} from "vue";
-import {scanCode,showToast} from '@utils/wechat';
-import { navigateTo } from '../../utils/wechat';
+import {ref,unref,onBeforeMount} from "vue";
+import {scanCode,showToast,navigateTo} from '@utils/wechat';
 let isbnCode = ref("")
+
+
+onBeforeMount(()=>{
+  console.log('opts: ', opts);
+
+  if(opts?.scanCode){
+    isbnCode.value = opts.scanCode;
+  }
+})
+
 async function scanIsbn(){
   try{
     let res = await scanCode();
     if(res){
     // if(res&&res.scanType=="EAN_13"){
       isbnCode.value=res.result;
-      navigateTo("/pages/upload-book/upload-book-info");
+
     }else{
       showToast("ISBN码识别错误")
     }
@@ -30,7 +49,7 @@ function queryIsbn(){
   <div class='page'>
     <NavBar title='扫描图书' />
     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_toolbar.png" class="bg-top" />
-    <input type="text" class="isbn-input" placeholder='请输入ISBN条形号'  placeholder-style='font-size:15px;color:##959797;font-family:HYCuYuanJ;font-weight:bold'>
+    <input type="text" v-model='isbnCode' class="isbn-input" placeholder='请输入ISBN条形号'  placeholder-style='font-size:15px;color:##959797;font-family:HYCuYuanJ;font-weight:bold'>
     <div class="btn" @click='queryIsbn'></div>
     <div class="scan-code" @click='scanIsbn'>切换扫条形码</div>
     <!-- <div>isbn码结果:{{isbnCode}}</div> -->
@@ -53,9 +72,9 @@ function queryIsbn(){
     display: inline-block;
     border-radius: 8px;
     line-height: 43px;
-    text-indent:17px;
     margin:50px auto 0 auto;
     text-align: left;
+    padding-left: 17px;
   }
   .btn{
     .box-size(110px,39px);
