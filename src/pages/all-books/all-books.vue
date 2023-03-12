@@ -3,34 +3,39 @@ import AllBooksNavBar from "./all-books-nav-bar.vue";
 import {useSystemInfo} from "@hooks/commonHooks";
 import {ref,unref,computed,shallowRef} from "vue";
 import { navigateTo } from '../../utils/wechat';
+import { onBeforeMount } from 'vue';
+import API from "@/api/index";
+
+
 const systemInfo = useSystemInfo();
 
 let searchText = ref("");
 let searchOk = ref(false);
+let searchConfirmText = ref("")
 
 let bookList = [];
 
 
-function mockBookList(){
-  let statusMap = {
-    0 : "no-cover",
-    1:'cover',
-    2 :"borrow-out"
-  }
-  let mockList=[]
-  for(let i= 1 ; i<20;i++){
-    mockList.push({
-      name:"书籍"+i,
-      id:i,
-      type:"active",
-      status:statusMap[i%2],
-      cover:i%3==0,
-    })
+async function getBookList(category_id="",keywords=""){
+  let userInfo = uni.getStorageSync("userInfo");
+  let params = {
+      school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
+    }
 
+  if(category_id){
+    params.category_id = category_id;
   }
-  bookList = mockList;
+  if(keywords){
+    params.keywords = keywords;
+  }
+
+  let books = await API.Book.getAllBookList({
+    params
+  })
+
+  return books;
 }
-mockBookList();
 
 function transformBookList(list){
   let selArr = [],res=[];
@@ -46,11 +51,92 @@ function transformBookList(list){
   }
   return res;
 }
-let showShelfList = shallowRef(transformBookList(bookList));
+
+let allBooks = shallowRef([]);
+// let showShelfList = shallowRef([]);
+
+
+const typeList = ref([]);
+const typeIndex = ref();
+
+function typeChange(e) {
+  console.log('e: ', e);
+  typeIndex.value = e.detail.value;
+}
+
+
+
+onBeforeMount(async ()=>{
+  uni.showLoading();
+  let res = await getBookList();
+  console.log('allBooks: ', res);
+  allBooks = res?.booklist || [];
+  typeList.value = res?.categorylist || [];
+  uni.hideLoading();
+})
+
+
+
+let showShelfList = computed(()=>{
+  let searchVal = unref(searchConfirmText).trim();
+  let category = unref(typeList)[unref(typeIndex)];
+  let tempList = allBooks;
+  if(searchVal){
+    tempList = tempList.filter(item=>{
+      return item.bookname.indexOf(searchVal)!=-1
+    })
+  };
+
+  if(category){
+    tempList = tempList.filter(item=>{
+      return item.category_id == category.category_id
+    })
+  }
+
+  return transformBookList(tempList)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+// function mockBookList(){
+//   let statusMap = {
+//     0 : "no-cover",
+//     1:'cover',
+//     2 :"borrow-out"
+//   }
+//   let mockList=[]
+//   for(let i= 1 ; i<20;i++){
+//     mockList.push({
+//       name:"书籍"+i,
+//       id:i,
+//       type:"active",
+//       status:statusMap[i%2],
+//       cover:i%3==0,
+//     })
+
+//   }
+//   bookList = mockList;
+// }
+// mockBookList();
+
+
+// let showShelfList = shallowRef(transformBookList(bookList));
+
+
 
 function search(){
   searchOk.value = "true";
-  showShelfList.value = transformBookList(bookList.filter(item=>item.name.indexOf(unref(searchText).trim())!==-1))
+  searchConfirmText.value = unref(searchText)
+  // showShelfList.value = transformBookList(bookList.filter(item=>item.name.indexOf(unref(searchText).trim())!==-1))
 }
 
 function cancelSearch(){
@@ -58,8 +144,8 @@ function cancelSearch(){
     return
   }
   searchOk.value = false;
-  searchText.value=""
-  showShelfList.value = transformBookList(bookList);
+  searchText.value="";
+  searchConfirmText.value="";
 }
 
 const searchStyle = ref({
@@ -77,9 +163,21 @@ function viewBookDetail(bookItem){
     <NavBar>
       <template v-slot:title>
         <div class='title'>
-            <div class="text">全部类型</div>
+            <div class="text">{{ typeList[typeIndex] ? typeList[typeIndex].category  : "全部类型" }}</div>
             <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/allbooks_down.png" alt="" class='down img'>
             <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/allbooks_up.png" alt="" class='up img'>
+
+            <picker
+              @change="typeChange"
+              :value="typeIndex"
+              :range="typeList"
+              range-key='category'
+              mode = selector
+              class="picker"
+            >
+              <view class="uni-input">{{ typeList[typeIndex] ? typeList[typeIndex].category  : "请选择图书类型" }}</view>
+            </picker>
+
         </div>
       </template>
     </NavBar>
@@ -97,10 +195,10 @@ function viewBookDetail(bookItem){
         <div class="book-shelf-layer" v-for='(shelfItem,index) in showShelfList' :key='index'>
           <div class="book-item-wrapper" v-for='bookItem in shelfItem' :key='bookItem.id' @click='viewBookDetail(bookItem)'>
             <div class="book-cover" :class='[bookItem.cover?"":"no-cover"]'>
-              <img :src="bookItem.coverUrl" alt="" v-if='bookItem.cover' class='cover-img'>
+              <img :src="bookItem.cover" alt="" v-if='bookItem.cover' class='cover-img'>
               <img v-if='bookItem.status=="borrow-out"' src="" alt="" class='borrow-out img' >
             </div>
-            <div class="name">{{bookItem.name}}</div>
+            <div class="name">{{bookItem.bookname}}</div>
           </div>
         </div>
         <div class="empty-wrapper" v-if='showShelfList.length==0' >
@@ -138,6 +236,15 @@ function viewBookDetail(bookItem){
     .img{
       .box-size(22px,22px);
       margin-left:6px;
+    }
+    .picker{
+      .pos-absolute(0,0,0,0);
+      background: transparent;
+      opacity: 0;
+      z-index: 100;
+      .uni-input{
+       height:44px;
+      }
     }
   }
   .search-wrapper{

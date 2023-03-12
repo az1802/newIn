@@ -20,17 +20,18 @@ const props = defineProps({
 
 
 function goToUserLibaray(item){
-    console.log('item: ', item);
+  let userInfo = uni.getStorageSync("userInfo");
     navigateTo("/pages/user-library/user-library",{
-      id:"12",
-      name:item.name
+      xingming:item.xingming,
+      school_id:userInfo.school_id,
+      student_id:item.student_id,
     })
   }
 </script>
 
 <template>
   <div class='info-wrapper' @click='goToUserLibaray(props.info)'>
-    <div class="name">{{props.info.name}}</div>
+    <div class="name">{{props.info.xingming}}</div>
     <div class="avatar-wrapper">
       <img :src="props.info.backgroundUrl" alt="" class='bg' />
       <img :src="props.info.tagUrl" alt="" class='tag'>

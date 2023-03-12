@@ -1,15 +1,59 @@
+
+
 <script setup>
 import { ref, unref } from 'vue';
+import API from "@/api/index";
+import { showToast } from '../../utils/wechat';
+
+let bookInfo = uni.getStorageSync("isbnBookInfo")?.isbninfo;
+let categoryList =  uni.getStorageSync("isbnBookInfo")?.categorylist || [];
+console.log('bookInfo: ', bookInfo);
 
 const bookReviewText = ref('');
 
 const bookType = ref('');
 
-const typeList = ref(['儿童文学', '大自然']);
+const typeList = ref(categoryList);
 const typeIndex = ref();
 
 function typeChange(e) {
+  console.log('e: ', e);
   typeIndex.value = e.detail.value;
+}
+
+
+
+// 商家图书
+async function sumbit(){
+
+  let userInfo = uni.getStorageSync("userInfo");
+
+  let a = await  await API.Book.getBookCategory2({
+    params:{
+      school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
+      category_id:unref(typeList)[unref(typeIndex)].category_id,
+    }
+  })
+
+  uni.showLoading()
+  let res = await API.Book.postBooksReview({
+      school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
+      category_id:unref(typeList)[unref(typeIndex)].category_id,
+      category2_id:6,
+      isbn_id:parseInt(bookInfo.isbn),
+      bookreview:unref(bookReviewText)
+    })
+  uni.hideLoading()
+
+  console.log('res: ', res);
+
+
+  showToast(res?"上架图书成功":"上架图书失败")
+
+
+
 }
 </script>
 
@@ -21,14 +65,14 @@ function typeChange(e) {
       <div class="group">
         <div class="detail">
           <div class="book-img">
-            <img src="" alt="" class="img" />
+            <img :src="bookInfo.cover" alt="" class="img" />
           </div>
           <div class="info">
-            <div class="name">神笔马良</div>
+            <div class="name">{{bookInfo.bookname}}</div>
             <div class="form">
               <div class="form-item">
                 <div class="label">作者：</div>
-                <div class="value">洪汛涛</div>
+                <div class="value">{{bookInfo.author}}</div>
               </div>
               <div class="form-item">
                 <div class="label">类型：</div>
@@ -36,7 +80,7 @@ function typeChange(e) {
               </div>
               <div class="form-item">
                 <div class="label">页数：</div>
-                <div class="value">106</div>
+                <div class="value">{{bookInfo.pages}}</div>
               </div>
             </div>
           </div>
@@ -44,7 +88,7 @@ function typeChange(e) {
         <div class="type-sel">
           <div class="label">类型:</div>
           <div class="sel">
-            {{ typeList[typeIndex] ? typeList[typeIndex] : '请选择图书类型' }}
+            {{ typeList[typeIndex] ? typeList[typeIndex].category : '请选择图书类型' }}
             <img
               src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/type_down.png"
               alt=""
@@ -54,9 +98,11 @@ function typeChange(e) {
               @change="typeChange"
               :value="typeIndex"
               :range="typeList"
+              range-key='category'
+              mode = selector
               class="picker"
             >
-              <view class="uni-input">{{ typeList[typeIndex] }}</view>
+              <view class="uni-input">{{ typeList[typeIndex] ? typeList[typeIndex].category  : "请选择图书类型" }}</view>
             </picker>
           </div>
         </div>
@@ -129,13 +175,15 @@ function typeChange(e) {
           .form {
             margin-top: 30px;
             .form-item {
-              .flex-simple(flex-start,center);
+              .flex-simple(flex-start,flex-start);
               margin-bottom: 10px;
               .label {
                 .normal-font(13px,#959797);
+                flex-basis: 42px;
               }
               .value {
                 .normal-font(13px,#646a6d);
+                flex:1;
               }
             }
           }
@@ -165,6 +213,7 @@ function typeChange(e) {
             .pos-absolute(0,0,0,0);
             background: transparent;
             opacity: 0;
+            z-index: 100;
           }
         }
       }

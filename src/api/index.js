@@ -7,9 +7,11 @@
  */
 // 将所有的接口请求都通过这个统一输出
 
-import * as  User from "./user"
+import * as  User from "./user";
+import * as  Book from "./book";
 const API = {
-  User
+  User,
+  Book
 }
 
-export default API
+export default API;

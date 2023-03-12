@@ -13,7 +13,17 @@ onMounted(()=>{
 })
 
 
-const emits = defineEmits(["update:show"])
+const emits = defineEmits(["update:show"]);
+const props = defineProps({
+  change:{
+    type:Number,
+    default:0
+  },
+  ranking:{
+    type:Number,
+    default:0
+  }
+})
 
 function hideDialog(){
 
@@ -21,6 +31,11 @@ function hideDialog(){
     showDialog.value=false
   }
 }
+
+
+
+
+
 
 </script>
 
@@ -30,11 +45,11 @@ function hideDialog(){
       <div class="info" v-if='showRankNum'>
         <div class="incr" >
           <div class="text">提升了</div>
-          <div class="num">2</div>
+          <div class="num">{{props.change}}</div>
         </div>
         <div class="rank"  >
           第
-          <div class="text">8</div>
+          <div class="text">{{props.ranking}}</div>
           名
         </div>
       </div>

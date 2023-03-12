@@ -13,6 +13,10 @@
     customBack:{
       type:Boolean,
       default:false
+    },
+    showBack:{
+      type:Boolean,
+      default:true
     }
   })
   const emits = defineEmits(['back']);
@@ -32,7 +36,7 @@
   <div class="nav-bar" :style="{
       paddingTop: systemInfo.statusBarHeight + 'px',
     }">
-    <div class="back-wrapper" @click='goBack' :style="{
+    <div v-if='showBack' class="back-wrapper" @click='goBack' :style="{
       top: systemInfo.statusBarHeight + 'px',
     }">
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/ic_back.png" alt="" class='img' />

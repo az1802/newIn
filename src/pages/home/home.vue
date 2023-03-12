@@ -2,7 +2,9 @@
 import { navigateTo } from '@/utils/wechat';
 // import {UploadBookMethodSel} from "./UploadBookMethodSel.vue";
 import {ref} from "vue";
+import { useUserInfoStore } from '@/stores/user'
 
+const userInfoStore = useUserInfoStore();
 
 let showUploadBookSel = ref(false);
 
@@ -27,7 +29,7 @@ function goToCategory(name){
 </script>
 <template>
   <div class="page">
-    <NavBar title="共享图书" />
+    <NavBar title="共享图书" :showBack='false' />
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
@@ -39,7 +41,7 @@ function goToCategory(name){
     <div class="notices-wrapper" @click='navigateTo("/pages/notices/notices",{})'>
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-notices.png" alt="" class='img'>
       <!-- <div class='text'>消息</div> -->
-      <div class="tag">11</div>
+      <div class="tag">{{userInfoStore.new_message_num}}</div>
     </div>
     <div class="upload-book-wrapper" @click='showUploadBookSel=true'>
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-add-book.png" alt="" class='img'>
@@ -51,48 +53,48 @@ function goToCategory(name){
       <!-- <div class='text'>排行榜</div> -->
     </div>
     <div class='category-item story' @click='goToCategory("story")' >
-      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1.png" alt="" class='img' >
+      <img v-if='userInfoStore.categorylist[0].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1.png" alt="" class='img' >
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1_d.png" alt="" class='img' >
       <div class="text-wrapper">
-        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img v-if='userInfoStore.categorylist[0].category_booknum'  src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
         <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">故事大王</div>
+        <div class="text">{{userInfoStore.categorylist[0].category}}</div>
       </div>
     </div>
     <div class='category-item keipu' @click='goToCategory("keipu")'>
-      <img v-if='0' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2.png" alt="" class='img'>
+      <img  v-if='userInfoStore.categorylist[1].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2.png" alt="" class='img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2_d.png" alt="" class='img' >
       <div class="text-wrapper">
-        <img v-if='0' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img  v-if='userInfoStore.categorylist[1].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
         <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">科普百科</div>
+        <div class="text">{{userInfoStore.categorylist[1].category}}</div>
       </div>
     </div>
     <div class='category-item all' @click="navigateTo('/pages/all-books/all-books')">
-      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3.png" alt="" class='img'>
+      <img  v-if='userInfoStore.categorylist[2].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3.png" alt="" class='img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3_d.png" alt="" class='img' >
       <div class="text-wrapper">
-        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img  v-if='userInfoStore.categorylist[2].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
         <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">全部图书</div>
+        <div class="text">{{userInfoStore.categorylist[2].category}}</div>
       </div>
     </div>
     <div class='category-item nature' @click='goToCategory("nature")'>
-      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4.png" alt="" class='img'>
+      <img  v-if='userInfoStore.categorylist[3].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4.png" alt="" class='img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4_d.png" alt="" class='img' >
       <div class="text-wrapper">
-        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img  v-if='userInfoStore.categorylist[3].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
         <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">大自然</div>
+        <div class="text">{{userInfoStore.categorylist[3].category}}</div>
       </div>
     </div>
     <div class='category-item children' @click='goToCategory("children")'>
-      <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5.png" alt="" class='img '>
+      <img  v-if='userInfoStore.categorylist[4].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5.png" alt="" class='img '>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5_d.png" alt="" class='img' >
       <div class="text-wrapper">
-        <img v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
+        <img  v-if='userInfoStore.categorylist[4].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
         <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">儿童文学</div>
+        <div class="text">{{userInfoStore.categorylist[4].category}}</div>
       </div>
     </div>
     <HomeMenuTabs class='home-menu-tabs' active='share' />

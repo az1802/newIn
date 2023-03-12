@@ -35,9 +35,9 @@ let bookBottomImg = computed(()=>{
 
 <template>
   <div class='book-item'>
-    <img src="" alt="" class='book'>
+    <img :src="info.cover" alt="" class='book'>
     <img :src="bookBottomImg" alt="" class='book-bottom'>
-    <div class="name">{{info.name}}</div>
+    <div class="name">{{info.bookname}}</div>
   </div>
 </template>
 

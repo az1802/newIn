@@ -1,46 +1,39 @@
+<script>
+let opts;
+export default {
+  onLoad(options) {
+    console.log('options: ', options);
+    opts = options || {};
+  }
+}
+</script>
+
 <script setup>
-import { ref ,unref,computed} from 'vue';
+import { ref ,unref,computed,onBeforeMount} from 'vue';
 import { useSystemInfo } from '@hooks/commonHooks';
 import BorrowBookDialog from './BorrowBookDialog.vue';
+import API from "@/api/index";
+import {showToast} from "@/utils/wechat";
 
 const systemInfo = useSystemInfo();
 
-const bookDetail = ref({
+const bookinfo = ref({
   name: '',
   author: '',
   owners: [],
   pingjia: [],
 });
 
+const bookreviewlist = ref([]);
+const ownerList = ref([]);
 
 
 
 let borrowBookDialog = ref(false);
-function borrowBook() {
-  console.log('借阅次数');
-
-  borrowBookDialog.value=true
-}
-
-let ownerList = [];
 
 
 
 
-function mockBookList(){
-  let mockList=[]
-  for(let i= 1 ; i<15;i++){
-    mockList.push({
-      name:"张恒"+i,
-      id:i,
-      grade:"三年级二班",
-      avatarUrl:""
-    })
-
-  }
-  ownerList = mockList;
-}
-mockBookList();
 function transfromOwnerList(list) {
   let selArr = [],
     res = [];
@@ -58,27 +51,77 @@ function transfromOwnerList(list) {
   }
   return res;
 }
-let temp = transfromOwnerList(ownerList);
-ownerList = ref(temp);
 
-console.log('temp: ', unref(ownerList));
+async function getBookDetail(isbn_id){
+  let userInfo = uni.getStorageSync("userInfo");
+  let params = {
+    school_id:userInfo.school_id,
+    student_id:userInfo.student_id,
+    isbn_id
+  }
+
+  uni.showLoading();
+  let  res=await API.Book.getBookDetail({
+    params
+  });
+
+  uni.hideLoading();
+
+  if(res){
+    bookinfo.value = res.bookinfo;
+    bookreviewlist.value = res.bookreviewlist;
+    ownerList.value = transfromOwnerList(res.thisbooklist || []);
+  }
+
+
+}
+
+
+onBeforeMount(()=>{
+  getBookDetail(opts.isbn_id);
+})
+
+
+
+// function mockBookList(){
+//   let mockList=[]
+//   for(let i= 1 ; i<15;i++){
+//     mockList.push({
+//       name:"张恒"+i,
+//       id:i,
+//       grade:"三年级二班",
+//       avatarUrl:""
+//     })
+
+//   }
+//   ownerList = mockList;
+// }
+// mockBookList();
+
+// let temp = transfromOwnerList(ownerList);
+// ownerList = ref(temp);
+
 
 
 let showOwnerList = computed(()=>{
   if(showAll.value){
-    console.log('unref(ownerList);: ', unref(ownerList));
     return unref(ownerList);
   }else{
     return unref(ownerList).length > 2 ? unref(ownerList).slice(0,2) : unref(ownerList);
   }
 })
-console.log('showOwnerList: ', showOwnerList);
 let showAll = ref(false);
+
 
 let selUserId = ref('');
 
 function changeSelUserId(item) {
-  selUserId.value = item.id;
+  if(item.student_id==unref(selUserId)){
+    selUserId.value = ""
+  }else{
+  selUserId.value = item.student_id;
+
+  }
 }
 
 const containerStyle = ref({
@@ -89,6 +132,39 @@ const containerStyle = ref({
 
 let borrowDays = ref('');
 
+
+async function borrowBook(){
+
+  let borrowDaysVal =  parseInt(unref(borrowDays));
+
+  if(Number.isNaN(borrowDaysVal)){
+    showToast("请输入借阅天数");
+    return ;
+  }
+  if(!unref(selUserId)){
+    showToast("请选择拥有次数的同学");
+    return ;
+  }
+
+
+  let userInfo = uni.getStorageSync("userInfo");
+  let params = {
+    school_id:userInfo.school_id,
+    borrow_student_id:userInfo.student_id,
+    book_id:unref(bookinfo).isbn_id,
+    lent_student_id:unref(selUserId),
+    borrow_days:borrowDaysVal
+  }
+
+  let res = await API.Book.getBorrowBook({
+    params
+  })
+
+  if(res&&res.code==0){
+    showToast("借阅成功")
+  }
+
+}
 
 
 
@@ -107,14 +183,14 @@ let borrowDays = ref('');
     >
       <div class="book-info">
         <div class="book-img">
-          <img src="" alt="" class="img" />
+          <img :src="bookinfo.cover" alt="" class="img" />
         </div>
         <div class="info">
-          <div class="name">神笔马良</div>
+          <div class="name">{{bookinfo.bookname}}</div>
           <div class="form">
             <div class="form-item">
               <div class="label">作者：</div>
-              <div class="value">洪汛涛</div>
+              <div class="value">{{bookinfo.author}}</div>
             </div>
             <div class="form-item">
               <div class="label">类型：</div>
@@ -122,11 +198,11 @@ let borrowDays = ref('');
             </div>
             <div class="form-item">
               <div class="label">页数：</div>
-              <div class="value">106</div>
+              <div class="value">{{bookinfo.pages}}</div>
             </div>
             <div class="form-item">
               <div class="label">借阅次数：</div>
-              <div class="value">12</div>
+              <div class="value">{{bookinfo.isbn_lent_num}}</div>
             </div>
           </div>
         </div>
@@ -146,15 +222,15 @@ let borrowDays = ref('');
               class="user-item"
               v-for="item in ownerGroup"
               :key="item.id"
-              :class="[selUserId == item.id ? 'active' : '']"
+              :class="[selUserId == item.student_id ? 'active' : '']"
               @click="changeSelUserId(item)"
             >
               <div class="avatar-wrapper">
-                <img src="" alt="" class="img" />
-                <img v-if="selUserId == item.id " src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/switch-user-bg.png" alt="" class='active-img'>
+                <img :src="item.photo" alt="" class="img" />
+                <img v-if="selUserId == item.student_id " src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/switch-user-bg.png" alt="" class='active-img'>
               </div>
-              <div class="name">{{ item.name }}</div>
-              <div class="class">一年级三班</div>
+              <div class="name">{{ item.xingming }}</div>
+              <div class="class">{{item.banji}}</div>
             </div>
           </div>
         </div>
@@ -269,7 +345,7 @@ let borrowDays = ref('');
     .owner-group{
       .box-size(100%,unset);
       .flex-simple(flex-start,center);
-      margin-bottom:20px;
+      padding-bottom:20px;
       .user-item{
         .box-size(calc(25% - 19.5px));
         .flex-simple(center,center);
@@ -352,6 +428,7 @@ let borrowDays = ref('');
     .input{
       .box-size(100%,29px);
       padding:0 20px 0 11px;
+      font-size:12px;
 
     }
   }

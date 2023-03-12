@@ -56,18 +56,18 @@ function calcPos(scrollTop,list){
 
   // let {screenHeight,screenWidth} = systemInfo;
   unref(list).forEach((item,index)=>{
-    let h = 80*(index+1)
+    let h = 60*(index+1)
 
-    if(h <= scrollTop+80 ){
+    if(h <= scrollTop+60 ){
       item.style = {
         itemStyle:{
           width:"245px",
-          height:"80px",
+          height:"60px",
           marginTop:"0px"
         },
         imgStyle:{
           width:"34px",
-          height:"44px"
+          height:"43px"
         },
         statusTextStyle:{
           fontSize:"16px"
@@ -75,26 +75,22 @@ function calcPos(scrollTop,list){
         timeTextStyle:{
           fontSize:"12px"
         },
-        jifenTextStyle:{
-          fontSize:"12px"
-        },
         numStyle:{
           fontSize:"20px"
         }
       }
-    }else if(h <= scrollTop + 160){
-      let scale = ((scrollTop+160) - h)/80;
+    }else if(h <= scrollTop + 120){
+      let scale = ((scrollTop+120) - h)/60;
       console.log('scale: ',(scrollTop+120)- h, scale);
       item.style = {
         itemStyle:{
           width:`${210+35*scale}px`,
-          height:`${67+13*scale}px`,
-          // marginTop:"10px"
+          height:`${52+8*scale}px`,
           // marginTop:`${12 - 12*scale}px`
         },
         imgStyle:{
-          width:`${29+4*scale}px`,
-          height:`${38+6*scale}px`
+          width:`${29+5*scale}px`,
+          height:`${37+6*scale}px`
         },
         statusTextStyle:{
           fontSize:`${13+3*scale}px`
@@ -102,60 +98,73 @@ function calcPos(scrollTop,list){
         timeTextStyle:{
           fontSize:`${11+1*scale}px`
         },
-        jifenTextStyle:{
-          fontSize:`${11+1*scale}px`
-        },
         numStyle:{
-          fontSize:`${19+1*scale}px`
+          fontSize:`${15+5*scale}px`
         }
       }
-    }else if(h <= scrollTop + 240){
-      let scale = ((scrollTop+240) -h)/80;
+    }else if(h <= scrollTop + 180){
+      let scale = ((scrollTop+180)-h)/60;
       item.style = {
         itemStyle:{
           width:`${187+23*scale}px`,
-          height:`${55+12*scale}px`,
-          // marginTop:`${14 - 2*scale}px`
+          height:`${47+6*scale}px`,
+          // marginTop:`${12 - 2*scale}px`
         },
         imgStyle:{
           width:`${26+3*scale}px`,
           height:`${34+4*scale}px`
         },
         statusTextStyle:{
-          fontSize:`${12+1*scale}px`
+          fontSize:`${13+3*scale}px`
         },
         timeTextStyle:{
-          fontSize:`${10+1*scale}px`
+          fontSize:`${10+2*scale}px`
         },
-        jifenTextStyle:{
+        numStyle:{
+          fontSize:`${15+0*scale}px`
+        }
+      }
+    }else if(h <= scrollTop + 240){
+      let scale = ((scrollTop+240) -h)/60;
+      item.style = {
+        itemStyle:{
+          width:`${172+15*scale}px`,
+          height:`${42+5*scale}px`,
+          // marginTop:`${14 - 2*scale}px`
+        },
+        imgStyle:{
+          width:`${24+2*scale}px`,
+          height:`${30+4*scale}px`
+        },
+        statusTextStyle:{
+          fontSize:`${11+2*scale}px`
+        },
+        timeTextStyle:{
           fontSize:`${9+1*scale}px`
         },
         numStyle:{
-          fontSize:`${16+3*scale}px`
+          fontSize:`${12+3*scale}px`
         }
       }
     }else if(h > scrollTop + 240){
       item.style = {
         itemStyle:{
-          width:"187px",
-          height:"55px",
+          width:"172px",
+          height:"42px",
           // marginTop:"14px"
         },
         imgStyle:{
-          width:`26px`,
-          height:`34px`
+          width:`24px`,
+          height:`30px`
         },
-        statusTextStyle:{
-          fontSize:"12px"
+        nameStyle:{
+          fontSize:"11px"
         },
         timeTextStyle:{
-          fontSize:"10px"
-        },
-        jifenTextStyle:{
           fontSize:"9px"
         },
         numStyle:{
-          fontSize:"16px"
+          fontSize:"12px"
         }
       }
     }
@@ -171,6 +180,7 @@ function handleScroll(e){
   // console.log('scrollTop: ', scrollTop);
   calcPos(scrollTop,list)
 }
+
 
 </script>
 
@@ -190,7 +200,7 @@ function handleScroll(e){
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/intergal-diandi.png" alt="" class='diandi-record'>
     </div>
     <div class="list-wrapper" :style='listStyle'>
-      <scroll-view :show-scrollbar='false' class="record-list" @scroll='handleScroll' scroll-y enable-passive >
+      <scroll-view :show-scrollbar='false' class="record-list" @scroll='handleScroll' scroll-y enable-passive>
       <div class='item' v-for='item in list' :key='item.id'>
         <div class="info" :style='item.style.itemStyle'>
           <div class="left">
@@ -199,7 +209,6 @@ function handleScroll(e){
             <div class="status">
               <div class="text" :style='item.style.statusTextStyle'>{{item.statusText}}</div>
               <div class="time" :style='item.style.timeTextStyle'>{{item.timeText}}</div>
-              <div class="jifen" :style='item.style.jifenTextStyle'>{{item.jifenText}}</div>
             </div>
           </div>
           <div class="right">
@@ -259,10 +268,10 @@ function handleScroll(e){
   .record-list{
     .flex-simple(center,flex-start);
     .box-size(100vw,240px);
-    margin-top:3.733vw;
+    margin-top:9.067vw;
     font-size:0px;
     .item{
-      .box-size(100%,80px);
+      .box-size(100%,60px);
       // .flex-simple(center,flex-start);
       .flex-simple(center,center);
       .info{
@@ -270,17 +279,17 @@ function handleScroll(e){
         margin: 0 auto 0 auto;
         .flex-simple(space-between,center);
         box-sizing: border-box;
-        padding:0 17px 0 13px;
+        padding:0 20px;
         .left{
           font-size:0px;
-          .flex-simple(flex-start,flex-start);
+          .flex-simple(flex-start,center);
           .img{
 
           }
           .status{
             .flex-simple(center,flex-start);
             flex-direction: column;
-            margin-left:10px;
+            margin-left:4px;
             .text{
               font-weight:bold;
               color:#813F01;
@@ -289,21 +298,12 @@ function handleScroll(e){
               margin-top:6px;
               color:#803F01;
             }
-            .jifen{
-              margin-top:6px;
-              color:#803F01;
-            }
           }
         }
         .right{
-          .flex-simple(flex-start,center);
-          align-self:flex-start;
-          margin-top:10%;
+          .flex-simple(flex-start,flex-end);
           .num{
             color:#803F01;
-          }
-          .unit{
-            font-size:13px;
           }
         }
       }

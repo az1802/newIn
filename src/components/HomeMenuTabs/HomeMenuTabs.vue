@@ -1,5 +1,5 @@
 <script setup >
-import {navigateTo} from "@utils/wechat"
+import {navigateTo,redirectTo} from "@utils/wechat"
 const props = defineProps({
   active:{
     type:String,
@@ -8,23 +8,37 @@ const props = defineProps({
 })
 
 
+function switchTab(name){
+  if(name ==props.active ){
+    return;
+  }
+  if(name == "class-library"){
+    redirectTo("/pages/class-library/class-library")
+  }else if(name=="share"){
+    redirectTo("/pages/home/home")
+  }else{
+    redirectTo("/pages/mine/mine")
+  }
+}
+
+
 
 
 </script>
 
 <template>
   <div class='menu-wrapper'>
-    <div class="menu-item" @click='navigateTo("/pages/class-library/class-library")'>
+    <div class="menu-item" @click='switchTab("class-library")'>
       <img v-if='props.active!=="class-library"' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_library_01.png" alt=""  class='library-img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_library_02.png" alt="" class='library-img'>
       <!-- <div class='text'>图书馆</div> -->
     </div>
-    <div class="menu-item"  @click='navigateTo("/pages/home/home")'>
+    <div class="menu-item"  @click='switchTab("share")'>
       <img v-if='props.active!=="share"' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_sharebooks_01.png" alt=""  class='share-img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_sharebooks_02.png" alt="" class='share-img'>
       <!-- <div class='text'>共享图书</div> -->
     </div>
-    <div class="menu-item"  @click='navigateTo("/pages/mine/mine")'>
+    <div class="menu-item"  @click='switchTab("name")'>
       <img v-if='props.active!=="mine"' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_my_01.png" alt=""  class='my-img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_my_02.png" alt="" class='my-img'>
       <!-- <div class='text'>我的</div> -->

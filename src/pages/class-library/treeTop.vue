@@ -59,7 +59,7 @@
 
 <template>
   <div class='tree-top-wrapper'>
-    <div class="user-item" v-for="userItem in list" :key='userItem.id' :style='userItem.style'>
+    <div class="user-item" v-for="userItem in list" :key='userItem.student_id' :style='userItem.style'>
         <memberInfo :info='userItem' />
     </div>
   </div>

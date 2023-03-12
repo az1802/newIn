@@ -16,6 +16,13 @@ import API from "@/api/index";
 const userInfoStore = useUserInfoStore();
 let isLogining = false;
 
+function handleUserInfo(userInfo){
+  userInfo.categoryNumMap = {};
+  userInfo.categorylist.forEach(item=>{
+    userInfo.categoryNumMap[item.category] = item.category_booknum
+  })
+}
+
 
 // 检测是否是学生,或者是老师
 onBeforeMount(async ()=>{
@@ -27,6 +34,10 @@ onBeforeMount(async ()=>{
   isLogining = false
   console.log('静默登录获取用户信息: ', userInfo);
   if(userInfo){
+
+    handleUserInfo(userInfo)
+
+
     userInfoStore.setUserInfo(userInfo);
     let {usertype} = userInfo
     console.log('usertype: ', usertype);
