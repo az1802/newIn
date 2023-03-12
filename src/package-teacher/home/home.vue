@@ -23,7 +23,13 @@ const tabActive = ref("uploadBook");
 
 <template>
   <div class='page'>
-    <TeacherNavBar :showBackIcon='false' title="二年级三班" />
+    <TeacherNavBar :showBackIcon='false' title="二年级三班" >
+      <template #back>
+        <div @click='navigateTo("/package-teacher/general-setting/general-setting")' class='home-setting'>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/home-icon-setting.png" alt="" class='img'>
+        </div>
+      </template>
+    </TeacherNavBar>
     <div class='card-list'>
       <div class="card-item upload" @click='navigateTo("/package-teacher/total-borrow/total-upload")'>
         <div class="text ben">265</div>
@@ -82,6 +88,13 @@ const tabActive = ref("uploadBook");
 @import '@static/teacher-index.less';
 .page{
   background-color: #F6F6F6;
+  .home-setting{
+    .box-size(33px,33px);
+    .flex-simple(center,center);
+    .img{
+      .box-size(17px,16px);
+    }
+  }
   .card-list{
     .box-size(100vw,114px,white);
     .flex-simple(space-between,center);

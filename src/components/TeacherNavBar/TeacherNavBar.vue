@@ -41,10 +41,15 @@
       paddingTop: systemInfo.statusBarHeight + 'px',
       background:props.background
     }">
-    <div class="back-wrapper" @click='goBack' :style="{
+    <div v-if='!$slots.back' class="back-wrapper" @click='goBack' :style="{
       top: systemInfo.statusBarHeight + 'px',
     }">
       <img v-if='showBackIcon' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/nav-icon-fh.png" alt="" class='img' />
+    </div>
+    <div v-else class="back-wrapper"  :style="{
+      top: systemInfo.statusBarHeight + 'px',
+    }">
+      <slot name='back'/>
     </div>
     <slot name='title' v-if='slots.title'/>
     <div class='title' v-else>

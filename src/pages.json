@@ -150,6 +150,26 @@
         "style": {
           "disableScroll": true
         }
+      },{
+        "path": "general-setting/general-setting",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "general-setting/switch-user",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "general-setting/change-password",
+        "style": {
+          "disableScroll": true
+        }
+      },{
+        "path": "general-setting/version",
+        "style": {
+          "disableScroll": true
+        }
       }]
     }
   ],
