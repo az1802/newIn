@@ -341,6 +341,7 @@ function viewBookDetail(bookItem){
           .normal-font(12px,#813F01);
           border-radius: 10px;
           margin-top:5px;
+          .no-wrap();
         }
       }
 

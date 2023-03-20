@@ -1,86 +1,153 @@
 <script setup >
-import {ref} from "vue";
+import {ref,unref,onBeforeMount} from "vue";
 import {navigateTo} from "@utils/wechat";
 
+import {getMessage} from "@/api/user";
 
-const borrowingMsgList = ref([
-  {
-    id:1,
-    content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-    type:"jieyue",
-    btnText:"去同意"
-  },
-  {
-    id:2,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-    type:"xinyongjifen",
-    btnText:"立即查看"
-  },
-  {
-    id:3,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-    type:"jifen",
-    btnText:"立即查看"
-  },
-  {
-    id:4,
-    content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-    type:"jifen",
-    btnText:"立即查看"
-  },
-  {
-    id:5,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-    type:"jifen",
-    btnText:"立即查看"
-  },
-  {
-    id:6,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-    type:"jifen",
-    btnText:"立即查看"
-  },
-  {
-    id:7,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-    type:"jifen",
-    btnText:"立即查看"
-  },
-  {
-    id:8,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-    type:"jifen",
-    btnText:"立即查看"
-  },
-]);
-const creditMsgList = ref([
-  {
-    id:1,
-    content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-    type:"jieyue",
-    btnText:"去同意"
-  },
-  {
-    id:2,
-    content:"李大锤向你申请借阅",
-    img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-    type:"xinyongjifen",
-    btnText:"立即查看"
-  },
-]);
+import { useUserInfoStore } from '@/stores/user';
 
-const integralMsgList = ref([
 
-]);
+const userInfoStore = useUserInfoStore();
+
+const borrowingMsgList = ref([]);
+const creditMsgList = ref([]);
+const integralMsgList = ref([]);
+
+
+const borrowingMsgPage = {
+  page:1
+}
+const creditMsgPage = {
+  page:1
+}
+const integralMsgPage = {
+  page:1
+}
+
+
+
+onBeforeMount(()=>{
+  // TODO 服务报错
+  getBorrowMsg();
+})
+
+
+
+async function getBorrowMsg(){
+  let res = await getMessage({
+    params:{
+      school_id:userInfoStore.school_id,
+      student_id:userInfoStore.student_id,
+      type:1,
+      ...borrowingMsgPage,
+    }
+  });
+
+  console.log(res);
+}
+
+async function getCreditMsg(){
+  let res = await getMessage({
+    params:{
+      school_id:userInfoStore.school_id,
+      student_id:userInfoStore.student_id,
+      type:2,
+      ...creditMsgPage,
+    }
+  });
+}
+async function getIntergralMsg(){
+  let res = await getMessage({
+    params:{
+      school_id:userInfoStore.school_id,
+      student_id:userInfoStore.student_id,
+      type:3,
+      ...integralMsgPage,
+    }
+  });
+}
+
+
+
+
+// const borrowingMsgList = ref([
+//   {
+//     id:1,
+//     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
+//     type:"jieyue",
+//     btnText:"去同意"
+//   },
+//   {
+//     id:2,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
+//     type:"xinyongjifen",
+//     btnText:"立即查看"
+//   },
+//   {
+//     id:3,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+//     type:"jifen",
+//     btnText:"立即查看"
+//   },
+//   {
+//     id:4,
+//     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+//     type:"jifen",
+//     btnText:"立即查看"
+//   },
+//   {
+//     id:5,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+//     type:"jifen",
+//     btnText:"立即查看"
+//   },
+//   {
+//     id:6,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+//     type:"jifen",
+//     btnText:"立即查看"
+//   },
+//   {
+//     id:7,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+//     type:"jifen",
+//     btnText:"立即查看"
+//   },
+//   {
+//     id:8,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
+//     type:"jifen",
+//     btnText:"立即查看"
+//   },
+// ]);
+// const creditMsgList = ref([
+//   {
+//     id:1,
+//     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
+//     type:"jieyue",
+//     btnText:"去同意"
+//   },
+//   {
+//     id:2,
+//     content:"李大锤向你申请借阅",
+//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
+//     type:"xinyongjifen",
+//     btnText:"立即查看"
+//   },
+// ]);
+
+// const integralMsgList = ref([
+
+// ]);
 
 const tabActive = ref("one");
 

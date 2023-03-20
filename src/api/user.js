@@ -100,3 +100,15 @@ export async function getBanjiRanking(params){
   }
   return false;
 }
+
+
+
+export async function getMessage(params){
+  try{
+    let res = await http.get("/index/sharebooksapi/getMessage",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}

@@ -34,51 +34,71 @@ onBeforeMount(async ()=>{
   isLogining = false
   console.log('静默登录获取用户信息: ', userInfo);
   if(userInfo){
-
-    handleUserInfo(userInfo)
-
+    // handleUserInfo(userInfo)
 
     userInfoStore.setUserInfo(userInfo);
     let {usertype} = userInfo
-    console.log('usertype: ', usertype);
-    if(usertype==0){
-      navigateTo("/pages/login/login")
-    }else if(usertype==1){
-      navigateTo("/pages/home/home")
-    }else if(usertype==2){
-      navigateTo("/package-teacher/home/home")
-    }
+
+    afterLogin(usertype)
+
   }
 })
+
+async function afterLogin(usertype){
+    if(usertype==0){
+      navigateTo("/pages/login/login");
+    }else if(usertype==1){
+      navigateTo("/pages/home/home");
+    }else if(usertype==2){
+      navigateTo("/package-teacher/home/home");
+    }
+}
+
+
 
 
 async function loginSystem(){
   if(isLogining){
     return ;
   }
+  // isLogining = true;
+  // let wechatUserInfo = await getUserInfo();
+  // let codeMsg = await uni.login();
+
+  // if (!wechatUserInfo || typeof wechatUserInfo === "object" &&wechatUserInfo.errMsg !== "getUserProfile:ok") {
+  //       await showToast("获取用户信息失败,请重新授权");
+  //       isLogining = false;
+  //       return;
+  //     }
+  // const {userInfo } = wechatUserInfo || {};
+  // // 绑定用户信息
+  // let res = await wechatSignUp({
+  //   code:codeMsg.code,
+  //   nickname:userInfo.nickName,
+  //   avataurl:userInfo.avatarUrl
+  // });
+
+  // if(res){
+  //   userInfoStore.setUserInfo(userInfo);
+  //   afterLogin(userInfo.usertype)
+  // }
+
+  // isLogining = false;
+
+
   isLogining = true;
-  let wechatUserInfo = await getUserInfo();
-  let codeMsg = await uni.login();
+  let userInfo = await getWechatUserId();
+  isLogining = false
+  console.log('静默登录获取用户信息: ', userInfo);
+  if(userInfo){
+    // handleUserInfo(userInfo)
 
-  if (!wechatUserInfo || typeof wechatUserInfo === "object" &&wechatUserInfo.errMsg !== "getUserProfile:ok") {
-        await showToast("获取用户信息失败,请重新授权");
-        isLogining = false;
-        return;
-      }
-  const {userInfo } = wechatUserInfo || {};
-  // 绑定用户信息
-  let res = await wechatSignUp({
-    code:codeMsg.code,
-    nickname:userInfo.nickName,
-    avataurl:userInfo.avatarUrl
-  });
-
-  if(res){
     userInfoStore.setUserInfo(userInfo);
-    navigateTo("/pages/login/login");
-  }
+    let {usertype} = userInfo
 
-  isLogining = false;
+    afterLogin(usertype)
+
+  }
 
 
 }

@@ -104,6 +104,10 @@ async function sumbit(){
             >
               <view class="uni-input">{{ typeList[typeIndex] ? typeList[typeIndex].category  : "请选择图书类型" }}</view>
             </picker>
+
+
+
+            <!-- <CategorySel v-model:value='typeIndex' :list='typeList'/> -->
           </div>
         </div>
 
@@ -145,14 +149,15 @@ async function sumbit(){
   position: relative;
 
   .group-wrapper {
-    .box-size(92vw,508px,#F7B053);
+    .box-size(92vw,unset,#F7B053);
+    min-height:508px;
     margin: 8px auto 0 auto;
     padding: 6px 6px 11px 6px;
     box-shadow: 0px 1.6vw 0px 0px rgba(208, 135.595, 40.786, 1);
     border-radius: 30px;
     .group {
       .box-size(100%,100%,#FEFBD7);
-      padding: 40px 26px 0 26px;
+      padding: 40px 26px 10px 26px;
       border-radius: 25px;
       .detail {
         .flex-simple(flex-start,center);

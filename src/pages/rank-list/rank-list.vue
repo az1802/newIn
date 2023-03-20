@@ -1,10 +1,37 @@
 <script setup >
 import RankItem from "./RankItem.vue";
 import MyRank from "./MyRank.vue"
-import {ref,shallowRef,unref,shallowReactive,reactive} from "vue";
+import {ref,shallowRef,unref,shallowReactive,reactive,onBeforeMount} from "vue";
+import {getRanking} from "@/api/class";
+
+import { useUserInfoStore } from '@/stores/user';
+
+
+onBeforeMount(()=>{
+  _init();
+})
+
+
+const userInfoStore = useUserInfoStore();
+
+async function _init(){
+  let res = await getRanking({
+    params:{
+      school_id:userInfoStore.school_id,
+      student_id:userInfoStore.student_id,
+    }
+  })
+
+  console.log('res: ', res);
+
+}
+
+
+
 
 const activeTab = ref("grade");
-const classRankList=reactive([{
+const classRankList=reactive([
+  {
   id:1,
   img:"",
   name:"张凡",

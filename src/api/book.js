@@ -71,6 +71,16 @@ export async function getAllBookList(params){
   }
   return false;
 }
+export async function getBookListByCategory(params){
+  try{
+    let res = await http.get("/getAllBookList",params);
+    return res;
+  }catch(err){
+    console.log('err: ', err);
+    showToast(err);
+  }
+  return false;
+}
 
 
 

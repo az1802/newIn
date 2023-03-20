@@ -1,6 +1,11 @@
 
 <script >
-import { ref, unref, computed ,onMounted} from "vue";
+import { ref, unref, computed ,onMounted ,onBeforeMount} from "vue";
+import {getBookListByCategory} from "@/api/book";
+import { useUserInfoStore } from '@/stores/user'
+import {navigateTo} from "@/utils/wechat"
+
+
 let opts = {} ;
 export default {
   onLoad(options){
@@ -8,6 +13,9 @@ export default {
     opts = options
   },
   setup() {
+
+
+    const userInfoStore = useUserInfoStore();
     const mockBookList = [
       {
         id: 0,
@@ -37,31 +45,52 @@ export default {
 
       mockBookList.forEach((item, index) => {
         item.style = posMap[index + 1];
-
       })
 
       return mockBookList
     }
 
-    const bookList = ref(handleBookList(mockBookList));
+    // const bookList = ref(handleBookList(mockBookList));
+    const bookList = ref([]);
 
 
     let title = ref("")
-    onMounted(() => {
-       title.value = opts.title
+    onBeforeMount(() => {
+       title.value = opts.title;
+       _init();
     })
+
+
+    async function _init(){
+      let res = await getBookListByCategory({
+        params:{
+          school_id:userInfoStore.school_id,
+          student_id:userInfoStore.student_id,
+          page:1,
+          category_id:opts.category_id
+        }
+      });
+      if(res){
+        bookList.value = handleBookList(res.booklist || [])
+      }
+      console.log('res: ', res);
+    }
+
+    function viewBookDetail(bookItem){
+      navigateTo("/pages/book-detail/book-detail",bookItem)
+    }
 
     return {
       bookList,
-      title
+      title,
+      viewBookDetail
     }
   }
 }
-
-
-
-
 </script>
+
+
+
 <template>
   <div class="page">
     <NavBar :title="title" />
@@ -87,9 +116,9 @@ export default {
 
 
 
-      <div class='book-item' v-for='bookItem in bookList' :style='bookItem.style' :key='bookItem.id'>
+      <div class='book-item' v-for='bookItem in bookList' :style='bookItem.style' :key='bookItem.id'  @click='viewBookDetail(bookItem)'>
         <img :src="bookItem" alt="" class='img'>
-        <div class="name">{{ bookItem.name }}</div>
+        <div class="name">{{ bookItem.bookname }}</div>
       </div>
 
     </div>

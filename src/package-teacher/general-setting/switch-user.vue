@@ -1,7 +1,9 @@
 <script setup >
-import {ref} from "vue";
-import {navigateTo,navigateBack} from "@utils/wechat";
+import {ref,onBeforeMount,unref} from "vue";
+import {navigateTo,navigateBack,getWechatUserId,showToast} from "@utils/wechat";
 import {useSystemInfo} from "@hooks/commonHooks";
+import { useUserInfoStore } from '@/stores/user';
+import {getBindUserlist,switchCurBindUser} from "@/api/user";
 
 const systemInfo = useSystemInfo();
 const listStyle = ref({
@@ -12,35 +14,70 @@ function goBack(){
   navigateBack()
   }
 
+const userInfoStore = useUserInfoStore();
+let selUserId = ref('');
 
-const userList = ref([
-  {
-    xingming:"学校管理员",
-    role:"student",
-    avatar:"",
-    id:1
-  },
-  {
-    xingming:"",
-    role:"student",
-    avatar:"",
-    id:1
-  },
-  {
-    xingming:"",
-    role:"student",
-    avatar:"",
-    id:1
-  },
-])
+
+onBeforeMount(async ()=>{
+  console.log(userInfoStore)
+  let listRes = await getBindUserlist({
+    params:{
+      wxuser_id:userInfoStore.wxuser_id
+    }
+  })
+  if(listRes){
+    userInfoStore.setUserInfo({
+      bindUserList:listRes.items || [],
+    })
+    selUserId.value = listRes.default
+  }
+  console.log('listRes: ', listRes);
+})
+
+async function bindUser(){
+  navigateTo("/pages/login/login",{showBack:1});
+}
+
+async function switchUser(){
+  if(!unref(selUserId)){
+    return
+  }
+  let switchRes = await switchCurBindUser({
+    params:{
+      wxuser_id:userInfoStore.wxuser_id,
+      selected:unref(selUserId)
+    }
+  })
+  console.log('切换身份结果: ', switchRes);
+  if(switchRes){
+    showToast("切换身份成功");
+    // TODO 同时更新其它所有信息,或者其他页面重新加载时重新请求信息
+    let userInfo = await getWechatUserId();
+    if(userInfo){
+      userInfoStore.setUserInfo(userInfo);
+      let {usertype} = userInfo
+      afterLogin(usertype)
+    }
+  }
+}
+
+async function afterLogin(usertype){
+    if(usertype==0){
+      navigateTo("/pages/login/login");
+    }else if(usertype==1){
+      navigateTo("/pages/home/home");
+    }else if(usertype==2){
+      navigateTo("/package-teacher/home/home");
+    }
+}
 
 async function unbinding(){
 
 }
-
-async function switchUser(){
-
+function changeSelUserId(item){
+  selUserId.value = item.binding_id
 }
+
 
 
 </script>
@@ -62,18 +99,18 @@ async function switchUser(){
 
 
   <div class="list">
-    <div class="item active" >
+    <div class="item" v-for='item in userInfoStore.bindUserList' :key='item.binding_id' :class='[selUserId==item.binding_id ? "active" :""]' @click='changeSelUserId(item)'>
       <div class="left">
         <img src="" alt="" class='img'>
         <div class="info">
-          <div class="name">学校管理员</div>
-          <div class="role">教师</div>
+          <div class="name">{{item.text}}</div>
+          <div class="role">{{item.text.indexOf("教师")?"教师":"学生"}}</div>
         </div>
       </div>
-      <div class='right'>当前登录</div>
+      <div class='right'>{{item.default ? "当前登录":""}}</div>
     </div>
 
-    <div class="item">
+    <!-- <div class="item">
       <div class="left">
         <img src="" alt="" class='img'>
         <div class="info">
@@ -93,7 +130,7 @@ async function switchUser(){
         </div>
       </div>
       <div class='right'></div>
-    </div>
+    </div> -->
 
     <div class="item">
       <div class="left">
@@ -161,6 +198,7 @@ async function switchUser(){
           .normal-font(12px,#ED9400);
         }
       }
+
       .left{
         .flex-simple(flex-start,center);
         .img{
@@ -189,10 +227,8 @@ async function switchUser(){
       }
 
       .right{
-       font-size:0px;
+        .normal-font(12px,#ED9400);
       }
-
-
 
       .label{
         .bold-font(16px,#434343);

@@ -1,22 +1,22 @@
 <script setup >
-import { navigateTo ,showToast} from '@utils/wechat';
+import {navigateTo,navigateBack,getWechatUserId,showToast} from "@utils/wechat";
 import {ref,onBeforeMount,unref} from "vue";
 import { useUserInfoStore } from '@/stores/user';
 import {getBindUserlist,switchCurBindUser} from "@/api/user";
 
 
-const userInfo = useUserInfoStore();
+const userInfoStore = useUserInfoStore();
 let selUserId = ref('');
 
 
 onBeforeMount(async ()=>{
   let listRes = await getBindUserlist({
     params:{
-      wxuser_id:userInfo.wxuser_id
+      wxuser_id:userInfoStore.wxuser_id
     }
   })
   if(listRes){
-    userInfo.setUserInfo({
+    userInfoStore.setUserInfo({
       bindUserList:listRes.items || [],
     })
     selUserId.value = listRes.default
@@ -38,17 +38,32 @@ async function switchUser(){
   }
   let switchRes = await switchCurBindUser({
     params:{
-      wxuser_id:userInfo.wxuser_id,
+      wxuser_id:userInfoStore.wxuser_id,
       selected:unref(selUserId)
     }
   })
   console.log('切换身份结果: ', switchRes);
   if(switchRes){
     showToast("切换身份成功");
-    userInfo.setUserInfo(switchRes)
     // TODO 同时更新其它所有信息,或者其他页面重新加载时重新请求信息
+    let userInfo = await getWechatUserId();
+    if(userInfo){
+      userInfoStore.setUserInfo(userInfo);
+      let {usertype} = userInfo
+      afterLogin(usertype)
+    }
   }
+}
 
+
+async function afterLogin(usertype){
+    if(usertype==0){
+      navigateTo("/pages/login/login");
+    }else if(usertype==1){
+      navigateTo("/pages/home/home");
+    }else if(usertype==2){
+      navigateTo("/package-teacher/home/home");
+    }
 }
 
 </script>
@@ -62,15 +77,15 @@ async function switchUser(){
     <div class="group-wrapper">
       <div class="group">
         <div class="current-info">
-          <img :src="userInfo.photo" alt="" class='img'>
-          <div class="name">{{userInfo.xingming}}</div>
-          <div class="class">{{userInfo.banji}}</div>
+          <img :src="userInfoStore.photo" alt="" class='img'>
+          <div class="name">{{userInfoStore.xingming}}</div>
+          <div class="class">{{userInfoStore.banji}}</div>
         </div>
         <div class="title">
           全部用户
         </div>
         <scroll-view :show-scrollbar='false' enhanced class='list' scroll-x>
-          <div class="user-item" v-for='item in userInfo.bindUserList' :key='item.binding_id' :class='[selUserId==item.binding_id ? "active" :""]' @click='changeSelUserId(item)'>
+          <div class="user-item" v-for='item in userInfoStore.bindUserList' :key='item.binding_id' :class='[selUserId==item.binding_id ? "active" :""]' @click='changeSelUserId(item)'>
             <div class="avatar-wrapper">
                 <img src="" alt="" class="img" />
                 <img v-if="selUserId == item.binding_id " src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/switch-user-bg.png" alt="" class='active-img'>

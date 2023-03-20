@@ -5,19 +5,17 @@ import UploadRankList from "../components/upload-rank-list.vue";
 import ReadRankList from "../components/read-rank-list.vue";
 import HotBook from "../components/hoot-book.vue"
 
-
-
 const tabActive = ref("uploadBook");
 
-
- function toggleTab(value){
+function toggleTab(value){
   tabActive.value = value
- }
+}
+
+const uploadList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
+const readList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
+const hotList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
 
 
-  const uploadList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
-  const readList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
-  const hotList = ref([1,2,3,4,5,6,7,8,9,10,11,12,13]);
 
 </script>
 

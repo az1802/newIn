@@ -302,8 +302,9 @@ async function borrowBook(){
       }
     }
     .info {
-      margin-left: 20px;
+      padding:0 20px;
       flex: 1;
+      box-sizing:border-box;
       .name {
         .bold-font(18px,#3f3f3f);
       }
