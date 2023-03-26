@@ -32,12 +32,41 @@ export default {
 
     const posMap = {
       1: {
-        top: "-15vw",
+        top: "-19vw",
         left: "24vw"
       },
       2: {
         top: "-2vw",
         left: "1vw"
+      },
+      3: {
+        top: "13vw",
+        left: "24vw"
+      },
+      4: {
+        top: "-3vw",
+        left: "76vw"
+      },
+      5: {
+        top: "19vw",
+        left: "54vw"
+      },
+      6: {
+        top: "30vw",
+        left: "77vw"
+      },
+      7: {
+        top: "53vw",
+        left: "34vw",
+        "z-index":100,
+      },
+      8: {
+        top: "74.5vw",
+        left: "12vw"
+      },
+      9: {
+        top: "85.5vw",
+        left: "43vw"
       }
     }
 
@@ -140,8 +169,8 @@ export default {
   }
 
   .island {
-    margin-top: 100px;
-    .box-size(100vw, 131vw);
+    margin-top: calc((100vh - 140vw - 88px)/2);
+    .box-size(100vw, 140vw);
     background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Nature-pic-island.png") 0 0/100% 100% no-repeat;
     position: relative;
 
@@ -156,8 +185,9 @@ export default {
     }
 
     .pic-animals {
-      .box-size(45.24vw, 27.47vw);
-      .pos-absolute(40vw, 0, unset, unset);
+      .box-size(48vw, 27.47vw);
+      .pos-absolute(47vw, 0, unset, unset);
+      z-index:100;
     }
 
     .pic-animals-2 {
@@ -167,8 +197,10 @@ export default {
 
     .animals {
       .box-size(13.24vw, 11.64vw);
-      .pos-absolute(57vw, 10vw, unset, unset);
+      .pos-absolute(65vw, 8vw, unset, unset);
+      z-index:1000;
     }
+
 
     .pic-rivers {
       .box-size(83.74vw, 57.58vw);
@@ -181,7 +213,7 @@ export default {
     }
 
     .book-item {
-      .box-size(22.133vw, 30.26vw);
+      .box-size(21.867vw, 33.6vw);
       background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_book_type_item_bg.9.png") 0 0/100% 100% no-repeat;
       position: absolute;
 
@@ -199,7 +231,7 @@ export default {
         white-space: nowrap;
         line-height: 6.4vw;
         .normal-font(12px, #814002);
-        margin-top: -5.867vw;
+        margin-top: -2.867vw;
       }
     }
   }

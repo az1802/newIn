@@ -102,10 +102,58 @@ export async function getBanjiRanking(params){
 }
 
 
-
 export async function getMessage(params){
   try{
-    let res = await http.get("/index/sharebooksapi/getMessage",params);
+    let res = await http.get("/getMessage",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+export async function getMyScore(params){
+  try{
+    let res = await http.get("/getMyScore",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+export async function getMyCreditScore(params){
+  try{
+    let res = await http.get("/getMyCreditScore",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+
+
+export async function getMyLibrary(params){
+  try{
+    let res = await http.get("/getMyLibrary",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+export async function getSwitchMylibraryTheme(params){
+  try{
+    let res = await http.get("/getSwitchMylibraryTheme",params);
     return res;
   }catch(err){
     showToast(err);

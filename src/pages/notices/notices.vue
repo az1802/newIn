@@ -14,58 +14,97 @@ const creditMsgList = ref([]);
 const integralMsgList = ref([]);
 
 
-const borrowingMsgPage = {
-  page:1
-}
-const creditMsgPage = {
-  page:1
-}
-const integralMsgPage = {
-  page:1
-}
+const borrowingMsgPage = ref({
+  page:1,
+  total_record:0
+})
+const creditMsgPage = ref({
+  page:1,
+  total_record:0
+})
+const integralMsgPage =ref( {
+  page:1,
+  total_record:0
+})
 
 
 
 onBeforeMount(()=>{
   // TODO 服务报错
   getBorrowMsg();
+  getCreditMsg();
+  getIntergralMsg()
+
 })
 
 
-
+let isAddBorrow = false;
 async function getBorrowMsg(){
+  if(isAddBorrow){
+    return ;
+  }
+  isAddBorrow = true;
   let res = await getMessage({
     params:{
       school_id:userInfoStore.school_id,
       student_id:userInfoStore.student_id,
       type:1,
-      ...borrowingMsgPage,
+      ...borrowingMsgPage.value,
     }
   });
+  isAddBorrow = false;
+  if(res){
+    borrowingMsgList.value.push(...res.records);
+    borrowingMsgPage.value.page+=1;
+    borrowingMsgPage.value.total_record=res.total_record;
+  }
 
-  console.log(res);
 }
 
+
+let isAddCredit = false;
 async function getCreditMsg(){
+  if(isAddCredit){
+    return ;
+  }
+  isAddCredit = true;
   let res = await getMessage({
     params:{
       school_id:userInfoStore.school_id,
       student_id:userInfoStore.student_id,
       type:2,
-      ...creditMsgPage,
+      ...creditMsgPage.value,
     }
   });
+  isAddCredit = false;
+  if(res){
+    creditMsgList.value.push(...res.records);
+    creditMsgPage.value.page+=1;
+  }
 }
+
+ let isAddIntergral = false;
 async function getIntergralMsg(){
+  if(isAddIntergral){
+    return ;
+  }
+  isAddIntergral = true;
   let res = await getMessage({
     params:{
       school_id:userInfoStore.school_id,
       student_id:userInfoStore.student_id,
       type:3,
-      ...integralMsgPage,
+      ...integralMsgPage.value,
     }
   });
+  isAddIntergral = false;
+  if(res){
+    integralMsgList.value.push(...res.records);
+    integralMsgPage.value.page+=1;
+  }
 }
+
+
 
 
 
@@ -169,24 +208,24 @@ const tabActive = ref("one");
     </div>
     <div class="notice-list-wrapper">
       <div class="tabs">
-        <div class="tab-item" :class='[tabActive=="one" ? "active":""]' @click='toggleTab("one")'>借阅<div class="num">1</div></div>
+        <div class="tab-item" :class='[tabActive=="one" ? "active":""]' @click='toggleTab("one")'>借阅<div class="num">{{borrowingMsgPage.total_record}}</div></div>
         <div class="tab-item" :class='[tabActive=="two" ? "active":""]' @click='toggleTab("two")'>信用分</div>
         <div class="tab-item" :class='[tabActive=="three" ? "active":""]' @click='toggleTab("three")'>积分</div>
       </div>
       <div class="tab-contents">
-        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="one"'>
-          <div class="notice-item-wrapper" v-for='noticeItem in borrowingMsgList' :key='noticeItem.id'>
+        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="one"' @scrolltolower='getBorrowMsg' :lower-threshold='100'>
+          <div class="notice-item-wrapper" v-for='noticeItem in borrowingMsgList' :key='noticeItem.message_id'>
             <div class="notice-item">
               <img src="" alt="" class="left">
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
-                  <div class="time">今天15：02</div>
+                  <div class="time">今天{{noticeItem.addtime}}</div>
                   <div class="btn"  @click='viewBorrowDetail(noticeItem)'>去同意</div>
               </div>
             </div>
           </div>
         </scroll-view>
-        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="two"'>
+        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="two"'  @scrolltolower='getCreditMsg' :lower-threshold='100'>
           <div class="notice-item-wrapper" v-for='noticeItem in creditMsgList' :key='noticeItem.id'>
             <div class="notice-item">
               <img src="" alt="" class="left">
@@ -198,7 +237,7 @@ const tabActive = ref("one");
             </div>
           </div>
         </scroll-view>
-        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="three"'>
+        <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="three"'  @scrolltolower='getIntergralMsg' :lower-threshold='100'>
           <div class="notice-item-wrapper" v-for='noticeItem in integralMsgList' :key='noticeItem.id'>
             <div class="notice-item">
               <img src="" alt="" class="left">
@@ -210,7 +249,7 @@ const tabActive = ref("one");
             </div>
           </div>
           <div v-if='integralMsgList.length==0' class='empty'>
-          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/message-empty-tooltip.png" alt="" class='img'>
+          <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/message-empty-tooltip.png" alt="" class='img' >
           </div>
         </scroll-view>
       </div>

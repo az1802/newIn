@@ -4,7 +4,7 @@ import http from './http';
 
 export async function getRanking(params){
   try{
-    let res = await http.get("/index/sharebooksapi/getRanking",params);
+    let res = await http.get("/getRanking",params);
     return res;
   }catch(err){
     showToast(err);
@@ -16,7 +16,7 @@ export async function getRanking(params){
 
  export async  function getBookCategoryAll(params){
   try{
-    let res = await http.get("/index/sharebooksapi/getBookCategoryAll",params);
+    let res = await http.get("/getBookCategoryAll",params);
     return res;
   }catch(err){
     console.log('err: ', err);

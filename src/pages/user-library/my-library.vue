@@ -10,36 +10,61 @@ export default{
 <script setup >
 import { useUserInfoStore } from '@/stores/user';
 import {navigateTo} from "@utils/wechat";
-import {ref,unref,computed} from "vue";
+import {ref,unref,computed,onBeforeMount,watch} from "vue";
 import ThemeSel from './ThemeSel.vue';
 import BookItem from "./BookItem.vue"
 import {useSystemInfo} from "@hooks/commonHooks";
+import API from "@/api/index"
+
 const systemInfo = useSystemInfo();
 // console.log('systemInfo: ', systemInfo);
 
 
 const userInfo = useUserInfoStore();
 
- function genMockList(n){
-   let arr = [];
+ function handleList(arr){
+  console.log('arr: ', arr);
 
-  for(let  i = 1 ; i<= n;i++){
-    let left = '55'
-    arr.push({
-      id:i,
-      name:`书本${i}`,
-      style:{
-        left:`${left}%`
-      }
-    })
+  for(let  i = 0 ; i< arr.length;i++){
+    let left = '55';
+    arr[i].style = {
+      left:`${left}%`
+    }
   }
-  calcPos(0,arr);
+    calcPos(0,arr);
    return arr;
  }
 
 let classmateInfo = ref({
-  name:"李文文",
-  bookList:genMockList(12)
+  name:userInfo.xingming,
+  onshelfList:[],
+  offshelfList:[],
+  beconfirmedList:[],
+  theme:1
+})
+
+
+async function getOwnBookList() {
+  uni.showLoading();
+  let params = {
+    school_id:userInfo.school_id,
+    student_id:userInfo.student_id
+  }
+  let res = await API.User.getMyLibrary({
+    params
+  })
+  uni.hideLoading();
+  if(res){
+    classmateInfo.value.onshelfList = handleList(res.list_onshelf);
+    classmateInfo.value.offshelfList = handleList(res.list_offshelf);
+    classmateInfo.value.beconfirmedList = handleList(res.list_beconfirmed);
+    classmateInfo.value.theme = res.theme || 1
+  }
+}
+
+
+onBeforeMount(()=>{
+  getOwnBookList()
 })
 
 
@@ -65,27 +90,34 @@ function calcPos(scrollTop,list){
 
 
 function handleScroll(e){
-  let scrollTop = e.detail.scrollTop;
-  // console.log('scrollTop: ', scrollTop);
-  calcPos(scrollTop,unref(classmateInfo).bookList)
-}
+    let scrollTop = e.detail.scrollTop;
+    // console.log('scrollTop: ', scrollTop);
+    if(unref(bookStatus)=="onshelf"){
+      calcPos(scrollTop,unref(classmateInfo).onshelfList);
+    }else if(unref(bookStatus)=="offshelf"){
+      calcPos(scrollTop,unref(classmateInfo).offshelfList);
+    }else if(unref(bookStatus)=="beconfirmed"){
+      calcPos(scrollTop,unref(classmateInfo).beconfirmedList);
+    }
+
+  }
 
 
-const theme = ref("default");
+
 const showThemeSel = ref(false);
 
 const bgMapUrl = {
-  default:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
-  spring:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
-  summer:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_2_bg.jpg",
-  autumn:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_3_bg.jpg",
-  winter:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_4_bg.jpg",
+  1:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
+  1:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
+  2:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_2_bg.jpg",
+  3:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_3_bg.jpg",
+  4:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_4_bg.jpg",
 }
 
 const bgStyle=computed(()=>{
-  console.log(unref(theme))
+
   return {
-    backgroundImage:`url(${bgMapUrl[unref(theme)]})`
+    backgroundImage:`url(${bgMapUrl[unref(classmateInfo).theme]})`
   }
 })
 
@@ -97,6 +129,22 @@ const listStyle = ref({
 })
 
 
+let bookStatus = ref("onshelf") //onshelf offshelf beconfirmed
+
+
+watch(()=>classmateInfo.value.theme,(nval)=>{
+  console.log('nval: ', nval);
+  API.User.getSwitchMylibraryTheme({
+    params:{
+      school_id:userInfo.school_id,
+    student_id:userInfo.student_id,
+    theme:nval
+    }
+  });
+
+})
+
+
 </script>
 
 <template>
@@ -105,18 +153,28 @@ const listStyle = ref({
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
-    <scroll-view class="list-wrapper" scroll-y  :show-scrollbar='false' 	enable-passive 	 @scroll='handleScroll' :style='listStyle'>
-      <div class="book-item-wrapper" v-for='item in classmateInfo.bookList' :key='item.id' :style='item.style'>
-        <BookItem :info='item' :theme='theme'/>
+    <scroll-view v-show="bookStatus=='onshelf'" class="list-wrapper" scroll-y  :show-scrollbar='false' 	enable-passive 	 @scroll='handleScroll' :style='listStyle'>
+      <div class="book-item-wrapper" v-for='item in classmateInfo.onshelfList' :key='item.id' :style='item.style'>
+        <BookItem :info='item' :theme='classmateInfo.theme'/>
+      </div>
+    </scroll-view>
+    <scroll-view v-show="bookStatus=='offshelf'" class="list-wrapper" scroll-y  :show-scrollbar='false' 	enable-passive 	 @scroll='handleScroll' :style='listStyle'>
+      <div class="book-item-wrapper" v-for='item in classmateInfo.offshelfList' :key='item.id' :style='item.style'>
+        <BookItem :info='item' :theme='classmateInfo.theme'/>
+      </div>
+    </scroll-view>
+    <scroll-view v-show="bookStatus=='beconfirmed'" class="list-wrapper" scroll-y  :show-scrollbar='false' 	enable-passive 	 @scroll='handleScroll' :style='listStyle'>
+      <div class="book-item-wrapper" v-for='item in classmateInfo.beconfirmedList' :key='item.id' :style='item.style'>
+        <BookItem :info='item' :theme='classmateInfo.theme'/>
       </div>
     </scroll-view>
     <div class="btn-group">
-     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn_lib_published2.png" alt="" class='btn put-on'>
-     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn-off.png" alt="" class='btn off'>
-     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn-to-confirm.png" alt="" class='btn to-confirm'>
+     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn_lib_published2.png" alt="" class='btn put-on' @click='bookStatus="onshelf"'>
+     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn-off.png" alt="" class='btn off' @click='bookStatus="offshelf"'>
+     <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn-to-confirm.png" alt="" class='btn to-confirm' @click='bookStatus="beconfirmed"'>
     </div>
 
-    <ThemeSel v-model:theme='theme'/>
+    <ThemeSel v-model:theme='classmateInfo.theme'/>
 
     <div class="upload-book-wrapper" @click='showUploadBookSel=true'>
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-add-book.png" alt="" class='img'>

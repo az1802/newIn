@@ -105,7 +105,7 @@ function handleScroll(e) {
 }
 
 
-const theme = ref("default");
+const theme = ref(1);
 const showThemeSel = ref(false);
 
 const bgMapUrl = {

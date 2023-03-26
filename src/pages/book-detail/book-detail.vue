@@ -116,6 +116,10 @@ let showAll = ref(false);
 let selUserId = ref('');
 
 function changeSelUserId(item) {
+  if(item.lent_status!=1){
+    showToast(item.lent_status==2?"已借出":"未拥有此书");
+    return ;
+  }
   if(item.student_id==unref(selUserId)){
     selUserId.value = ""
   }else{
@@ -222,7 +226,7 @@ async function borrowBook(){
               class="user-item"
               v-for="item in ownerGroup"
               :key="item.id"
-              :class="[selUserId == item.student_id ? 'active' : '']"
+              :class="[selUserId == item.student_id ? 'active' : '',item.lent_status!==1 ? 'disabled':'']"
               @click="changeSelUserId(item)"
             >
               <div class="avatar-wrapper">
@@ -355,6 +359,9 @@ async function borrowBook(){
         margin-right:23px;
         &:last-child{
           margin-right:0px;
+        }
+        &.disabled{
+          opacity:0.5;
         }
         // &.active{
         //   border:1px solid red;

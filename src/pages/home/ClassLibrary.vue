@@ -92,13 +92,13 @@ const treeMiddleUserGroups = computed(()=>{
   if(unref(userList).length <= 18){
     return []
   }else{
-    let ret = unref(userList).length%12 ;
-    ret = ret ==0 ? -12 : 0-ret
+    let ret = unref(userList).length%9 ;
+    ret = ret ==0 ? -9 : 0-ret
 
     let res = [],temp =[];
-    let list = unref(userList).slice(12,ret);
+    let list = unref(userList).slice(9,ret);
     list.forEach(item=>{
-      if(temp.length == 12){
+      if(temp.length == 9){
         res.push(temp);
         temp = []
       }
@@ -115,15 +115,10 @@ const treeMiddleUserGroups = computed(()=>{
 
 
 const treeBottomUsers = computed(()=>{
-  let len = unref(userList).length;
-  if(len <= 9){
+  if(unref(userList).length <= 9){
     return unref(userList)
-  }else if(len<=18){
-    let ret = len%9 ;
-    ret = ret == 0 ? -9 : 0-ret
-    return  unref(userList).slice(ret);
   }else{
-    let ret = (len - 9)%12 ;
+    let ret = unref(userList).length%9 ;
     ret = ret == 0 ? -9 : 0-ret
     return  unref(userList).slice(ret);
   }

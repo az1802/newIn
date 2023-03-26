@@ -23,58 +23,65 @@ async function _init(){
   })
 
   console.log('res: ', res);
-
+  if(res){
+    classRankList.value = res.banji_list;
+    gradeRankList.value = res.grade_list;
+    // classRankList.push(...res.banji_list);
+    // gradeRankList.push(...res.gradeRankList);
+  }
 }
 
 
 
 
 const activeTab = ref("grade");
-const classRankList=reactive([
-  {
-  id:1,
-  img:"",
-  name:"张凡",
-  num:500
-},{
-  id:2,
-  img:"",
-  name:"张凡",
-  num:300
-}])
+const classRankList = ref([]);
+const gradeRankList = ref([]);
+// const classRankList=reactive([
+//   {
+//   id:1,
+//   img:"",
+//   name:"张凡",
+//   num:500
+// },{
+//   id:2,
+//   img:"",
+//   name:"张凡",
+//   num:300
+// }])
 
 
-const gradeRankList=reactive([{
-  id:1,
-  img:"",
-  name:"张凡1",
-  num:300
-},{
-  id:2,
-  img:"",
-  name:"张凡2",
-  num:200
-},{
-  id:3,
-  img:"",
-  name:"张凡2",
-  num:200
-},{
-  id:4,
-  img:"",
-  name:"张凡2",
-  num:200
-},{
-  id:5,
-  img:"",
-  name:"张凡2",
-  num:200
-},{
-  id:6,
-  img:"",
-  name:"张凡3",
-  num:200
-}])
+// const gradeRankList=reactive([{
+//   id:1,
+//   img:"",
+//   name:"张凡1",
+//   num:300
+// },{
+//   id:2,
+//   img:"",
+//   name:"张凡2",
+//   num:200
+// },{
+//   id:3,
+//   img:"",
+//   name:"张凡2",
+//   num:200
+// },{
+//   id:4,
+//   img:"",
+//   name:"张凡2",
+//   num:200
+// },{
+//   id:5,
+//   img:"",
+//   name:"张凡2",
+//   num:200
+// },{
+//   id:6,
+//   img:"",
+//   name:"张凡3",
+//   num:200
+// }])
 
 const mineRankInfo = {
   id:2,
@@ -94,8 +101,8 @@ function sortJifen(){
   // gradeRankList.value= gradeRankList.value.reverse();
 
 
-  classRankList.reverse();
-  gradeRankList.reverse();
+  classRankList.value.reverse();
+  gradeRankList.value.reverse();
 }
 
 </script>
@@ -111,10 +118,10 @@ function sortJifen(){
       </div>
       <div class="tab-content">
         <scroll-view class="tab-content-item" v-show='activeTab=="class"' scroll-y :show-scrollbar='false' enhanced>
-          <RankItem v-for='item in classRankList' :key='item.id' :info='item'/>
+          <RankItem v-for='item in classRankList' :key='item.student_id' :info='item'/>
         </scroll-view>
         <scroll-view class="tab-content-item" v-show='activeTab=="grade"' scroll-y :show-scrollbar='false' enhanced>
-          <RankItem v-for='item in gradeRankList' :key='item.id' :info='item'/>
+          <RankItem v-for='item in gradeRankList' :key='item.student_id' :info='item'/>
         </scroll-view>
       </div>
       <div class="my-rank">

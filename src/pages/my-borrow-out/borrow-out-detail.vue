@@ -396,22 +396,22 @@ function agreeBorrowOut(){
             margin-left:24px;
           }
           .name{
-            .bold-font(10px,#959797);
-            .line-center(10px);
+            .bold-font(12px,#959797);
+            .line-center(12px);
             margin-left:12px;
             flex-basis:50px;
           }
           .text{
-            .bold-font(10px,#959797);
-            .line-center(10px);
-            margin-left:24px;
+            .bold-font(12px,#959797);
+            .line-center(12px);
+            margin-left:12px;
           }
           .time{
             flex:1;
             text-align:right;
             .hour,.day{
-              .line-center(9px);
-              .normal-font(9px,#646A6D)
+              .line-center(12px);
+              .normal-font(12px,#646A6D)
             }
             .day{
               margin-top:10px;

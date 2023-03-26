@@ -69,7 +69,7 @@
 @import '@static/index.less';
   .tree-top-wrapper{
     position: relative;
-    .box-size(100vw,190vw);
+    .box-size(100vw,190.0444vw);
     background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/class-pic-tree1.png") 0 0/100% 100% no-repeat;
     .user-item{
       position: absolute;

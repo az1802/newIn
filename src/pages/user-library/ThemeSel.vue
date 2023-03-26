@@ -1,10 +1,10 @@
 <script setup >
-import {ref,unref} from "vue";
+import {ref,unref,watch} from "vue";
 
 const props = defineProps({
   theme:{
-    type:String,
-    default:"default"
+    type:Number,
+    default:1
   }
 })
 
@@ -22,10 +22,10 @@ function changeTheme(val){
    <div class="theme-sel">
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_skin.png" alt="" class='change-btn' @click='showThemeSel=!showThemeSel'>
       <div class='theme-list' :class='[showThemeSel ? "show":""]'>
-        <div class="theme-item" @click='changeTheme("spring")'>春天</div>
-        <div class="theme-item" @click='changeTheme("summer")'>夏天</div>
-        <div class="theme-item" @click='changeTheme("autumn")'>秋天</div>
-        <div class="theme-item" @click='changeTheme("winter")'>冬天</div>
+        <div class="theme-item" @click='changeTheme(1)'>春天</div>
+        <div class="theme-item" @click='changeTheme(2)'>夏天</div>
+        <div class="theme-item" @click='changeTheme(3)'>秋天</div>
+        <div class="theme-item" @click='changeTheme(4)'>冬天</div>
       </div>
     </div>
 </template>

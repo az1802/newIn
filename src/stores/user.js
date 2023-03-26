@@ -11,8 +11,10 @@ export const useUserInfoStore = defineStore('userInfo', {
       new_message_num:0,
       photo:"",
       categoryNumMap:{},
-      school_id:"",
+      school_id:"306",
       categorylist:[],
+      student_id:"500392",
+
 
 
     }
@@ -26,7 +28,6 @@ export const useUserInfoStore = defineStore('userInfo', {
         this[key] = info[key];
       }
     },
-    set
     setName(name) {
       this.name = name
     },

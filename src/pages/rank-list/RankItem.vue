@@ -18,16 +18,16 @@ const props = defineProps({
 <template>
   <div class='rank-item'>
     <div class="left">
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-first.png" alt="" class='rank' v-if='props.info.id==1' />
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-two.png" alt="" class='rank' v-else-if='props.info.id==2' />
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-third.png" alt="" class='rank' v-else-if='props.info.id==3' />
-      <div class="rank border" v-else>{{props.info.id}}</div>
-      <img class="avatar" :src="props.info.img" />
-      <div class="name">{{props.info.name}}</div>
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-first.png" alt="" class='rank' v-if='props.info.ranking==1' />
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-two.png" alt="" class='rank' v-else-if='props.info.ranking==2' />
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-third.png" alt="" class='rank' v-else-if='props.info.ranking==3' />
+      <div class="rank border" v-else>{{props.info.ranking}}</div>
+      <img class="avatar" :src="props.info.photo" />
+      <div class="name">{{props.info.xingming}}</div>
     </div>
     <div class="right">
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-intergal.png" alt="" class='img'>
-      <div class="num">{{props.info.num}}</div>
+      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/rank-icon-intergal.png" alt="" class='img' mode='aspectFit'>
+      <div class="num">{{props.info.sharebooks_score}}</div>
     </div>
   </div>
 </template>

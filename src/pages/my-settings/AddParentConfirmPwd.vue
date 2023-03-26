@@ -90,7 +90,7 @@ function ok(){
     .btn{
       .box-size(84px,32px);
       .line-center(32px);
-      .bold-font(12px,white);
+      .bold-font(16px,white);
       text-align:center;
       background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/bg_button_2.png") 0 0/100% 100% no-repeat;
     }

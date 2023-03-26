@@ -42,8 +42,10 @@ export async function getBookCategory2(params){
 export async function postBooksReview(params){
   try{
     let res = await http.post("/postBooksReview",params);
+    showToast(res?"上架图书成功":"上架图书失败");
     return res;
   }catch(err){
+    console.log('err: ', err);
     showToast(err);
   }
   return false;
@@ -123,6 +125,18 @@ export async function getBorrowBook(params){
 export async function getPersonalBookList(params){
   try{
     let res = await http.get("/getPersonalBookList",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+export async function getBookParentConfirm(params){
+  try{
+    let res = await http.get("/getBookParentConfirm",params);
+    showToast(res ? "家长确认成功" :"家长确认失败");
     return res;
   }catch(err){
     showToast(err);

@@ -39,6 +39,9 @@
 			"path": "pages/upload-book/upload-book-info",
 		},
     {
+			"path": "pages/upload-book/parent-confirm",
+		},
+    {
 			"path": "pages/rank-list/rank-list",
 		},
     {

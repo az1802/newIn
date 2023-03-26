@@ -5,23 +5,23 @@ import {ref,unref,computed} from "vue";
       type:Object,
       default:()=>{
         return {
-          name:"",
-          img:""
+          bookname:"",
+          cover:""
         }
       }
     },
     theme:{
-      type:String,
-      default:"default",
+      type:Number,
+      default:1,
     }
    })
 
 const bgMapUrl = {
-  default:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes.png",
-  spring:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes.png",
-  summer:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes2.png",
-  autumn:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes2.png",
-  winter:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes3.png",
+  1:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes.png",
+  1:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes.png",
+  2:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes2.png",
+  3:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes2.png",
+  4:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Mylibrary-Stakes3.png",
 }
 
 let bookBottomImg = computed(()=>{

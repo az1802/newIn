@@ -1,55 +1,61 @@
 <script setup >
-import {ref,unref}  from "vue";
+import {ref,unref,onBeforeMount}  from "vue";
   import {useSystemInfo} from "@hooks/commonHooks";
+  import {getMyScore } from "@/api/user"
+
+
+
+
+
   const systemInfo = useSystemInfo();
   const listStyle = ref({
     height: `calc(100vh - 44px - ${systemInfo.statusBarHeight}px - 20px - 92vw)`,
     // height:"63vw"
   });
 
-  function genMockList(n){
-   let arr = [];
+  // function genMockList(n){
+  //  let arr = [];
 
-  for(let  i = 1 ; i<= n;i++){
-    let left = '55'
-    arr.push({
-      id:i,
-      status:i%2==0 ? "out" : "return", //return ,out
-      statusText:i%2==0 ? "出借图书" : "上架图书",
-      timeText:"2018/10/20 09:12",
-      jifenText:i%2==0 ? "剩余积分：1200分" : "当前积分：1200分",
-      num:"+5",
-      style:{
-        itemStyle:{
-          width:"172px",
-          height:"42px",
-          marginTop:"0px"
-        },
-       imgStyle:{
-        width:"24px",
-        height:"30px"
-       },
-       statusTextStyle:{
-        fontSize:"11px"
-       },
-       timeTextStyle:{
-        fontSize:"9px"
-       },
-       jifenTextStyle:{
-        fontSize:"9px"
-       },
-       numStyle:{
-        fontSize:"12px"
-       },
+  //   for(let  i = 1 ; i<= n;i++){
+  //     let left = '55'
+  //     arr.push({
+  //       id:i,
+  //       status:i%2==0 ? "out" : "return", //return ,out
+  //       statusText:i%2==0 ? "出借图书" : "上架图书",
+  //       timeText:"2018/10/20 09:12",
+  //       jifenText:i%2==0 ? "剩余积分：1200分" : "当前积分：1200分",
+  //       num:"+5",
+  //       style:{
+  //         itemStyle:{
+  //           width:"172px",
+  //           height:"42px",
+  //           marginTop:"0px"
+  //         },
+  //       imgStyle:{
+  //         width:"24px",
+  //         height:"30px"
+  //       },
+  //       statusTextStyle:{
+  //         fontSize:"11px"
+  //       },
+  //       timeTextStyle:{
+  //         fontSize:"9px"
+  //       },
+  //       jifenTextStyle:{
+  //         fontSize:"9px"
+  //       },
+  //       numStyle:{
+  //         fontSize:"12px"
+  //       },
 
-      }
-    })
-  }
-  calcPos(0,arr);
-   return arr;
- }
+  //       }
+  //     })
+  //   }
+  //   calcPos(0,arr);
+  //   return arr;
+  // }
 
-let list = ref(genMockList(12))
+let list = ref([]);
 
 function calcPos(scrollTop,list){
   console.log('scrollTop: ', scrollTop);
@@ -182,6 +188,54 @@ function handleScroll(e){
 }
 
 
+
+onBeforeMount(async ()=>{
+  await getScore();
+  calcPos(0,list)
+})
+
+
+let  page= ref(1),hasMore = ref(true),isRequest=ref(false),scoreInfo=ref({
+  score:0
+});
+async function getScore(){
+  let userInfo = uni.getStorageSync("userInfo");
+  if(unref(isRequest)){
+    return;
+  }
+  isRequest. value= true;
+  let res =await getMyScore({
+    params:{
+      school_id:userInfo.school_id,
+      student_id:500396 || userInfo.student_id,
+      page:unref(page)
+    }
+  });
+
+  isRequest.value = false;
+
+  if(res){
+    list.value.push(...res.records);
+    page.value++;
+    if(page.value > res.total_pages){
+      hasMore.value = false;
+    }
+    scoreInfo.value.score = res.score
+
+  }
+}
+
+async function handleScrollMore(){
+  if(unref(hasMore)){
+    return;
+  }
+
+  getScore()
+}
+
+
+
+
 </script>
 
 <template>
@@ -193,26 +247,26 @@ function handleScroll(e){
     <div :style='{ height: systemInfo.statusBarHeight + "px"}'></div>
     <div class='intergral-wrapper' >
       <div class="high">
-        <div class="text">1200</div>
+        <div class="text">{{scoreInfo.score}}</div>
       </div>
     </div>
     <div class="diandi-wrapper">
       <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/intergal-diandi.png" alt="" class='diandi-record'>
     </div>
     <div class="list-wrapper" :style='listStyle'>
-      <scroll-view :show-scrollbar='false' class="record-list" @scroll='handleScroll' scroll-y enable-passive>
+      <scroll-view :show-scrollbar='false' class="record-list" @scroll='handleScroll' scroll-y enable-passive :lower-threshold='50' @scrolltolower='handleScrollMore'>
       <div class='item' v-for='item in list' :key='item.id'>
-        <div class="info" :style='item.style.itemStyle'>
+        <div class="info" :style='item.style?.itemStyle'>
           <div class="left">
-            <img v-if="item.status=='out'" src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Credit-Books.png" alt="" class='img' :style='item.style.imgStyle'>
-            <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Credit-Books2.png" alt="" class='img' :style='item.style.imgStyle'>
+            <img v-if="item.status_code==0" src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Credit-Books.png" alt="" class='img' :style='item.style?.imgStyle'>
+            <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Credit-Books2.png" alt="" class='img' :style='item.style?.imgStyle'>
             <div class="status">
-              <div class="text" :style='item.style.statusTextStyle'>{{item.statusText}}</div>
-              <div class="time" :style='item.style.timeTextStyle'>{{item.timeText}}</div>
+              <div class="text" :style='item.style?.statusTextStyle'>{{item.status_code_zh}}</div>
+              <div class="time" :style='item.style?.timeTextStyle'>{{item.addtime}}</div>
             </div>
           </div>
           <div class="right">
-            <div class='num' :style='item.style.numStyle'>{{item.num}}</div><div class='unit'>分</div>
+            <div class='num' :style='item.style?.numStyle'>{{item.score}}</div><div class='unit'>分</div>
           </div>
         </div>
       </div>

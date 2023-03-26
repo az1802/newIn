@@ -2,121 +2,25 @@
 import { navigateTo } from '@/utils/wechat';
 // import {UploadBookMethodSel} from "./UploadBookMethodSel.vue";
 import {ref,onBeforeMount} from "vue";
-import { useUserInfoStore } from '@/stores/user'
+import { useGlobalConfigStore } from '@/stores/globalConfig';
 
-import {getBookCategoryAll} from "@/api/class";
-
-const userInfoStore = useUserInfoStore();
-
-let showUploadBookSel = ref(false);
+import ShareHome from "./ShareHome.vue";
+import ClassLibrary from "../class-library/class-library.vue";
+import Mine from "../mine/mine.vue";
 
 
-function goToCategory(item){
-  // let title=""
-  // if(name=="story"){
-  //   title = "故事大王"
-  // }else if(name=="keipu"){
-  //   title = "科普百科"
-  // }else if(name=="nature"){
-  //   title = "大自然"
-  // }else if(name=="children"){
-  //   title = "儿童文学"
-  // }
+const globalConfigStore = useGlobalConfigStore();
+console.log('globalConfigStore: ', globalConfigStore);
 
-  navigateTo('/pages/category-detail/nature-books',{
-    title:item.category,
-    category_id:item.category_id
-  })
-}
 
-onBeforeMount(()=>{
-  // getBookCategory();
-})
-
-async function getBookCategory(){
-  let res = await getBookCategoryAll({
-    params:{
-      school_id:userInfoStore.school_id,
-      student_id:userInfoStore.student_id,
-    }
-  });
-
-  console.log(res)
-}
 
 </script>
 <template>
   <div class="page">
-    <NavBar title="共享图书" :showBack='false' />
-    <div class="bg-top-wrapper">
-        <TopCloud />
-    </div>
-    <!-- <div class="title-wrapper">
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_main_title_bg.png" class="bg-top-title" />
-      <div class="text">张文文的图书馆最棒</div>
-    </div> -->
-
-    <div class="notices-wrapper" @click='navigateTo("/pages/notices/notices",{})'>
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-notices.png" alt="" class='img'>
-      <!-- <div class='text'>消息</div> -->
-      <div class="tag">{{userInfoStore.new_message_num}}</div>
-    </div>
-    <div class="upload-book-wrapper" @click='showUploadBookSel=true'>
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-add-book.png" alt="" class='img'>
-      <!-- <div class='text'>添加图书</div> -->
-    </div>
-    <UploadBookMethodSel v-model:show='showUploadBookSel'/>
-    <div class="rank-list-wrapper" @click='navigateTo("/pages/rank-list/rank-list")'>
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-rank.png" alt="" class='img'>
-      <!-- <div class='text'>排行榜</div> -->
-    </div>
-    <div class='category-item story' @click='goToCategory(userInfoStore.categorylist[0])' >
-      <img v-if='userInfoStore.categorylist[0].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1.png" alt="" class='img' >
-      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_1_d.png" alt="" class='img' >
-      <div class="text-wrapper">
-        <img v-if='userInfoStore.categorylist[0].category_booknum'  src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
-        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">{{userInfoStore.categorylist[0].category}}</div>
-      </div>
-    </div>
-    <div class='category-item keipu' @click='goToCategory(userInfoStore.categorylist[1])'>
-      <img  v-if='userInfoStore.categorylist[1].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2.png" alt="" class='img'>
-      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_2_d.png" alt="" class='img' >
-      <div class="text-wrapper">
-        <img  v-if='userInfoStore.categorylist[1].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
-        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">{{userInfoStore.categorylist[1].category}}</div>
-      </div>
-    </div>
-    <div class='category-item all' @click="navigateTo('/pages/all-books/all-books')">
-      <img  v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3.png" alt="" class='img'>
-      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_3_d.png" alt="" class='img' >
-      <div class="text-wrapper">
-        <img  v-if='1' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
-        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">全部图书</div>
-      </div>
-    </div>
-    <div class='category-item nature' @click='goToCategory(userInfoStore.categorylist[2])'>
-      <img  v-if='userInfoStore.categorylist[2].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4.png" alt="" class='img'>
-      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_4_d.png" alt="" class='img' >
-      <div class="text-wrapper">
-        <img  v-if='userInfoStore.categorylist[2].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
-        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">{{userInfoStore.categorylist[2].category}}</div>
-      </div>
-    </div>
-    <div class='category-item children' @click='goToCategory(userInfoStore.categorylist[3])'>
-      <img  v-if='userInfoStore.categorylist[3].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5.png" alt="" class='img '>
-      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/img_theme_item_5_d.png" alt="" class='img' >
-      <div class="text-wrapper">
-        <img  v-if='userInfoStore.categorylist[3].category_booknum' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item.png" alt="" class='text-bg' >
-        <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/image_theme_item_d.png" alt="" class='text-bg' >
-        <div class="text">{{userInfoStore.categorylist[3].category}}</div>
-      </div>
-    </div>
-    <HomeMenuTabs class='home-menu-tabs' active='share' />
-
+    <ShareHome v-show='globalConfigStore.tabActive=="share"'/>
+    <ClassLibrary v-show='globalConfigStore.tabActive=="classLibrary"' />
+    <Mine v-show='globalConfigStore.tabActive=="mine"' />
+    <HomeMenuTabs class='home-menu-tabs' :active='globalConfigStore.tabActive' />
   </div>
 </template>
 
@@ -126,8 +30,8 @@ async function getBookCategory(){
 @import '@static/index.less';
 .page{
   .full-screen();
-  background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/theme_view_bg.jpg") 0 0/100% 100% no-repeat;
-  position:relative;
+  // background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/theme_view_bg.jpg") 0 0/100% 100% no-repeat;
+  // position:relative;
   .bg-top-wrapper{
     .pos-absolute(0,0,unset,0);
     z-index:1000;
@@ -169,7 +73,7 @@ async function getBookCategory(){
     }
   }
   .upload-book-wrapper{
-    .pos-absolute(unset,6.933vw,24.667vw,unset);
+    .pos-absolute(unset,6.933vw,25.367vw,unset);
     display: inline-block;
     text-align: center;
     font-size:0px;
@@ -184,7 +88,7 @@ async function getBookCategory(){
   }
 
   .rank-list-wrapper{
-    .pos-absolute(unset,unset,24.667vw,6.933vw);
+    .pos-absolute(unset,unset,23.667vw,6.933vw);
     display: inline-block;
     text-align: center;
     font-size:0px;

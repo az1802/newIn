@@ -1,5 +1,7 @@
 <script setup >
-import {navigateTo,redirectTo} from "@utils/wechat"
+import {navigateTo,redirectTo} from "@utils/wechat";
+import { useGlobalConfigStore } from '@/stores/globalConfig';
+
 const props = defineProps({
   active:{
     type:String,
@@ -7,17 +9,22 @@ const props = defineProps({
   }
 })
 
+const globalConfigStore = useGlobalConfigStore();
+
 
 function switchTab(name){
   if(name ==props.active ){
     return;
   }
-  if(name == "class-library"){
-    redirectTo("/pages/class-library/class-library")
+  if(name == "classLibrary"){
+    globalConfigStore.setTabActive("classLibrary");
+    // redirectTo("/pages/class-library/class-library")
   }else if(name=="share"){
-    redirectTo("/pages/home/home")
+    globalConfigStore.setTabActive("share");
+    // redirectTo("/pages/home/home")
   }else{
-    redirectTo("/pages/mine/mine")
+    globalConfigStore.setTabActive("mine");
+    // redirectTo("/pages/mine/mine")
   }
 }
 
@@ -28,7 +35,7 @@ function switchTab(name){
 
 <template>
   <div class='menu-wrapper'>
-    <div class="menu-item" @click='switchTab("class-library")'>
+    <div class="menu-item" @click='switchTab("classLibrary")'>
       <img v-if='props.active!=="class-library"' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_library_01.png" alt=""  class='library-img'>
       <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/nav_ico_library_02.png" alt="" class='library-img'>
       <!-- <div class='text'>图书馆</div> -->

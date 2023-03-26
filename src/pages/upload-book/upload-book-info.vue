@@ -1,13 +1,43 @@
 
 
 <script setup>
-import { ref, unref } from 'vue';
+import { ref, unref,onBeforeMount } from 'vue';
 import API from "@/api/index";
-import { showToast } from '../../utils/wechat';
+import { showToast,navigateTo } from '@utils/wechat';
+import { useBookStore } from '@/stores/book';
+import CategorySel from "./category-sel.vue";
+import {getBookCategoryAll} from "@/api/class";
+
+import { useUserInfoStore } from '@/stores/user'
+
+
+
+const bookStore = useBookStore();
+const userInfoStore = useUserInfoStore();
+
+onBeforeMount(()=>{
+  getBookCategory();
+})
+
+async function getBookCategory(){
+  let res = await getBookCategoryAll({
+    params:{
+      school_id:userInfoStore.school_id,
+      student_id:userInfoStore.student_id,
+    }
+  });
+
+  if(res){
+    bookStore.setCategoryList(res.categorylist)
+  }
+
+}
+
+
+
 
 let bookInfo = uni.getStorageSync("isbnBookInfo")?.isbninfo;
 let categoryList =  uni.getStorageSync("isbnBookInfo")?.categorylist || [];
-console.log('bookInfo: ', bookInfo);
 
 const bookReviewText = ref('');
 
@@ -22,35 +52,36 @@ function typeChange(e) {
 }
 
 
+const multiIndex = ref([0,0]);
+
+const multiArray = ref([['无脊柱动物', '脊柱动物'], ['扁性动物', '线形动物', '环节动物', '软体动物', '节肢动物']])
+
 
 // 商家图书
 async function sumbit(){
 
   let userInfo = uni.getStorageSync("userInfo");
-
-  let a = await  await API.Book.getBookCategory2({
-    params:{
-      school_id:userInfo.school_id,
-      student_id:userInfo.student_id,
-      category_id:unref(typeList)[unref(typeIndex)].category_id,
-    }
-  })
+  let categoryList = bookStore.categorylist;
 
   uni.showLoading()
   let res = await API.Book.postBooksReview({
       school_id:userInfo.school_id,
       student_id:userInfo.student_id,
-      category_id:unref(typeList)[unref(typeIndex)].category_id,
-      category2_id:6,
-      isbn_id:parseInt(bookInfo.isbn),
-      bookreview:unref(bookReviewText)
+      category_id:unref(categoryList)[unref(multiIndex)[0]].category_id,
+      category2_id:unref(categoryList)[unref(multiIndex)[0]].children[unref(multiIndex)[1]].category_id,
+      isbn_id:parseInt(bookInfo.isbn_id),
+      bookreview:unref(bookReviewText) || " "
     })
   uni.hideLoading()
 
-  console.log('res: ', res);
+  if(res){
+    setTimeout(()=>{
+      navigateTo("/pages/upload-book/parent-confirm",{
+        book_id:res.book_id,
+      })
+    },1500)
+  }
 
-
-  showToast(res?"上架图书成功":"上架图书失败")
 
 
 
@@ -88,7 +119,7 @@ async function sumbit(){
         <div class="type-sel">
           <div class="label">类型:</div>
           <div class="sel">
-            {{ typeList[typeIndex] ? typeList[typeIndex].category : '请选择图书类型' }}
+            <!-- {{ typeList[typeIndex] ? typeList[typeIndex].category : '请选择图书类型' }}
             <img
               src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/type_down.png"
               alt=""
@@ -103,11 +134,11 @@ async function sumbit(){
               class="picker"
             >
               <view class="uni-input">{{ typeList[typeIndex] ? typeList[typeIndex].category  : "请选择图书类型" }}</view>
-            </picker>
+            </picker> -->
 
 
 
-            <!-- <CategorySel v-model:value='typeIndex' :list='typeList'/> -->
+            <CategorySel  :multiIndex="multiIndex" :categorylist='bookStore.categorylist' ></CategorySel>
           </div>
         </div>
 
@@ -197,12 +228,11 @@ async function sumbit(){
       .type-sel {
         .flex-simple(flex-start,center);
         margin-top: 30px;
-
         .label {
           .bold-font(14px);
         }
         .sel {
-          .box-size(160px,30px,#FCF5B8);
+          .box-size(unset,30px,#FCF5B8);
           line-height: 30px;
           text-indent: 16px;
           .bold-font(15px,#63696d);
