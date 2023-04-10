@@ -11,9 +11,8 @@ export default {
 <script setup>
 import { ref ,unref,computed,onBeforeMount} from 'vue';
 import { useSystemInfo } from '@hooks/commonHooks';
-import BorrowBookDialog from './BorrowBookDialog.vue';
 import API from "@/api/index";
-import {showToast} from "@/utils/wechat";
+import {showToast,showConfirmModal} from "@/utils/wechat";
 
 const systemInfo = useSystemInfo();
 
@@ -32,186 +31,102 @@ const borrowInfo = ref({
 })
 
 
-
-let borrowBookDialog = ref(false);
-
-
-
-
-function transfromOwnerList(list) {
-  if(opts.student_id){
-    let ownerIndex = list.findIndex(item=>item.student_id == opts.student_id);
-    console.log('ownerIndex: ', ownerIndex);
-    if(ownerIndex!=-1){
-      list.unshift(list.splice(ownerIndex,1)[0])
-    }
-  }
-
-
-
-
-
-  let selArr = [],
-    res = [],ownInfo=null;
-  for (let i = 0; i < list.length; i++) {
-    selArr.push(list[i]);
-    if ((i + 1) % 4 == 0) {
-      selArr.id=Math.random();
-      res.push(selArr);
-      selArr = [];
-    }
-  }
-  if (selArr.length > 0) {
-    selArr.id=Math.random();
-    res.push(selArr);
-  }
-
-  return res;
-}
-
-async function getBookDetail(isbn_id){
+async function getBookDetail(book_id,showLoading=true){
   let userInfo = uni.getStorageSync("userInfo");
   let params = {
     school_id:userInfo.school_id,
     student_id:userInfo.student_id,
-    isbn_id
+    book_id,
   }
 
-  uni.showLoading();
-  let  res=await API.Book.getBookDetail({
+  showLoading&&uni.showLoading();
+  let  res=await API.Book.getMyLibraryBookInfo({
     params
   });
 
-  uni.hideLoading();
+  showLoading&&uni.hideLoading();
 
   if(res){
     bookinfo.value = res.bookinfo;
-    bookreviewlist.value = res.bookreviewlist;
-    ownerList.value = transfromOwnerList(res.thisbooklist || []);
-    borrowInfo.value = res.borrowinfo
+    borrowInfo.value = res.bookreviewlist
   }
 
 
 }
-
-
-onBeforeMount(()=>{
-  getBookDetail(opts.isbn_id);
-})
 
 let userInfo = uni.getStorageSync("userInfo");
 
-
-
-// function mockBookList(){
-//   let mockList=[]
-//   for(let i= 1 ; i<15;i++){
-//     mockList.push({
-//       name:"张恒"+i,
-//       id:i,
-//       grade:"三年级二班",
-//       avatarUrl:""
-//     })
-
-//   }
-//   ownerList = mockList;
-// }
-// mockBookList();
-
-// let temp = transfromOwnerList(ownerList);
-// ownerList = ref(temp);
-
-
-
-let showOwnerList = computed(()=>{
-  if(showAll.value){
-    return unref(ownerList);
-  }else{
-    return unref(ownerList).length > 2 ? unref(ownerList).slice(0,2) : unref(ownerList);
-  }
-})
-let showAll = ref(false);
-
-let selUserInfo = ref({
-  student_id:"",
-  book_id:""
+onBeforeMount(()=>{
+  getBookDetail(opts.book_id || opts.isbn_id);
 })
 
 
 
-function changeselBookId(item) {
-  if(item.lent_status!=1){
-    showToast(item.lent_status==2?"已借出":"未拥有此书");
-    return ;
-  }
-  if(item.student_id==unref(selUserInfo).student_id){
-    selUserInfo.value = {
-      student_id:"",
-      book_id:""
-    }
-  }else{
-    selUserInfo.value = {
-      student_id:item.student_id,
-      book_id:item.book_id
-    }
 
-  }
-}
+
 
 const containerStyle = ref({
   height: `calc(100vh - 44px - ${systemInfo.statusBarHeight}px)`,
 });
 
 
-
-let borrowDays = ref('');
-
-
-async function borrowBook(){
-
-  let borrowDaysVal =  parseInt(unref(borrowDays));
-
-  if(unref(borrowInfo).is_borrow!=1){
-    showToast(unref(borrowInfo).notborrowtip);
-    return ;
+async function shangjia(){
+  let {is_offtip,tip,book_id} = unref(bookinfo);
+  if(is_offtip){
+    await showToast(tip);
   }
 
-  if(Number.isNaN(borrowDaysVal)){
-    showToast("请输入借阅天数");
-    return ;
-  }
-  if(!unref(selUserInfo).student_id){
-    showToast("请选择拥有次数的同学");
-    return ;
-  }
-
-
-
+  let userInfo = uni.getStorageSync("userInfo");
   let params = {
     school_id:userInfo.school_id,
-    borrow_student_id:userInfo.student_id,
-    book_id:unref(selUserInfo).book_id,
-    lent_student_id:unref(selUserInfo).student_id,
-    borrow_days:borrowDaysVal
+    student_id:userInfo.student_id,
+    book_id,
   }
+  let res = await API.Book.getMyBookOnShelf({params})
+  console.log('res: ', res);
 
-  let res = await API.Book.getBorrowBook({
-    params
-  })
-
-  if(res&&res.code==0){
-    showToast("借阅成功")
+  if(res){
+    await showToast("上架成功");
+    getBookDetail(book_id,false)
   }
-
 }
 
+async function xiajia(){
+  let {is_offtip,tip,book_id,lent_status} = unref(bookinfo);
+  if(lent_status==2){
+    showToast("书本已借出,不可下架")
+    return
+  }
+  if(is_offtip){
+    let confirmRes = await showConfirmModal({title:"",content:tip})
+    if(!confirmRes){
+      return ;
+    }
+  }
+
+  let userInfo = uni.getStorageSync("userInfo");
+  let params = {
+    school_id:userInfo.school_id,
+    student_id:userInfo.student_id,
+    book_id,
+  }
+
+  console.log('params: ', params);
+
+  let res = await API.Book.getMyBookOffShelf({params})
+  console.log('res: ', res);
+
+  if(res){
+    await showToast("下架成功");
+    getBookDetail(book_id,false)
+  }
+}
 
 
 </script>
 
 <template>
   <div class="page">
-    <BorrowBookDialog v-model:show='borrowBookDialog' />
     <NavBar title="图书详情" />
     <div class="bg-top-wrapper">
       <TopCloud />
@@ -236,7 +151,7 @@ async function borrowBook(){
             </div>
             <div class="form-item">
               <div class="label">类型：</div>
-              <div class="value">{{}}</div>
+              <div class="value">儿童文学</div>
             </div>
             <div class="form-item">
               <div class="label">页数：</div>
@@ -244,70 +159,28 @@ async function borrowBook(){
             </div>
             <div class="form-item">
               <div class="label">借阅次数：</div>
-              <div class="value">{{bookinfo.isbn_lent_num}}</div>
+              <div class="value">{{bookinfo.lent_num}}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="concat-ratten">
+      <div class="concat-ratten" :bottomRattan='false'>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/teacher/icon-ratten.png" alt="" class='ratten-img'>
       </div>
-      <ContentBlock :topRattan="false">
-        <div class="title">拥有此书的同学</div>
-        <div class="book-owner-list">
-          <div
-            class="owner-group"
-            v-for="(ownerGroup, groupIndex) in showOwnerList"
-            :key="ownerGroup.id"
-          >
-            <div
-              class="user-item"
-              v-for="item in ownerGroup"
-              :key="item.id"
-              :class="[selUserInfo.student_id == item.student_id ? 'active' : '',item.lent_status!==1 ? 'disabled':'']"
-              @click="changeselBookId(item)"
-            >
-              <div class="avatar-wrapper">
-                <img :src="item.photo" alt="" class="img" />
-                <img v-if="selUserInfo.student_id == item.student_id " src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/switch-user-bg.png" alt="" class='active-img'>
-              </div>
-              <div class="name">{{ item.xingming }}</div>
-              <div class="class">{{item.banji}}</div>
-            </div>
-          </div>
-        </div>
-        <div class="bottom-wrapper" v-if="ownerList.length>2">
-          <div class="bottom" v-if="!showAll">
-            <div class="text" @click='showAll=true'>显示全部</div>
-            <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Lend-icon-Arrow.png" @click='showAll=true' alt="" class="img down" />
-          </div>
-          <div class="bottom" v-if="showAll">
-            <div class="text" @click='showAll=false'>收起全部</div>
-            <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/Lend-icon-Arrow.png" alt="" class="img up" @click='showAll=false' />
-          </div>
-          </div>
-
-      </ContentBlock>
-
-      <ContentBlock>
-        <div class="borrow-days">
-          <div class="title">请填写借阅天数</div>
-          <div class="borrow-input-wrapper">
-            <input type="text" v-model="borrowDays" placeholder="请输入" class='input'  placeholder-style='font-size:13px;color:#646A6D;font-family:HYCuYuanJ'/>
-          </div>
+      <ContentBlock :bottomRattan="false">
+        <div>
+          借阅记录
         </div>
       </ContentBlock>
-      <ContentBlock :bottomRattan='false'>
-        <div class="borrow-days">
-          <div class="title">精彩书评</div>
 
-        </div>
-      </ContentBlock>
       <div class="bottom-placeholder"></div>
     </scroll-view>
 
-    <div class="btn-wrapper" :class='borrowInfo.is_borrow!=1 ? "disabled" :""'>
-      <div class="btn" @click="borrowBook">借阅此书</div>
+    <div class="btn-wrapper" v-if='bookinfo.status==0'>
+      <div class="btn" @click="shangjia" v-if='bookinfo.status==0'>上架图书</div>
+    </div>
+    <div class="btn-wrapper" v-if='bookinfo.status==1'>
+      <div class="btn" @click="xiajia" >下架图书</div>
     </div>
   </div>
 </template>

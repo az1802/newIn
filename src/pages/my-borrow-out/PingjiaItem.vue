@@ -8,7 +8,7 @@
     <div class='fenshu-wrapper'>
       <div class="left">
         <div class="fenshu">
-          <div class="item" v-for='item in [1,2,3,4,5]'></div>
+          <div class="item" v-for='item in [1,2,3,4,5]' :key="item"></div>
         </div>
         <div class="text">超赞，无可挑剔</div>
       </div>

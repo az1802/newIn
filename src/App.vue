@@ -1,5 +1,10 @@
 <script>
 export default {
+  globalData:{
+    uploadIsbnInfo:{
+
+    }
+  },
   onLaunch: function () {
     console.log('App Launch')
   },

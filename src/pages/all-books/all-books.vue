@@ -283,7 +283,7 @@ function viewBookDetail(bookItem){
     width:calc(100vw - 44px);
     margin:12px auto 0 auto;
     min-height:calc(100vh - 22.11vw - 66px - 24px);
-    max-height:calc(100vh - 22.11vw - 40px -24px);
+    max-height:calc(100vh - 22.11vw - 40px - 24px);
     border-radius:10px 20px 20px 10px;
     background-color: #A46C1F;
     background: url("https://shilai-images.oss-cn-shenzhen.aliyuncs.com/staticImgs/package-static/package-payment/buyFanpiao/Allbooks-bottomborder.png") 0 0/100% 100% no-repeat;
@@ -325,7 +325,7 @@ function viewBookDetail(bookItem){
           .cover-img{
             .box-size(46px,64px,#ccc);
             margin:10px;
-            margin-left:4px;
+            margin-left:12px;
           }
           .borrow-out{
             .pos-absolute(0,0,0,0);

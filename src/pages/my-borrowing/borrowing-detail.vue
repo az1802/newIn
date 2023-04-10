@@ -1,28 +1,38 @@
+<script>
+  let opts;
+export default {
+  onLoad(options) {
+    console.log('options: ', options);
+    opts = options || {};
+  }
+}
+</script>
+
 <script setup>
-import { navigateTo } from '@utils/wechat';
-import { ref ,unref,computed} from 'vue';
+import { navigateTo,showToast } from '@utils/wechat';
+import { ref ,unref,computed,onBeforeMount} from 'vue';
 import { useSystemInfo } from '@hooks/commonHooks';
 import ContentBlock from '../../components/ContentBlock/ContentBlock.vue';
 import PingjiaItem  from "../my-borrow-out/PingjiaItem.vue"
+import API from "@/api"
 
 const systemInfo = useSystemInfo();
 
-const borrowingInfo = ref({
-  id: '1',
-  bookName: '神笔马良',
-  status: 'borrowing',
-  statusText: '借阅中',
-  shareName: '李丽(3年级2班)',
-  timeText: '7天',
-  bookUrl: '',
 
+let borrowingInfo = ref({
+  addtime: "",
+  from_student_id: '',
+  from_xingming: "",
+  lent_status: 1,
+  lent_status_zh: "",
+  photo: null,
+  xuhao: 1,
+})
 
-});
 
 const containerStyle = ref({
   height: `calc(100vh - 44px - ${systemInfo.statusBarHeight}px)`,
 });
-
 
 const bookReviewText = ref("");
 function  sumbitSp(){
@@ -31,49 +41,87 @@ function  sumbitSp(){
 
 
 const statusList = ref([
-{
-    index:5,
-    name:"我",
-    statusText:"结束借阅",
-    avatarUrl:"",
-    hour:"16:23",
-    day:"2018/06/21",
-    active:true
-  },
-{
-    index:4,
-    name:"欧阳果果",
-    statusText:"已确认归还",
-    avatarUrl:"",
-    hour:"16:23",
-    day:"2018/06/21"
-  },
-{
-    index:3,
-    name:"我的借阅",
-    statusText:"书已借到",
-    avatarUrl:"",
-    hour:"16:23",
-    day:"2018/06/21"
-  },
-  {
-    index:2,
-    name:"欧阳果果",
-    statusText:"同意借阅",
-    avatarUrl:"",
-    hour:"16:23",
-    day:"2018/06/21"
-  },
-  {
-    index:1,
-    name:"我",
-    statusText:"申请中",
-    avatarUrl:"",
-    hour:"16:23",
-    day:"2018/06/21"
-  }
+
 ])
+
+
+onBeforeMount(()=>{
+  getDetail()
+})
+
+const userInfo = uni.getStorageSync("userInfo")
+
+
+function handleStatusList(statusList){
+  statusList.forEach(item=>{
+    let temp = item.addtime.split(" ")
+    item.day=temp[0];
+    item.time=temp[1];
+  })
+
+  return statusList;
+}
+
+async function getDetail(){
+  if(!opts.lent_id){
+    return ;
+  }
+  let res = await API.Book.getLentBookDetail({
+    params:{
+      school_id:userInfo.school_id,
+      lent_id:opts.lent_id
+    }
+  })
+  if(res){
+    borrowingInfo.value = res.lentinfo;
+    statusList.value = handleStatusList(res.statuslist)
+  }
+}
+
+
+function contactTeacher(){
+  navigateTo('/pages/my-borrowing/concat-teacher')
+}
+
+const btnText = computed(()=>{
+  if(unref(borrowingInfo).lent_status==1){
+    return "取消申请"
+  }
+  return ""
+})
+
+const btnShow = computed(()=>{
+  if(unref(borrowingInfo).lent_status==1){
+    return true
+  }
+  return false;
+})
+
+async function handleBtnClick(){
+  let {lent_status,lent_id,lender_student_id,borrower_student_id} = unref(borrowingInfo)
+  let res = false;
+  if(lent_status==1){ //取消申请
+    let res = await API.Book.getLentCancel({
+      params:{
+        school_id:userInfo.school_id,
+        lent_id,
+        borrower_student_id,
+      }
+    })
+    showToast(res?"取消申请成功":"取消申请失败");
+  }
+
+  if(res){
+    getDetail()
+  }
+}
+
+
+
 </script>
+
+
+
 
 <template>
   <div class="page">
@@ -89,33 +137,34 @@ const statusList = ref([
         <ContentBlock topLong>
           <div class="borrowing-item">
             <div class="left">
-              <img src="" alt="" class="img" />
-              <div class="tag"  @click="navigateTo('/pages/my-borrowing/concat-teacher')">联系老师</div>
+              <img :src="borrowingInfo.cover" alt="" class="img" />
+              <div class="tag"  @click="contactTeacher">联系老师</div>
             </div>
             <div class="info">
-              <div class="name">{{ borrowingInfo.bookName }}</div>
+              <div class="name">{{ borrowingInfo.bookname }}</div>
               <div class="status">
                 <div class="label">状态：</div>
-                <div class="text" :class="borrowingInfo.status">
-                  {{ borrowingInfo.statusText }}
+                <div class="text" :class="'status-'+borrowingInfo.lent_status">
+                  {{ borrowingInfo.lent_status_zh }}
                 </div>
               </div>
               <div class="status">
                 <div class="label">借阅时间：</div>
-                <div class="text">{{ borrowingInfo.timeText }}</div>
+                <div class="text">{{ borrowingInfo.borrow_days }}天</div>
               </div>
               <div class="share-people">
                 <div class="label">共享人：</div>
-                <div class="text">{{ borrowingInfo.shareName }}</div>
+                <div class="text">{{borrowingInfo.lender}}({{borrowingInfo.lender_banj}})</div>
               </div>
               <div
-                class="view-btn"
-                @click="navigateTo('/pages/my-borrowing/borrowing-detail')"
-              ></div>
+                v-if="btnShow"
+                class="handle-btn"
+                @click="handleBtnClick"
+              >{{btnText}}</div>
             </div>
           </div>
 
-          <div class="pingjia-wrapper">
+          <div class="pingjia-wrapper" v-if='borrowingInfo.lent_status>6'>
             <div class="title">借阅评价</div>
             <div class="pingjia-item">
               <PingjiaItem />
@@ -128,7 +177,7 @@ const statusList = ref([
           </div>
         </ContentBlock>
 
-        <ContentBlock>
+        <ContentBlock v-if='borrowingInfo.lent_status>5'>
           <div class="borrowing-book-review">
             <div class="title">
               <div class="text">写书评</div>
@@ -158,13 +207,13 @@ const statusList = ref([
           <div class="borrow-status">
             <div class="title">借阅状态</div>
             <div class="status-list">
-              <div class="status-item" v-for='item in statusList' :key="item.id" :class='[item.active?"active":""]'>
-                  <div class="index">{{item.index}}</div>
-                  <img src="" alt="" class='img'>
-                  <div class="name">{{item.name}}</div>
-                  <div class="text">{{item.statusText}}</div>
+              <div class="status-item" v-for='(item,index) in statusList' :key="item.xuhao" :class='[index==0?"active":""]'>
+                  <div class="index">{{item.xuhao}}</div>
+                  <img :src="item.photo" alt="" class='img'>
+                  <div class="name">{{item.from_student_id ==userInfo.student_id? "我" :item.from_xingming}}</div>
+                  <div class="text">{{item.lent_status_zh}}</div>
                   <div class="time">
-                    <div class="hour">{{item.hour }}</div>
+                    <div class="hour">{{item.time }}</div>
                     <div class="day">{{item.day }}</div>
                   </div>
               </div>
@@ -197,6 +246,7 @@ const statusList = ref([
     .borrowing-item {
       .box-size(342px,unset);
       .flex-simple(flex-start,flex-start);
+      padding-bottom:30px;
       .left {
         .box-size(95.5px,130px);
         background: url('https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-borrowing-book-bg.png')
@@ -247,11 +297,14 @@ const statusList = ref([
             }
           }
         }
-        .view-btn {
+        .handle-btn {
           .box-size(89px,37px);
-          background: url('https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/mine-borrowing-view-btn.png')
+          line-height:37px;
+          text-align:center;
+          background: url('https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/button_lib_green.png')
             0 0/100% 100% no-repeat;
           margin-top: 20px;
+          .btn-text(14px);
         }
       }
     }

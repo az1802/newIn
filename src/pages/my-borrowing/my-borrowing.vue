@@ -1,8 +1,9 @@
 <script setup >
 import { navigateTo } from '@utils/wechat';
-import {ref} from "vue";
+import {ref,unref,onBeforeMount}  from "vue";
 
 import {useSystemInfo} from "@hooks/commonHooks";
+import {getMyBorrowList} from "@/api/user"
 
 const systemInfo = useSystemInfo();
 
@@ -11,46 +12,70 @@ const listStyle = ref({
 })
 
 const borrowingList = ref([
-  {
-    id:"1",
-    bookName:"神笔马良",
-    status:"borrowing",
-    statusText:"借阅中",
-    shareName:"李丽(3年级2班)",
-    bookUrl:""
-  },
-  {
-    id:"2",
-    bookName:"小王子",
-    status:"returned",
-    statusText:"已归还",
-    shareName:"李明(3年级2班)",
-    bookUrl:""
-  },
-  {
-    id:"3",
-    bookName:"木偶奇遇记",
-    status:"applying",
-    statusText:"申请中",
-    shareName:"王敏(3年级2班)",
-    bookUrl:""
-  },{
-    id:"4",
-    bookName:"神笔马良",
-    status:"returned",
-    statusText:"已归还",
-    shareName:"李丽(3年级2班)",
-    bookUrl:""
-  }
-  ,{
-    id:"5",
-    bookName:"小王子",
-    status:"borrowing",
-    statusText:"借阅中",
-    shareName:"李丽(3年级2班)",
-    bookUrl:""
-  }
+  // {
+  //   id:"1",
+  //   bookName:"小王子",
+  //   status:"borrowing",
+  //   statusText:"借阅中",
+  //   shareName:"李丽(3年级2班)",
+  //   bookUrl:""
+  // }
 ])
+
+
+// function handleScroll(e){
+//   let scrollTop = e.detail.scrollTop;
+// }
+
+
+
+onBeforeMount(async ()=>{
+  await getList();
+})
+
+
+let  page= ref(1),hasMore = ref(true),isRequest=ref(false),scoreInfo=ref({
+  score:0
+});
+async function getList(){
+  let userInfo = uni.getStorageSync("userInfo");
+  if(unref(isRequest)){
+    return;
+  }
+  isRequest. value= true;
+  let res =await getMyBorrowList({
+    params:{
+      school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
+      page:unref(page)
+    }
+  });
+
+  isRequest.value = false;
+
+  if(res){
+    borrowingList.value.push(...res.records);
+    page.value++;
+    if(page.value > res.total_pages){
+      hasMore.value = false;
+    }
+  }
+}
+
+async function handleScrollMore(){
+  if(!unref(hasMore)){
+    return;
+  }
+  getList()
+}
+
+
+function viewBorrowDetail(item){
+  console.log('item: ', item);
+  navigateTo("/pages/my-borrowing/borrowing-detail",unref(item))
+}
+
+
 
 
 
@@ -63,29 +88,31 @@ const borrowingList = ref([
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
-    <scroll-view :show-scrollbar='false' enhanced scroll-y class='borrowing-list' :style='listStyle'>
+    <scroll-view :show-scrollbar='false' enhanced scroll-y class='borrowing-list' :style='listStyle' :lower-threshold='50' @scrolltolower='handleScrollMore'>
       <ContentBlock :topLong='index==0' :bottomRattan='index!=borrowingList.length-1' v-for='(item,index) in borrowingList' :key='item.id' >
         <div class="borrowing-item" >
         <div class="left">
-          <img src="" alt="" class='img'>
+          <img :src="item.cover" alt="" class='img'>
         </div>
         <div class="info">
-          <div class="name">{{item.bookName}}</div>
+          <div class="name">{{item.bookname}}</div>
           <div class="status">
             <div class="label">状态：</div>
-            <div class="text"  :class='item.status'>{{item.statusText}}</div>
+            <div class="text"  :class='"status"+item.lent_status'>{{item.lent_status_zh}}</div>
           </div>
           <div class='share-people'>
             <div class="label">共享人：</div>
-            <div class="text" >{{item.shareName}}</div>
+            <div class="text"  >{{item.lender}}({{item.banji}})</div>
           </div>
-          <div class="view-btn" @click='navigateTo("/pages/my-borrowing/borrowing-detail")'></div>
+          <div class="view-btn" @click="viewBorrowDetail(item)"></div>
         </div>
       </div>
       </ContentBlock>
 
       <div class="" style='height:40px'></div>
+
     </scroll-view>
+
   </div>
 
 </template>
@@ -123,6 +150,7 @@ const borrowingList = ref([
       }
       .info{
         margin-left:22px;
+        padding-right: 24px;
         .name{
           .bold-font(16px,#3F3F3F);
           margin-bottom:23px;

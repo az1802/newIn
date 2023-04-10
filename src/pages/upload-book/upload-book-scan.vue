@@ -47,6 +47,10 @@ async function queryIsbn() {
 
   let userInfo = uni.getStorageSync("userInfo")
   console.log('userInfo: ', userInfo);
+  if(unref(isbnCode).length!=13){
+    showToast("ISBN应为13位的数字");
+    return;
+  }
 
   uni.showLoading();
   let res = await API.Book.scanIsbn({
@@ -56,11 +60,16 @@ async function queryIsbn() {
       isbn: unref(isbnCode),
     }
   })
-
-  res&&(uni.setStorageSync("isbnBookInfo",res));
   uni.hideLoading();
+  console.log('扫描图书结果---: ', res);
 
-  navigateTo("/pages/upload-book/upload-book-info");
+  if(res){
+    // uni.setStorageSync("isbnBookInfo",res);
+    navigateTo("/pages/upload-book/upload-book-info",res);
+  }else{
+    // showToast("查询不到此书")
+  }
+
 }
 
 </script>

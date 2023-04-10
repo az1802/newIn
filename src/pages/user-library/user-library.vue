@@ -109,11 +109,11 @@ const theme = ref(1);
 const showThemeSel = ref(false);
 
 const bgMapUrl = {
-  default: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
-  spring: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
-  summer: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_2_bg.jpg",
-  autumn: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_3_bg.jpg",
-  winter: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_4_bg.jpg",
+  1: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
+  1: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_1_bg.jpg",
+  2: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_2_bg.jpg",
+  3: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_3_bg.jpg",
+  4: "https://sunj-share.oss-cn-shenzhen.aliyuncs.com/library_scenes_4_bg.jpg",
 }
 
 const bgStyle = computed(() => {
@@ -130,6 +130,11 @@ const listStyle = ref({
   height: `calc(100vh - 44px - ${systemInfo.statusBarHeight}px)`
 })
 
+function viewBookDetail(bookItem){
+  console.log('bookItem: ', bookItem);
+  navigateTo("/pages/book-detail/book-detail",bookItem)
+}
+
 
 </script>
 
@@ -141,7 +146,7 @@ const listStyle = ref({
     </div>
     <scroll-view class="list-wrapper" scroll-y :show-scrollbar='false' enable-passive @scroll='handleScroll'
       :style='listStyle'>
-      <div class="book-item-wrapper" v-for='item in classmateInfo.bookList' :key='item.id' :style='item.style'>
+      <div class="book-item-wrapper" v-for='item in classmateInfo.bookList' :key='item.id' :style='item.style' @click='viewBookDetail(item)'>
         <BookItem :info='item' :theme='theme' />
       </div>
     </scroll-view>
@@ -151,7 +156,7 @@ const listStyle = ref({
        <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn-to-confirm.png" alt="" class='btn to-confirm'>
       </div> -->
 
-    <ThemeSel v-model:theme='theme' />
+    <!-- <ThemeSel v-model:theme='theme' /> -->
 
     <!-- <div class="upload-book-wrapper" @click='showUploadBookSel=true'>
         <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/home-add-book.png" alt="" class='img'>

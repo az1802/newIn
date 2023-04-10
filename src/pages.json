@@ -51,6 +51,9 @@
 			"path": "pages/user-library/my-library",
 		},
     {
+			"path": "pages/user-library/my-book-detail",
+		},
+    {
 			"path": "pages/my-borrow-out/my-borrow-out",
 		},
     {

@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import {ref,unref,computed,onMounted,onBeforeMount} from "vue";
 import memberInfo from './memberInfo.vue';
 import TreeTop from "./treeTop.vue"
@@ -92,13 +92,13 @@ const treeMiddleUserGroups = computed(()=>{
   if(unref(userList).length <= 18){
     return []
   }else{
-    let ret = unref(userList).length%9 ;
-    ret = ret ==0 ? -9 : 0-ret
+    let ret = (unref(userList).length - 9)%12 ;
+    ret = ret == 0 ? -9 : 0-ret
 
     let res = [],temp =[];
     let list = unref(userList).slice(9,ret);
     list.forEach(item=>{
-      if(temp.length == 9){
+      if(temp.length == 12){
         res.push(temp);
         temp = []
       }
@@ -124,6 +124,7 @@ const treeBottomUsers = computed(()=>{
   }
 
 })
+
 
 </script>
 
@@ -167,4 +168,4 @@ const treeBottomUsers = computed(()=>{
   // z-index: 10000;
 }
 
-</style>
+</style> -->

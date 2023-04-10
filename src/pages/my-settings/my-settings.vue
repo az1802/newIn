@@ -43,10 +43,10 @@ function handleParentConfirmPwd(){
           <div class="text">个人信息</div>
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-qt.png" alt="" class='img'>
         </div>
-        <div class="parent-confirm" @click='handleParentConfirmPwd'>
+        <!-- <div class="parent-confirm" @click='handleParentConfirmPwd'>
           <div class="text">家长确认</div>
           <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/icon-qt.png" alt="" class='img'>
-        </div>
+        </div> -->
         <div class="sign-out" @click='signOut'>退出登录</div>
       </div>
     </div>

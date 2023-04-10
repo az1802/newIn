@@ -1,8 +1,9 @@
 <script setup >
-import {ref} from "vue";
 import { navigateTo } from '@utils/wechat';
+import {ref,unref,onBeforeMount}  from "vue";
 
 import {useSystemInfo} from "@hooks/commonHooks";
+import {getMyLentList} from "@/api/user"
 
 const systemInfo = useSystemInfo();
 
@@ -12,46 +13,57 @@ const listStyle = ref({
 
 
 const borrowingOutList = ref([
-  {
-    id:"1",
-    bookName:"神笔马良",
-    status:"borrowing",
-    statusText:"借阅中",
-    shareName:"李丽(3年级2班)",
-    bookUrl:""
-  },
-  {
-    id:"2",
-    bookName:"小王子",
-    status:"returned",
-    statusText:"已归还",
-    shareName:"李明(3年级2班)",
-    bookUrl:""
-  },
-  {
-    id:"3",
-    bookName:"木偶奇遇记",
-    status:"applying",
-    statusText:"申请中",
-    shareName:"王敏(3年级2班)",
-    bookUrl:""
-  },{
-    id:"4",
-    bookName:"神笔马良",
-    status:"returned",
-    statusText:"已归还",
-    shareName:"李丽(3年级2班)",
-    bookUrl:""
-  }
-  ,{
-    id:"5",
-    bookName:"小王子",
-    status:"borrowing",
-    statusText:"借阅中",
-    shareName:"李丽(3年级2班)",
-    bookUrl:""
-  }
 ])
+
+
+
+
+onBeforeMount(async ()=>{
+  await getList();
+})
+
+
+let  page= ref(1),hasMore = ref(true),isRequest=ref(false),scoreInfo=ref({
+  score:0
+});
+async function getList(){
+  let userInfo = uni.getStorageSync("userInfo");
+  if(unref(isRequest)){
+    return;
+  }
+  isRequest. value= true;
+  let res =await getMyLentList({
+    params:{
+      school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
+      page:unref(page)
+    }
+  });
+
+  isRequest.value = false;
+
+  if(res){
+    borrowingOutList.value.push(...res.records);
+    page.value++;
+    if(page.value > res.total_pages){
+      hasMore.value = false;
+    }
+  }
+}
+
+async function handleScrollMore(){
+  if(!unref(hasMore)){
+    return;
+  }
+  getList()
+}
+
+
+function viewBorrowOutDetail(){
+  navigateTo("/pages/my-borrow-out/borrow-out-detail")
+}
+
+
 
 </script>
 
@@ -62,26 +74,26 @@ const borrowingOutList = ref([
         <TopCloud />
     </div>
     <scroll-view :show-scrollbar='false' enhanced scroll-y class='borrowing-list' :style='listStyle'>
-      <ContentBlock :topLong='index==0' :bottomRattan='index!=borrowingOutList.length-1' v-for='(item,index) in borrowingOutList' :key='item.id' >
+      <ContentBlock :topLong='index==0' :bottomRattan='index!=borrowingOutList.length-1' v-for='(item,index) in borrowingOutList' :key='item.id' :lower-threshold='50' @scrolltolower='handleScrollMore'>
         <div class="borrowing-item" >
           <div class="left">
-            <img src="" alt="" class='img'>
+            <img :src="item.cover" alt="" class='img'>
           </div>
           <div class="info">
-            <div class="name">木偶奇遇记</div>
+            <div class="name">{{item.bookname}}</div>
             <div class="status">
               <div class="label">状态：</div>
-              <div class="text"  :class='item.status'>借阅中</div>
+              <div class="text"  :class='"status"+item.lent_status'>{{item.lent_status_zh}}</div>
             </div>
             <div class='share-people'>
               <div class="label">借阅人：</div>
-              <div class="text"  :class='item.status'>王敏(3年级2班）</div>
+              <div class="text"  >{{item.borrower}}({{item.banji}})</div>
             </div>
             <div class='time'>
               <div class="label">借阅时间：</div>
-              <div class="text"  :class='item.status'>7天</div>
+              <div class="text" >{{}}</div>
             </div>
-            <div class="view-btn" @click='navigateTo("/pages/my-borrow-out/borrow-out-detail")'></div>
+            <div class="view-btn" @click='viewBorrowOutDetail'></div>
           </div>
         </div>
 
@@ -118,11 +130,14 @@ const borrowingOutList = ref([
         margin-left:22px;
         padding:10px 10px;
         .img{
-          .box-size(100%,100%,transparent);
+          .box-size(66px,90px,#ccc);
+          border-radius: 0px;
+          margin:2px 0 0 6px;
         }
       }
       .info{
         margin-left:22px;
+        padding-right: 24px;
         .name{
           .bold-font(16px,#3F3F3F);
           margin-bottom:23px;

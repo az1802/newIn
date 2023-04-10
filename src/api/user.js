@@ -27,6 +27,18 @@ export async function bindUser(params){
   }
   return false;
 }
+
+
+export async function addBindUser(params){
+  try{
+    let res = await http.get("/addBindingUser", params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
 export async function getBindUserlist(params){
   try{
     let res = await http.get("/getUserTypeList",params);
@@ -154,6 +166,33 @@ export async function getMyLibrary(params){
 export async function getSwitchMylibraryTheme(params){
   try{
     let res = await http.get("/getSwitchMylibraryTheme",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+
+export async function getMyBorrowList(params){
+  try{
+    let res = await http.get("/getMyBorrowList",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+
+
+export async function getMyLentList(params){
+  try{
+    let res = await http.get("/getMyLentList",params);
     return res;
   }catch(err){
     showToast(err);

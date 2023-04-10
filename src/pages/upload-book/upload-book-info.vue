@@ -1,4 +1,12 @@
-
+<script>
+let opts;
+export default {
+  onLoad(options) {
+    console.log('options: ', options);
+    opts = options || {};
+  }
+}
+</script>
 
 <script setup>
 import { ref, unref,onBeforeMount } from 'vue';
@@ -14,9 +22,22 @@ import { useUserInfoStore } from '@/stores/user'
 
 const bookStore = useBookStore();
 const userInfoStore = useUserInfoStore();
+let bookInfo = ref({
+  cover:"",
+  bookname:"",
+  author:"",
+  pages:"",
+  cover:"",
+
+})
+let categoryList = unref(bookStore)?.categorylist || [];
 
 onBeforeMount(()=>{
+  bookInfo.value=getApp().globalData.uploadIsbnInfo || {};
+  console.log('bookInfo: ', unref(bookInfo));
+
   getBookCategory();
+
 })
 
 async function getBookCategory(){
@@ -36,8 +57,7 @@ async function getBookCategory(){
 
 
 
-let bookInfo = uni.getStorageSync("isbnBookInfo")?.isbninfo;
-let categoryList =  uni.getStorageSync("isbnBookInfo")?.categorylist || [];
+
 
 const bookReviewText = ref('');
 
@@ -64,22 +84,24 @@ async function sumbit(){
   let categoryList = bookStore.categorylist;
 
   uni.showLoading()
-  let res = await API.Book.postBooksReview({
-      school_id:userInfo.school_id,
-      student_id:userInfo.student_id,
-      category_id:unref(categoryList)[unref(multiIndex)[0]].category_id,
-      category2_id:unref(categoryList)[unref(multiIndex)[0]].children[unref(multiIndex)[1]].category_id,
-      isbn_id:parseInt(bookInfo.isbn_id),
-      bookreview:unref(bookReviewText) || " "
-    })
-  uni.hideLoading()
+    let res = await API.Book.postBooksReview({
+        school_id:userInfo.school_id,
+        student_id:userInfo.student_id,
+        category_id:unref(categoryList)[unref(multiIndex)[0]].category_id,
+        category2_id:unref(categoryList)[unref(multiIndex)[0]].children[unref(multiIndex)[1]].category_id,
+        isbn_id:parseInt(unref(bookInfo).isbn_id),
+        bookreview:unref(bookReviewText) || " "
+      })
+    uni.hideLoading()
+
+  console.log('res: ', res);
 
   if(res){
     setTimeout(()=>{
       navigateTo("/pages/upload-book/parent-confirm",{
         book_id:res.book_id,
       })
-    },1500)
+    },100)
   }
 
 
@@ -105,10 +127,10 @@ async function sumbit(){
                 <div class="label">作者：</div>
                 <div class="value">{{bookInfo.author}}</div>
               </div>
-              <div class="form-item">
+              <!-- <div class="form-item">
                 <div class="label">类型：</div>
                 <div class="value">儿童文学</div>
-              </div>
+              </div> -->
               <div class="form-item">
                 <div class="label">页数：</div>
                 <div class="value">{{bookInfo.pages}}</div>

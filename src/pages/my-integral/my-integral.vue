@@ -1,7 +1,7 @@
 <script setup >
 import {ref,unref,onBeforeMount}  from "vue";
-  import {useSystemInfo} from "@hooks/commonHooks";
-  import {getMyScore } from "@/api/user"
+import {useSystemInfo} from "@hooks/commonHooks";
+import {getMyScore } from "@/api/user"
 
 
 
@@ -207,7 +207,7 @@ async function getScore(){
   let res =await getMyScore({
     params:{
       school_id:userInfo.school_id,
-      student_id:500396 || userInfo.student_id,
+      student_id:userInfo.student_id,
       page:unref(page)
     }
   });

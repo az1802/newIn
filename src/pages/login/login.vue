@@ -2,7 +2,7 @@
 import {ref,unref,onBeforeMount} from "vue";
 import {showToast,navigateTo,getUserInfo} from "@utils/wechat"
 import { useUserInfoStore } from '@/stores/user';
-import {bindUser} from "@/api/user";
+import {bindUser,addBindUser} from "@/api/user";
 
 let opts ;
  export default{
@@ -14,8 +14,8 @@ let opts ;
 
 
     const identity = ref("student");
-    const userName = ref("19999999919");
-    const userPwd = ref("999919");
+    const userName = ref("");
+    const userPwd = ref("");
     let showBack = ref(false);
 
     onBeforeMount(()=>{
@@ -38,14 +38,23 @@ let opts ;
         usertype:unref(identity)=="student" ? 1 : 2,
         wxuser_id:userInfoStore.wxuser_id
       }
-      let bindRes = await bindUser({
-        params
-      });
+
+      let bindRes = null;
+      if(opts.addBindUser){
+        bindRes = await addBindUser({
+          params
+        });
+      }else{
+         bindRes = await bindUser({
+          params
+        });
+      }
+
 
       console.log('绑定用户信息: ', bindRes);
       if(!bindRes){
         return
-      }else{
+      }else if(!opts.addBindUse){
         userInfoStore.setUserInfo(bindRes)
       }
 
@@ -55,7 +64,6 @@ let opts ;
       }else{
         navigateTo("/package-teacher/home/home")
       }
-
     }
 
     return {

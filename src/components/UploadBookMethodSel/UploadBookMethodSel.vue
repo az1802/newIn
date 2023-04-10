@@ -1,6 +1,9 @@
 <script setup >
 
 import {noop,navigateTo,scanCode,showToast} from "@utils/wechat";
+import API from "@/api/index";
+import {unref} from "vue";
+
   const props = defineProps({
     show:{
       type:Boolean,
@@ -14,10 +17,11 @@ import {noop,navigateTo,scanCode,showToast} from "@utils/wechat";
     let res = await scanCode();
     console.log('res: ', res);
     if(res){
-    // if(res&&res.scanType=="EAN_13"){
-      navigateTo("/pages/upload-book/upload-book-scan",{
-        scanCode:res.result
-      });
+      let scanCode = res.result;
+      queryIsbn(scanCode)
+      // navigateTo("/pages/upload-book/upload-book-scan",{
+      //   scanCode:res.result
+      // });
     }else{
       showToast("ISBN码识别错误")
     }
@@ -27,12 +31,43 @@ import {noop,navigateTo,scanCode,showToast} from "@utils/wechat";
   }
 }
 
+
+async function queryIsbn(isbnCode) {
+
+  let userInfo = uni.getStorageSync("userInfo")
+  if(unref(isbnCode).length!=13){
+    showToast("ISBN应为13位的数字");
+    return;
+  }
+
+  uni.showLoading();
+  let res = await API.Book.scanIsbn({
+    params: {
+      school_id: userInfo.school_id,
+      student_id: userInfo.student_id,
+      isbn: unref(isbnCode),
+    }
+  })
+  uni.hideLoading();
+
+  if(res){
+    // uni.setStorageSync("isbnBookInfo",res);
+    getApp().globalData.uploadIsbnInfo=res.isbninfo;
+    navigateTo("/pages/upload-book/upload-book-info",{
+      hasIsbnInfo:true
+    });
+  }else{
+    // showToast("查询不到此书")
+  }
+
+}
+
 function uploadBook(type){
 
   if(type=='scan'){
     scanIsbn();
   }else{
-    navigateTo("/pages/upload-book/upload-book-manually")
+    // navigateTo("/pages/upload-book/upload-book-manually")
   }
   emit('update:show',false);
 }

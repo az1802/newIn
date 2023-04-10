@@ -3,7 +3,8 @@ import { defineStore } from 'pinia'
 export const useBookStore = defineStore('book', {
   state: () => {
     return {
-      categorylist:{},//mine,classLibrary
+      categorylist:{},//mine,classLibrary,
+      updateMyLibrary:false
     }
   },
   actions:{

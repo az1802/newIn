@@ -58,7 +58,7 @@ function confirmLater(){
 
 
         <div class="submit" @click='confirm'>确认</div>
-        <div class="submit" @click='confirmLater'>稍后确认</div>
+        <div class="submit later" @click='confirmLater'>稍后确认</div>
       </div>
     </div>
 
@@ -133,6 +133,9 @@ function confirmLater(){
       background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/sign-out-btn.png") 0 0/100% 100% no-repeat;
       .bold-font(22px,white);
       margin:50px auto 0 auto;
+      &.later{
+        background: url("https://sunj-share.oss-cn-shenzhen.aliyuncs.com/imgs/btn-bind-user-bg.png") 0 0/100% 100% no-repeat;
+      }
 
     }
   }

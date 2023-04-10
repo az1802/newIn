@@ -38,9 +38,9 @@ onBeforeMount(()=>{
 })
 
 
-let isAddBorrow = false;
+let isAddBorrow = false,hasMoreBorrow=ref(true);
 async function getBorrowMsg(){
-  if(isAddBorrow){
+  if(isAddBorrow || !unref(hasMoreBorrow)){
     return ;
   }
   isAddBorrow = true;
@@ -57,14 +57,15 @@ async function getBorrowMsg(){
     borrowingMsgList.value.push(...res.records);
     borrowingMsgPage.value.page+=1;
     borrowingMsgPage.value.total_record=res.total_record;
+    hasMoreBorrow.value = unref(borrowingMsgPage).page <= res.total_pages
   }
 
 }
 
 
-let isAddCredit = false;
+let isAddCredit = false,hasMoreCredit = ref(true)
 async function getCreditMsg(){
-  if(isAddCredit){
+  if(isAddCredit || !unref(hasMoreCredit)){
     return ;
   }
   isAddCredit = true;
@@ -80,12 +81,13 @@ async function getCreditMsg(){
   if(res){
     creditMsgList.value.push(...res.records);
     creditMsgPage.value.page+=1;
+    hasMoreCredit.value = unref(hasMoreCredit).page <= res.total_pages;
   }
 }
 
- let isAddIntergral = false;
+ let isAddIntergral = false,hasMoreIntergral=ref(true);
 async function getIntergralMsg(){
-  if(isAddIntergral){
+  if(isAddIntergral || !unref(hasMoreIntergral)){
     return ;
   }
   isAddIntergral = true;
@@ -101,92 +103,9 @@ async function getIntergralMsg(){
   if(res){
     integralMsgList.value.push(...res.records);
     integralMsgPage.value.page+=1;
+    hasMoreIntergral.value = unref(hasMoreIntergral).page <= res.total_pages;
   }
 }
-
-
-
-
-
-
-// const borrowingMsgList = ref([
-//   {
-//     id:1,
-//     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-//     type:"jieyue",
-//     btnText:"去同意"
-//   },
-//   {
-//     id:2,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-//     type:"xinyongjifen",
-//     btnText:"立即查看"
-//   },
-//   {
-//     id:3,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-//     type:"jifen",
-//     btnText:"立即查看"
-//   },
-//   {
-//     id:4,
-//     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-//     type:"jifen",
-//     btnText:"立即查看"
-//   },
-//   {
-//     id:5,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-//     type:"jifen",
-//     btnText:"立即查看"
-//   },
-//   {
-//     id:6,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-//     type:"jifen",
-//     btnText:"立即查看"
-//   },
-//   {
-//     id:7,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-//     type:"jifen",
-//     btnText:"立即查看"
-//   },
-//   {
-//     id:8,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_integral.png",
-//     type:"jifen",
-//     btnText:"立即查看"
-//   },
-// ]);
-// const creditMsgList = ref([
-//   {
-//     id:1,
-//     content:"李大锤向你申请借阅<床边的小豆豆>,赶紧去同意吧!",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-//     type:"jieyue",
-//     btnText:"去同意"
-//   },
-//   {
-//     id:2,
-//     content:"李大锤向你申请借阅",
-//     img:"https://sunj-share.oss-cn-shenzhen.aliyuncs.com/icon_credit.png",
-//     type:"xinyongjifen",
-//     btnText:"立即查看"
-//   },
-// ]);
-
-// const integralMsgList = ref([
-
-// ]);
 
 const tabActive = ref("one");
 
@@ -195,7 +114,12 @@ const tabActive = ref("one");
  }
 
  function viewBorrowDetail(noticeItem){
-  navigateTo("/pages/my-borrow-out/borrow-out-detail");
+  console.log('noticeItem: ', noticeItem);
+  if(noticeItem.content?.indexOf("申请借阅")!=-1){
+    navigateTo("/pages/my-borrow-out/borrow-out-detail",noticeItem);
+  }else{
+    navigateTo("/pages/my-borrowing/borrowing-detail",noticeItem);
+  }
  }
 
 </script>
@@ -216,11 +140,11 @@ const tabActive = ref("one");
         <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="one"' @scrolltolower='getBorrowMsg' :lower-threshold='100'>
           <div class="notice-item-wrapper" v-for='noticeItem in borrowingMsgList' :key='noticeItem.message_id'>
             <div class="notice-item">
-              <img src="" alt="" class="left">
+              <img :src="noticeItem.photo" alt="" class="left">
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
-                  <div class="time">今天{{noticeItem.addtime}}</div>
-                  <div class="btn"  @click='viewBorrowDetail(noticeItem)'>去同意</div>
+                  <div class="time">{{noticeItem.addtime}}</div>
+                  <div class="btn" v-if='noticeItem.is_read!=1'  @click='viewBorrowDetail(noticeItem)'>查看</div>
               </div>
             </div>
           </div>
@@ -231,8 +155,8 @@ const tabActive = ref("one");
               <img src="" alt="" class="left">
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
-                  <div class="time">今天15：02</div>
-                  <div class="btn">去同意</div>
+                  <div class="time">{{noticeItem.addtime}}</div>
+                  <!-- <div class="btn">去同意</div> -->
               </div>
             </div>
           </div>
@@ -243,8 +167,8 @@ const tabActive = ref("one");
               <img src="" alt="" class="left">
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
-                  <div class="time">今天15：02</div>
-                  <div class="btn">去同意</div>
+                  <div class="time">{{noticeItem.addtime}}</div>
+                  <!-- <div class="btn">去同意</div> -->
               </div>
             </div>
           </div>
@@ -342,7 +266,7 @@ const tabActive = ref("one");
             flex:1;
             .info{
               .box-size(100%,unset);
-              padding-right:24px;
+              // padding-right:24px;
               .bold-font(14px,#3F3F3F);
               line-height:18px;
             }

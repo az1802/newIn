@@ -21,11 +21,20 @@ const props = defineProps({
 
 function goToUserLibaray(item){
   let userInfo = uni.getStorageSync("userInfo");
+  if(item.student_id==userInfo.student_id){
+    navigateTo("/pages/user-library/my-library",{
+      xingming:item.xingming,
+      school_id:userInfo.school_id,
+      student_id:item.student_id,
+    })
+  }else{
     navigateTo("/pages/user-library/user-library",{
       xingming:item.xingming,
       school_id:userInfo.school_id,
       student_id:item.student_id,
     })
+  }
+
   }
 </script>
 
@@ -35,7 +44,7 @@ function goToUserLibaray(item){
     <div class="avatar-wrapper">
       <img :src="props.info.backgroundUrl" alt="" class='bg' />
       <img :src="props.info.tagUrl" alt="" class='tag'>
-      <img :src="props.info.avatarUrl" alt="" class='avatar-img'>
+      <img :src="props.info.photo" alt="" class='avatar-img'>
     </div>
 
   </div>

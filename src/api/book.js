@@ -4,7 +4,6 @@ import http from './http';
 
 // isbn扫码查询 scanIsbn
 export async function scanIsbn(params){
-  console.log('params: ', params);
   try{
     let res = await http.get("/scanIsbn",params);
     return res;
@@ -137,6 +136,92 @@ export async function getBookParentConfirm(params){
   try{
     let res = await http.get("/getBookParentConfirm",params);
     showToast(res ? "家长确认成功" :"家长确认失败");
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+export async function getLentBookDetail(params){
+  try{
+    let res = await http.get("/getLentBookDetail",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+export async function getLentCancel(params){
+  try{
+    let res = await http.get("/getLentCancel",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+export async function getLentAgree(params){
+  try{
+    let res = await http.get("/getLentAgree",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+
+
+export async function getLentRefuse(params){
+  try{
+    let res = await http.get("/getLentRefuse",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+export async function getLentRefuse2(params){
+  try{
+    let res = await http.get("/getLentRefuse2",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+export async function getMyLibraryBookInfo(params){
+  try{
+    let res = await http.get("/getMyLibraryBookInfo",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+export async function getMyBookOffShelf(params){
+  try{
+    let res = await http.get("/getMyBookOffShelf",params);
+    return res;
+  }catch(err){
+    showToast(err);
+  }
+  return false;
+}
+
+
+export async function getMyBookOnShelf(params){
+  try{
+    let res = await http.get("/getMyBookOnShelf",params);
     return res;
   }catch(err){
     showToast(err);

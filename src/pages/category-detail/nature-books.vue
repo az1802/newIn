@@ -76,7 +76,7 @@ export default {
         item.style = posMap[index + 1];
       })
 
-      return mockBookList
+      return mockBookList.slice(0,9)
     }
 
     // const bookList = ref(handleBookList(mockBookList));

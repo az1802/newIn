@@ -92,11 +92,11 @@ const treeMiddleUserGroups = computed(()=>{
   if(unref(userList).length <= 18){
     return []
   }else{
-    let ret = unref(userList).length%12 ;
+    let ret = (unref(userList).length - 9)%12 ;
     ret = ret ==0 ? -12 : 0-ret
 
     let res = [],temp =[];
-    let list = unref(userList).slice(12,ret);
+    let list = unref(userList).slice(9,ret);
     list.forEach(item=>{
       if(temp.length == 12){
         res.push(temp);

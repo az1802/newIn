@@ -28,8 +28,8 @@ function changeSelUserId(item){
   selUserId.value = item.binding_id
 }
 
-async function bindUser(){
-  navigateTo("/pages/login/login",{showBack:1});
+async function addBindUser(){
+  navigateTo("/pages/login/login",{showBack:1,addBindUser:true});
 }
 
 async function switchUser(){
@@ -95,7 +95,7 @@ async function afterLogin(usertype){
           </div>
         </scroll-view>
         <div class="btn-group">
-          <div class="add-bind btn" @click='bindUser'>添加绑定</div>
+          <div class="add-bind btn" @click='addBindUser'>添加绑定</div>
           <div class="switch-user btn" @click='switchUser'>切换用户</div>
         </div>
       </div>

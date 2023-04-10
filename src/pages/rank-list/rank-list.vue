@@ -105,13 +105,17 @@ function sortJifen(){
   gradeRankList.value.reverse();
 }
 
+
+let sortStatus = ref("jifen");
+
 </script>
 
 <template>
   <div class='page'>
     <NavBar title='' />
     <div class="rank-wrapper">
-      <img src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/ic_start.png" alt="" class='sort-img' @click='sortJifen'>
+      <img v-if='sortStatus=="jifen"' src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/ic_start.png" alt="" class='sort-img' @click='status="xinyongjf"'>
+      <img v-else src="https://sunj-share.oss-cn-shenzhen.aliyuncs.com/ic_start.png" alt="" class='sort-img' @click='status="jifen"'>
       <div class='tabs'>
         <div class="tab-item" :class='[activeTab=="class" ? "active":""]' @click='switchTab("class")'>班级榜</div>
         <div class="tab-item" :class='[activeTab=="grade" ? "active":""]' @click='switchTab("grade")'>年级榜</div>
