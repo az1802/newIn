@@ -69,6 +69,7 @@ async function getDetail(){
   let res = await API.Book.getLentBookDetail({
     params:{
       school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
       lent_id:opts.lent_id
     }
   })

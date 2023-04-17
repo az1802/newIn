@@ -9,22 +9,48 @@ export default{
 }
 </script>
 <script setup >
-import {ref,unref,reactive} from "vue";
+import {ref,unref,reactive,onBeforeMount} from "vue";
 import { navigateTo ,showToast,navigateBack} from '@utils/wechat';
-import {getBookParentConfirm} from "@/api/book";
+import {postBookParentConfirm,getBookReviewParentConfirm} from "@/api/book";
 
-
+const bookReviewText = ref("");
 let confirmPwd = ref("")
+;
+
+
+
+onBeforeMount(() => {
+  getBookReviewText();
+});
+
+
+async function getBookReviewText(){
+
+  let userInfo = uni.getStorageSync("userInfo");
+
+
+  let res = await getBookReviewParentConfirm({
+    school_id:userInfo.school_id,
+      student_id:userInfo.student_id,
+      book_id:opts.book_id,
+  })
+  if(res){
+    bookReviewText.value = res.book_review
+  }
+
+}
+
+
+
 
 async function confirm(){
   let userInfo = uni.getStorageSync("userInfo");
-  let res = await getBookParentConfirm({
-    params:{
-      school_id:userInfo.school_id,
+  let res = await postBookParentConfirm({
+    school_id:userInfo.school_id,
       student_id:userInfo.student_id,
       book_id:opts.book_id,
-      password:unref(confirmPwd)
-    }
+      password:unref(confirmPwd),
+      bookreview:unref(bookReviewText)
   })
 
   if(res){
@@ -35,6 +61,7 @@ async function confirm(){
 
 }
 
+
 function confirmLater(){
   navigateBack();
 }
@@ -44,13 +71,30 @@ function confirmLater(){
 
 <template>
   <div class="page">
-    <SignOutDialog  v-model:show='showSignOutDialog'></SignOutDialog>
+    <!-- <SignOutDialog  v-model:show='showSignOutDialog'></SignOutDialog> -->
     <NavBar title='家长确认' />
     <div class="bg-top-wrapper">
         <TopCloud />
     </div>
     <div class="setting-wrapper">
       <div class="setting">
+
+        <div>
+          请输入书评
+        </div>
+        <div style='height:100px;border:1px solid #ccc'>
+          <textarea
+              class="text-area"
+              v-model="bookReviewText"
+              maxlength="100"
+              placeholder="请填写书评"
+              placeholder-style="font-size:15px;color:#6F6F6F;font-family:HYCuYuanJ"
+            ></textarea>
+
+        </div>
+        <div style='margin-bottom:20px'></div>
+
+
         <div class="input-wrapper">
           <input type="text" v-model='confirmPwd' class='input' placeholder='请输入家长确认密码' placeholder-style='font-size:15px;color:#ccc;font-family:HYCuYuanJ'>
         </div>

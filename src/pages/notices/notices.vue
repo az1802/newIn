@@ -132,7 +132,7 @@ const tabActive = ref("one");
     </div>
     <div class="notice-list-wrapper">
       <div class="tabs">
-        <div class="tab-item" :class='[tabActive=="one" ? "active":""]' @click='toggleTab("one")'>借阅<div class="num">{{borrowingMsgPage.total_record}}</div></div>
+        <div class="tab-item" :class='[tabActive=="one" ? "active":""]' @click='toggleTab("one")'>借阅<div class="num">{{userInfoStore.new_message_num}}</div></div>
         <div class="tab-item" :class='[tabActive=="two" ? "active":""]' @click='toggleTab("two")'>信用分</div>
         <div class="tab-item" :class='[tabActive=="three" ? "active":""]' @click='toggleTab("three")'>积分</div>
       </div>
@@ -144,7 +144,7 @@ const tabActive = ref("one");
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
                   <div class="time">{{noticeItem.addtime}}</div>
-                  <div class="btn" v-if='noticeItem.is_read!=1'  @click='viewBorrowDetail(noticeItem)'>查看</div>
+                  <div class="btn" v-if='noticeItem.is_read!=1 || 1'  @click='viewBorrowDetail(noticeItem)'>查看</div>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ const tabActive = ref("one");
         <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="two"'  @scrolltolower='getCreditMsg' :lower-threshold='100'>
           <div class="notice-item-wrapper" v-for='noticeItem in creditMsgList' :key='noticeItem.id'>
             <div class="notice-item">
-              <img src="" alt="" class="left">
+              <img :src="noticeItem.photo" alt="" class="left">
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
                   <div class="time">{{noticeItem.addtime}}</div>
@@ -164,7 +164,7 @@ const tabActive = ref("one");
         <scroll-view :show-scrollbar='false' enhanced scroll-y class='scroll-view' v-show='tabActive=="three"'  @scrolltolower='getIntergralMsg' :lower-threshold='100'>
           <div class="notice-item-wrapper" v-for='noticeItem in integralMsgList' :key='noticeItem.id'>
             <div class="notice-item">
-              <img src="" alt="" class="left">
+              <img :src="noticeItem.photo" alt="" class="left">
               <div class="right">
                 <div class="info">{{noticeItem.content}}</div>
                   <div class="time">{{noticeItem.addtime}}</div>

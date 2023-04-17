@@ -37,6 +37,17 @@ export async function getBookCategory2(params){
 }
 
 
+export async function getBookReviewParentConfirm(params){
+  try{
+    let res = await http.post("/getBookReviewParentConfirm",params);
+    return res;
+  }catch(err){
+    console.log('err: ', err);
+    showToast(err);
+  }
+  return false;
+}
+
 
 export async function postBooksReview(params){
   try{
@@ -132,9 +143,9 @@ export async function getPersonalBookList(params){
 }
 
 
-export async function getBookParentConfirm(params){
+export async function postBookParentConfirm(params){
   try{
-    let res = await http.get("/getBookParentConfirm",params);
+    let res = await http.post("/postBookParentConfirm",params);
     showToast(res ? "家长确认成功" :"家长确认失败");
     return res;
   }catch(err){
